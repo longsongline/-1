@@ -5,12 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#2e141a">
 <meta name="color-scheme" content="light">
-<title>古代世家 · 高门主母掌家录</title>
+<title>古代世家 · 高门主母掌家录 (完整典藏版)</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html{color-scheme:light;height:100%;-webkit-text-size-adjust:100%;}
 body{
-  /* 现代高清晰度 CJK 系统字族，字迹锐利工整，彻底消除细弱发虚 */
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;
   color:#1c100e;background:#f6eee3;line-height:1.55;font-size:13px;
   height:100%;overflow:hidden;position:relative;
@@ -18,12 +17,11 @@ body{
   text-rendering:optimizeLegibility;
 }
 
-/* 背景花瓣浮动 */
 #fxCanvas{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
 #fxCanvas span{position:absolute;top:-30px;animation:petalFall linear infinite;opacity:.65;}
 @keyframes petalFall{to{transform:translateY(110vh) rotate(360deg);}}
 
-.wrap{position:relative;z-index:1;max-width:1160px;margin:0 auto;
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;
   padding:8px;height:100vh;height:100dvh;display:flex;flex-direction:column;
   gap:8px;overflow:hidden;}
 
@@ -52,8 +50,11 @@ body{
 .chip-svg{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;flex-shrink:0;}
 .chip.clickable{cursor:pointer;user-select:none;transition:all .15s;}
 .chip.clickable:hover{background:#f3e3d3;border-color:#a53b51;transform:translateY(-1px);}
+.chip.highlight{background:#7e1f34;color:#fff;border-color:#5c1222;box-shadow:0 2px 6px rgba(126,31,52,.25);}
+.chip.highlight b{color:#ffe482;}
+.chip.highlight .chip-svg svg{stroke:#fff;}
 
-/* 移动端/窄屏 视图切换器 (解决显示不全与重叠) */
+/* 移动端视图切换条 */
 .mobile-switch-bar{display:none;background:#fffdfa;border:1px solid #d4bda8;border-radius:10px;
   padding:3px;gap:5px;flex-shrink:0;box-shadow:0 2px 6px rgba(70,25,35,.04);}
 .m-switch-btn{flex:1;background:#f3e8dc;border:1px solid transparent;border-radius:8px;
@@ -72,17 +73,17 @@ body{
   padding:12px;display:flex;flex-direction:column;gap:10px;min-height:0;overflow:hidden;
   box-shadow:0 2px 8px rgba(70,25,35,.04);}
 
-/* 导航选项卡 (宋锦古风高对比) */
+/* 导航选项卡 */
 .nav-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:3px;flex-shrink:0;-webkit-overflow-scrolling:touch;}
 .nav-tabs::-webkit-scrollbar{height:0;}
 .nav-btn{background:#f5e8db;border:1px solid #d1b7a0;border-radius:8px;
-  padding:6.5px 13px;font-size:12.5px;font-family:inherit;font-weight:600;color:#4f2b21;
+  padding:6.5px 12px;font-size:12px;font-family:inherit;font-weight:600;color:#4f2b21;
   cursor:pointer;white-space:nowrap;transition:all .15s;
   display:inline-flex;align-items:center;gap:6px;}
 .nav-btn:hover{background:#eedbca;border-color:#b95e72;}
 .nav-btn.on{background:#7e1f34;border-color:#5f1323;color:#ffffff;font-weight:700;
   box-shadow:0 2px 8px rgba(126,31,52,.3);}
-.nav-btn .nav-svg{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;}
+.nav-btn .nav-svg{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;}
 .nav-btn.on .nav-svg svg{stroke:#fff;}
 
 /* 场景文案 */
@@ -93,7 +94,7 @@ body{
 .page-content::-webkit-scrollbar{width:5px;}
 .page-content::-webkit-scrollbar-thumb{background:#cbb099;border-radius:3px;}
 
-/* 动作网格 (自适应卡片，永不横向溢出) */
+/* 动作网格 */
 .acts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:9px;align-content:start;}
 .act-card{background:#fffefc;border:1px solid #d8bfab;border-radius:10px;
   padding:10px 11px;display:flex;gap:10px;cursor:pointer;transition:all .16s;
@@ -112,138 +113,135 @@ body{
 .act-ic svg{display:block;}
 
 .act-bd{flex:1;min-width:0;}
-.act-t1{font-size:13.5px;font-weight:700;color:#1f100d;display:flex;justify-content:space-between;align-items:center;gap:6px;}
+.act-t1{font-size:13px;font-weight:700;color:#1f100d;display:flex;justify-content:space-between;align-items:center;gap:6px;}
 .act-t2{font-size:11.5px;font-weight:500;color:#4a2f26;margin-top:4px;line-height:1.5;word-break:break-word;}
 .act-cost{font-size:10.5px;color:#7e1f34;font-weight:700;background:#fde9ed;padding:1.5px 7px;border-radius:10px;border:1px solid #eec0c9;flex-shrink:0;}
 
 /* 卡片列表通用 */
 .card-item{background:#fffefc;border:1px solid #d8bfab;border-radius:9px;padding:10px 12px;margin-bottom:8px;
-  display:flex;gap:10px;align-items:flex-start;box-shadow:0 1px 3px rgba(70,25,35,.03);}
-.card-item .item-ic{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;
-  justify-content:center;background:linear-gradient(135deg,#fffdfa,#f5e5d5);
-  border:1px solid #d4bda8;box-shadow:0 1px 2px rgba(80,30,40,.06);flex-shrink:0;}
-.card-content{flex:1;min-width:0;}
-.card-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:13px;color:#351a14;}
-.card-body{font-size:12px;font-weight:500;color:#4a2f26;margin-top:4px;line-height:1.5;}
-.card-acts{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
-
-/* 右侧侧边栏 · 府邸大观与起居注 */
-.right-col{display:flex;flex-direction:column;gap:8px;min-height:0;overflow:hidden;}
-.house-panel{background:#fffdfa;border:1px solid #d4bda8;border-radius:12px;
-  padding:12px 14px;flex-shrink:0;box-shadow:0 2px 8px rgba(70,25,35,.04);}
-.house-title{font-size:13px;font-weight:700;color:#6b1527;border-bottom:1px solid #e5cebc;
-  padding-bottom:6px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
-.rank-badge{font-size:11px;font-weight:600;color:#7e1f34;background:#fde9ed;border:1px solid #eec0c9;padding:1.5px 8px;border-radius:10px;}
-
-.lord-card{display:flex;gap:10px;align-items:center;background:#fbf3e9;border:1px solid #dec4b1;border-radius:8px;padding:8px 10px;}
-.lord-avatar{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#7e1f34,#9a2a41);
+  display:flex;gap:10px;align-items:flex-start;}
+.item-ic{width:36px;height:36px;border-radius:8px;background:#f4e6d8;border:1px solid #d6bfa8;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.lord-avatar svg{stroke:#fff;}
-.lord-info{flex:1;min-width:0;}
-.lord-name{font-size:12.5px;font-weight:700;color:#381c15;}
+.card-content{flex:1;min-width:0;}
+.card-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:13px;color:#2e151b;}
+.card-body{font-size:12px;color:#4a2b22;margin-top:4px;line-height:1.55;}
+.card-acts{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap;}
 
-.meter-bar-wrap{display:flex;flex-direction:column;gap:3px;margin-top:5px;}
-.meter-label{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:#4f332a;}
-.meter-track{height:6px;background:#e5cebc;border-radius:4px;overflow:hidden;}
-.meter-fill{height:100%;border-radius:4px;transition:width .3s;}
-.meter-fill.rose{background:linear-gradient(to right,#a83850,#7e1f34);}
-.meter-fill.purple{background:linear-gradient(to right,#805ad5,#553c9a);}
+/* 右侧侧边栏 */
+.right-col{display:flex;flex-direction:column;gap:8px;min-height:0;overflow:hidden;}
+.house-panel{background:#fffdfa;border:1px solid #d4bda8;border-radius:12px;padding:12px;
+  display:flex;flex-direction:column;gap:8px;flex-shrink:0;box-shadow:0 2px 8px rgba(70,25,35,.04);}
+.panel-hd{display:flex;align-items:center;justify-content:space-between;}
+.panel-hd h2{font-size:13.5px;font-weight:700;color:#6b1527;display:flex;align-items:center;gap:6px;}
+.badge-rank{background:#f9eef1;color:#7e1f34;border:1px solid #e4b8c3;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;}
 
-.stats-duo{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.stat-cell{background:#fdf7f0;border:1px solid #dec4b1;border-radius:7px;padding:6px 8px;text-align:center;}
-.sc-title{font-size:11px;font-weight:600;color:#5a372c;}
-.sc-val{font-size:16px;font-weight:700;margin:1px 0;}
-.sc-desc{font-size:11px;font-weight:500;color:#7a3543;}
+.rel-box{background:#fdf9f4;border:1px solid #e5d4c2;border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:10px;}
+.rel-avatar{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#7e1f34,#501321);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0;}
+.rel-info{flex:1;min-width:0;}
+.rel-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:600;color:#2c1511;}
+.rel-bar-bg{height:5px;background:#eaddce;border-radius:3px;margin-top:5px;overflow:hidden;}
+.rel-bar-fill{height:100%;background:linear-gradient(90deg,#97266d,#7e1f34);border-radius:3px;transition:width .3s;}
 
-.household-tags{display:flex;flex-wrap:wrap;gap:4px;}
-.h-tag{font-size:11.5px;font-weight:600;background:#fbf3ea;border:1px solid #d4bda8;border-radius:6px;
-  padding:2.5px 8px;color:#3e221a;display:inline-flex;align-items:center;gap:4px;}
+.mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.mini-stat-card{background:#fbf5ed;border:1px solid #e5d5c5;border-radius:6px;padding:6px 8px;text-align:center;}
+.mini-stat-num{font-size:15px;font-weight:700;color:#7e1f34;}
+.mini-stat-label{font-size:11px;color:#543228;font-weight:500;}
 
-/* 府邸起居注 (日志流) */
-.log-box{flex:1;background:#fffdfa;border:1px solid #d4bda8;border-radius:12px;
-  padding:10px 12px;display:flex;flex-direction:column;min-height:0;box-shadow:0 2px 8px rgba(70,25,35,.04);}
-.log-head{font-size:12.5px;font-weight:700;color:#4a261c;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;}
-.log-list{flex:1;overflow-y:auto;font-size:11.5px;line-height:1.65;display:flex;flex-direction:column;gap:5px;padding-right:2px;}
+.status-tags{display:flex;flex-wrap:wrap;gap:4px;}
+.tag-badge{font-size:11px;font-weight:600;padding:2.5px 7px;border-radius:6px;border:1px solid;}
+.tag-badge.pink{background:#fdf2f4;color:#9b2c45;border-color:#f1c2cc;}
+.tag-badge.green{background:#f0fdf4;color:#166534;border-color:#bbf7d0;}
+.tag-badge.gold{background:#fefce8;color:#854d0e;border-color:#fde047;}
+.tag-badge.blue{background:#eff6ff;color:#1e40af;border-color:#bfdbfe;}
+
+/* 日志框 */
+.log-box{flex:1;min-height:0;background:#fffdfa;border:1px solid #d4bda8;border-radius:12px;
+  padding:10px 12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 2px 8px rgba(70,25,35,.04);}
+.log-head{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;font-weight:700;color:#6b1527;border-bottom:1px solid #eddcd0;padding-bottom:5px;flex-shrink:0;}
+.log-list{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:5px;padding-right:2px;-webkit-overflow-scrolling:touch;}
 .log-list::-webkit-scrollbar{width:4px;}
-.log-list::-webkit-scrollbar-thumb{background:#cbb099;border-radius:3px;}
-.log-item{padding:6px 9px;border-radius:6px;background:#fcf5eb;border-left:3px solid #d4af37;color:#2c1712;font-weight:500;}
-.log-item.gd{color:#1a5929;background:#eef6f0;border-left-color:#2f855a;}
-.log-item.gd2{color:#134e20;background:#e5f3e8;font-weight:700;border-left-color:#276749;}
-.log-item.bd{color:#8c1d1e;background:#fdeeee;border-left-color:#c53030;}
-.log-item.pink{color:#7e1f34;background:#fdf0f3;border-left-color:#a53b51;font-weight:600;}
-.log-item.gold{color:#744210;background:#fef9e7;border-left-color:#d69e2e;font-weight:600;}
-.log-tag{font-size:10.5px;padding:1px 5px;border-radius:4px;background:rgba(0,0,0,.08);margin-right:5px;font-weight:700;}
+.log-list::-webkit-scrollbar-thumb{background:#cbb099;border-radius:2px;}
+.log-row{font-size:11.5px;line-height:1.55;color:#3f221a;background:#faf3ea;padding:5px 8px;border-radius:6px;border-left:2.5px solid #a33b51;}
+.log-row.pink{border-left-color:#d53f8c;background:#fff5f7;}
+.log-row.gold{border-left-color:#d97706;background:#fffbeb;}
+.log-row.gd{border-left-color:#2f855a;background:#f0fdf4;}
+.log-row.gd2{border-left-color:#3182ce;background:#eff6ff;}
+.log-tag{font-weight:700;color:#6b1527;margin-right:4px;}
 
-/* 底部功能条 */
+/* 底栏操作区 */
 .bottom-bar{background:#fffdfa;border:1px solid #d4bda8;border-radius:12px;
-  padding:7px 12px;display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;
-  align-items:center;flex-shrink:0;box-shadow:0 2px 8px rgba(70,25,35,.04);}
-.main-btn{background:#7e1f34;border:1px solid #5f1323;border-radius:8px;
-  color:#fff;padding:6px 13px;font-size:12px;font-family:inherit;font-weight:600;cursor:pointer;
-  transition:all .15s;display:inline-flex;align-items:center;gap:5px;}
-.main-btn:hover{background:#982841;box-shadow:0 2px 8px rgba(126,31,52,.3);transform:translateY(-1px);}
-.main-btn.secondary{background:#f3e3d3;border-color:#d4bda8;color:#4a261c;}
-.main-btn.secondary:hover{background:#e7d3c0;}
+  padding:8px 12px;display:flex;flex-wrap:wrap;gap:8px;
+  align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 8px rgba(70,25,35,.04);}
+.main-btn{background:linear-gradient(135deg,#7e1f34,#601323);color:#fff;border:1px solid #4a0d1a;
+  border-radius:8px;padding:6px 14px;font-size:12.5px;font-weight:600;font-family:inherit;
+  cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .15s;
+  box-shadow:0 2px 6px rgba(126,31,52,.25);}
+.main-btn:hover{background:linear-gradient(135deg,#91253c,#74182b);transform:translateY(-1px);}
+.main-btn.secondary{background:#f3e6d8;color:#4a261c;border:1px solid #c9b09b;box-shadow:none;}
+.main-btn.secondary:hover{background:#ecd7c4;border-color:#99384e;}
+.main-btn.gold{background:linear-gradient(135deg,#b45309,#78350f);color:#fff;border-color:#451a03;}
 
-/* 模态弹窗系统 */
-.modal-mask{position:fixed;inset:0;background:rgba(28,12,16,.6);backdrop-filter:blur(2px);
+/* 模态框通用 */
+.modal-mask{position:fixed;inset:0;background:rgba(20,8,12,.65);backdrop-filter:blur(3px);
   z-index:99;display:none;align-items:center;justify-content:center;padding:12px;}
-.modal-box{background:#fffdfa;border:1.5px solid #a53b51;border-radius:14px;
-  max-width:540px;width:100%;max-height:86vh;display:flex;flex-direction:column;
-  box-shadow:0 14px 40px rgba(50,15,22,.32);overflow:hidden;animation:popIn .2s ease-out;}
-@keyframes popIn{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
-.modal-head{background:linear-gradient(to right,#7e1f34,#9a2a41);color:#fff;
-  padding:11px 16px;font-size:14px;font-weight:700;letter-spacing:1px;
-  display:flex;justify-content:space-between;align-items:center;}
-.modal-close{cursor:pointer;font-size:18px;line-height:1;opacity:.85;}
-.modal-close:hover{opacity:1;}
-.modal-body{padding:14px;overflow-y:auto;font-size:12.5px;color:#2c1713;line-height:1.65;}
-.story-panel{background:#faf2e8;border:1px solid #dfc7b0;border-radius:10px;padding:12px;margin-bottom:10px;}
-.story-title{font-size:13.5px;font-weight:700;color:#6b1527;margin-bottom:6px;border-bottom:1px dashed #d4bda8;padding-bottom:4px;}
-.story-text{font-size:12.5px;font-weight:500;color:#351e17;line-height:1.7;}
+.modal-mask.show{display:flex;}
+.modal-box{background:#fffdfa;border:1.5px solid #c4a993;border-radius:14px;width:100%;max-width:580px;
+  max-height:86vh;overflow-y:auto;display:flex;flex-direction:column;box-shadow:0 12px 35px rgba(0,0,0,.35);
+  animation:popIn .2s ease-out;}
+@keyframes popIn{from{transform:scale(.95);opacity:0;}to{transform:scale(1);opacity:1;}}
+.modal-head{background:linear-gradient(135deg,#7e1f34,#501321);color:#fff;padding:10px 14px;
+  border-radius:12px 12px 0 0;display:flex;align-items:center;justify-content:space-between;
+  font-weight:700;font-size:14px;letter-spacing:.5px;}
+.modal-close{cursor:pointer;padding:2px 6px;border-radius:4px;font-size:14px;transition:background .15s;}
+.modal-close:hover{background:rgba(255,255,255,.25);}
+.modal-body{padding:14px;display:flex;flex-direction:column;gap:10px;}
+
+/* 剧情选择面板 */
+.story-panel{background:#faf3ea;border:1px solid #dfcbb8;border-radius:10px;padding:12px;
+  display:flex;flex-direction:column;gap:8px;}
+.story-title{font-size:13.5px;font-weight:700;color:#6b1527;border-bottom:1px solid #ecd5c2;padding-bottom:5px;}
+.story-text{font-size:12.5px;line-height:1.65;color:#3b1e16;}
 .story-text p{margin-bottom:6px;}
-.story-choices{display:flex;flex-direction:column;gap:7px;margin-top:10px;}
-.story-choice{background:#fffdfa;border:1px solid #d4bda8;border-radius:8px;
-  padding:10px 14px;font-size:12.5px;font-weight:600;color:#351a14;cursor:pointer;text-align:left;
-  font-family:inherit;transition:all .15s;}
-.story-choice:hover{background:#7e1f34;border-color:#5c1222;color:#fff;}
+.story-choices{display:flex;flex-direction:column;gap:7px;margin-top:6px;}
+.story-choice{background:#fff;border:1px solid #d4baa2;border-radius:8px;padding:9px 12px;
+  text-align:left;font-size:12.5px;font-weight:600;color:#351a14;cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:space-between;}
+.story-choice:hover{background:#fdf5ec;border-color:#8e233a;transform:translateX(3px);box-shadow:0 2px 6px rgba(126,31,52,.1);}
 
-/* 提示浮条 */
-#toastBox{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
-  background:rgba(30,12,16,.92);color:#fff;border:1px solid #a53b51;
-  border-radius:20px;padding:7px 18px;font-size:12px;font-weight:600;z-index:999;
-  pointer-events:none;opacity:0;transition:opacity .2s;}
-#toastBox.show{opacity:1;}
+/* 结局专刊展示卡片 */
+.ending-banner{background:linear-gradient(135deg,#4a0f1c,#22050b);border:2px solid #eab308;
+  border-radius:12px;padding:16px;color:#fff;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.ending-title{font-size:18px;font-weight:800;color:#fde047;letter-spacing:1px;margin-bottom:6px;}
+.ending-sub{font-size:12.5px;color:#fef08a;margin-bottom:12px;}
+.ending-scroll{background:rgba(255,255,255,.1);border:1px solid rgba(253,224,71,.3);border-radius:8px;
+  padding:12px;font-size:12px;line-height:1.7;text-align:left;color:#fef9c3;max-height:220px;overflow-y:auto;}
 
-/* 彻底解决窄屏/移动端 (<= 890px) 遮挡、裁切与重叠 */
-@media(max-width:890px){
+/* 提示泡 */
+#toastBox{position:fixed;bottom:65px;left:50%;transform:translateX(-50%);
+  background:rgba(30,10,16,.92);color:#fff;padding:8px 18px;border-radius:24px;
+  font-size:12.5px;font-weight:600;pointer-events:none;z-index:9999;
+  box-shadow:0 4px 15px rgba(0,0,0,.35);transition:opacity .25s,transform .25s;
+  opacity:0;display:none;}
+#toastBox.show{display:block;opacity:1;transform:translateX(-50%) translateY(-5px);}
+
+/* 响应式断点适配 */
+@media (max-width:860px){
   .wrap{padding:6px;gap:6px;}
-  .topbar{padding:6px 10px;gap:6px;}
-  .brand-box h1{font-size:14.5px;}
-  .brand-sub{font-size:10.5px;}
-  .chip{padding:2.5px 8px;font-size:11px;}
-
-  /* 显式开启移动端分屏切换器，避免两栏上下挤压塌陷 */
   .mobile-switch-bar{display:flex;}
-  .main{display:flex;flex-direction:column;overflow:hidden;}
-
-  /* 切换隐藏逻辑 */
-  .left-col.m-hidden, .right-col.m-hidden{display:none!important;}
-  .left-col, .right-col{flex:1;min-height:0;height:100%;}
-  .house-panel{padding:10px 12px;}
-  .log-box{min-height:0;}
-
-  .acts-grid{grid-template-columns:1fr;gap:8px;}
+  .main{grid-template-columns:1fr;position:relative;}
+  .left-col.m-hidden{display:none;}
+  .right-col.m-hidden{display:none;}
+  .right-col{height:100%;}
+  .house-panel{padding:9px;}
+  .topbar{padding:6px 10px;}
+  .brand-box h1{font-size:14.5px;}
   .bottom-bar{padding:6px 10px;}
-}
-
-@media(min-width:891px){
-  .mobile-switch-bar{display:none!important;}
-  .left-col, .right-col{display:flex!important;}
 }
 </style>
 </head>
-<body class="s-spring">
+<body>
+
 <div id="fxCanvas"></div>
 
 <div class="wrap">
@@ -251,62 +249,55 @@ body{
   <header class="topbar">
     <div class="brand-box">
       <div class="mansion-logo">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2L3 7v6c0 5 3.8 9.7 9 11 5.2-1.3 9-6 9-11V7l-9-5z"/>
-          <path d="M12 7v5"/>
-          <circle cx="12" cy="15" r="1.5" fill="#fff"/>
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 10L12 3l9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><polyline points="9 21 9 12 15 12 15 21"/>
         </svg>
       </div>
       <div>
-        <h1>定远侯府 <small>高门主母掌家录</small></h1>
-        <div class="brand-sub">执掌中馈 · 规训内宅 · 经略庄产 · 望子成龙</div>
+        <h1>定远侯府 <small>· 高门主母掌家录</small></h1>
+        <div class="brand-sub">百年世家 · 钟鸣鼎食 · 掌中馈 · 驭群妾 · 助夫登科</div>
       </div>
     </div>
+
+    <!-- 顶栏状态徽章 -->
     <div class="chips" id="topChips">
-      <!-- 动态渲染属性牌 -->
+      <!-- 动态更新 -->
     </div>
   </header>
 
-  <!-- 移动端专属切换器 (保证无论屏幕多窄，均拥有100%全景高度，杜绝重叠截断) -->
+  <!-- 移动端双屏切换条 -->
   <div class="mobile-switch-bar">
     <button class="m-switch-btn on" id="btnMViewMain" onclick="setMobileView('main')">
-      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10L12 3l9 7v10h-6v-6h-6v6H5z"/></svg>
-      执掌中馈 (主令)
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      掌家政务堂
     </button>
     <button class="m-switch-btn" id="btnMViewHouse" onclick="setMobileView('house')">
       <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      阖府大观 · 起居注 <span class="m-badge" id="mBadge" style="display:none;">新</span>
+      侯府起居注 & 人物
+      <span class="m-badge" id="mBadge" style="display:none;">新</span>
     </button>
   </div>
 
   <!-- 主体工作区 -->
   <div class="main">
-    <!-- 左侧中枢 (主令与中馈政务) -->
+    <!-- 左侧：掌家决策操作大厅 -->
     <div class="left-col" id="leftCol">
-      <!-- 页面标签栏 -->
-      <div class="nav-tabs" id="navTabs">
-        <!-- 动态渲染 6 大中馈分区 -->
-      </div>
-
-      <!-- 场景诗意文案 -->
+      <nav class="nav-tabs" id="navTabs">
+        <!-- 6大选项卡 -->
+      </nav>
       <div class="scene-desc" id="sceneDesc">
-        <!-- 动态渲染 -->
+        <!-- 当前场景文案 -->
       </div>
-
-      <!-- 具体功能区内容 -->
       <div class="page-content" id="pageContent">
-        <!-- 动态渲染动作或子列表 -->
+        <!-- 动态交互卡片 -->
       </div>
     </div>
 
     <!-- 右侧：府邸状态与流水日志 -->
     <div class="right-col" id="rightCol">
-      <!-- 府邸大观概览卡 -->
       <div class="house-panel" id="housePanel">
         <!-- 动态渲染 -->
       </div>
-
-      <!-- 府邸起居注 (日志) -->
       <div class="log-box">
         <div class="log-head">
           <span style="display:inline-flex;align-items:center;gap:6px;">
@@ -328,8 +319,9 @@ body{
       <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#7e1f34" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
       当前身份：<b>定远侯正头大娘子 (谢氏锦仪)</b>
     </div>
-    <div style="display:flex;gap:6px;">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
       <button class="main-btn" onclick="endCurrentXun()">⏳ 岁月流转 (下旬)</button>
+      <button class="main-btn gold" onclick="openEndingsModal()">📜 终局图鉴</button>
       <button class="main-btn secondary" onclick="openSaveModal()">💾 存简</button>
       <button class="main-btn secondary" onclick="showHelp()">❓ 典籍</button>
       <button class="main-btn secondary" onclick="restartGame()">🔄 重开</button>
@@ -361,19 +353,10 @@ body{
       e.preventDefault(); e.stopPropagation(); return false;
     }
   });
-  setInterval(function(){
-    var before = Date.now();
-    debugger;
-    var after = Date.now();
-    if(after - before > 120){
-      console.clear();
-    }
-  }, 3500);
 })();
 
-/* ================= 1. 矢量古风 SVG 图标引擎 (全量矢量 · 无粗糙表情包 · 无重复) ================= */
+/* ================= 1. 矢量古风 SVG 图标引擎 ================= */
 var ICONS = {
-  // 顶栏微图标
   chipCalendar: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#7e1f34" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
   chipEnergy: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#d97706" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
   chipSilver: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#b7791f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h2"/><path d="M8 5v2"/></svg>',
@@ -382,6 +365,7 @@ var ICONS = {
   chipReputation: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#236647" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
   chipMusicOn: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#7e1f34" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
   chipMusicOff: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#8a736a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>',
+  chipCrown: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#eab308" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14v2H5z"/></svg>',
 
   // 6大主页面导航图标
   tabMainHall: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#7e1f34" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10L12 3l9 7"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/><path d="M2 10h20"/></svg>',
@@ -391,31 +375,44 @@ var ICONS = {
   tabSocial: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#8b4513" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14v6a6 6 0 0 1-6 6H11a6 6 0 0 1-6-6V8z"/><path d="M3 20h18"/><path d="M4 5h16l-2-2H6L4 5z"/></svg>',
   tabLaw: '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#4a151e" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M6 7l6-3 6 3"/><path d="M3 13l3-6 3 6a3 3 0 0 1-6 0z"/><path d="M15 13l3-6 3 6a3 3 0 0 1-6 0z"/><path d="M4 21h16"/></svg>',
 
-  // 18大具体行动专属矢量图标 (完全无重复 · 针对性几何造型)
+  // 行动图标库
   morningRoll: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><circle cx="12" cy="11" r="2"/></svg>',
   monthlyBudget: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#b7791f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1.5" fill="#b7791f"/><circle cx="16" cy="15" r="1.5" fill="#b7791f"/><line x1="12" y1="12" x2="12" y2="17"/></svg>',
   houseDiscipline: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#97266d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L4 6v6c0 5.5 3.8 10.7 8 12 4.2-1.3 8-6.5 8-12V6l-8-4z"/><path d="M12 7v6"/><path d="M9 10h6"/></svg>',
   visitMother: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#805ad5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
   cookSoup: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#dd6b20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 19a6 6 0 0 0 12 0V9H6v10z"/><line x1="4" y1="9" x2="20" y2="9"/><path d="M9 5c0-1 1-2 1-2s1 1 1 2"/><path d="M13 5c0-1 1-2 1-2s1 1 1 2"/></svg>',
   dowryManage: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#319795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><circle cx="12" cy="14" r="1.5"/></svg>',
+  famineRelief: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+  ancestorWorship: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#7e1f34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15 8 22 9 17 14 18 21 12 17 6 21 7 14 2 9 9 8 12 2"/></svg>',
+
   auditBooks: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2b6cb0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>',
-  visitFarm: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2f855a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20"/><path d="M12 2v20"/><path d="M12 7c-2.5-1.5-4-4-4-5 3 0 4 2.5 4 5z"/><path d="M12 7c2.5-1.5 4-4 4-5-3 0-4 2.5-4 5z"/><path d="M12 13c-3-1.5-5-4-5-5 3.5 0 5 2.5 5 5z"/></svg>',
+  visitFarm: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2f855a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 22h20"/><path d="M12 2v20"/><path d="M12 7c-2.5-1.5-4-4-4-5 3 0 4 2.5 4 5z"/><path d="M12 7c2.5-1.5 4-4 4-5-3 0-4 2.5-4 5z"/></svg>',
+  bankExpand: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
+  saltTrade: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8l-8 8"/><path d="M8 8h8v8"/></svg>',
+
   hireTeacher: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#319795" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
   hireMartialMaster: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#c53030" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M18 5l3-3"/></svg>',
-  hostBanquet: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#d53f8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 5a3.5 3.5 0 0 0-3.5 3.5c0 1.5.8 2.5 2 3"/><path d="M12 5a3.5 3.5 0 0 1 3.5 3.5c0 1.5-.8 2.5-2 3"/><path d="M12 19a3.5 3.5 0 0 0 3.5-3.5c0-1.5-.8-2.5-2-3"/><path d="M12 19a3.5 3.5 0 0 1-3.5-3.5c0-1.5.8-2.5 2-3"/></svg>',
-  attendBanquet: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#dd6b20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>',
+  imperialExam: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M12 6v6l4 2"/></svg>',
+  grandsonJoy: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#db2777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M3 21v-2a7 7 0 0 1 14 0v2"/><circle cx="19" cy="11" r="3"/><path d="M22 21v-1a5 5 0 0 0-4-4.9"/></svg>',
+
+  hostBanquet: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#d53f8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 5a3.5 3.5 0 0 0-3.5 3.5c0 1.5.8 2.5 2 3"/><path d="M12 5a3.5 3.5 0 0 1 3.5 3.5c0 1.5-.8 2.5-2 3"/></svg>',
+  attendBanquet: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#dd6b20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>',
   visitPalace: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#d69e2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
-  supportHusband: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#4a5568" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><circle cx="12" cy="13" r="2"/></svg>',
+  supportHusband: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#4a5568" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><circle cx="12" cy="13" r="2"/></svg>',
+  empressBanquet: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#7e1f34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 7h6l-5 4 2 7-6-4-6 4 2-7-5-4h6z"/></svg>',
+
   searchCourtyard: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#e53e3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1.5"/></svg>',
-  punishSlave: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#742a2a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>',
+  punishSlave: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#742a2a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11"/></svg>',
   fairTrial: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2c5282" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/><path d="M8 12a4 4 0 0 0 8 0"/></svg>',
   investigatePoison: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#4c1d95" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31M14 9.3V2M8.5 2h7M14 9.3a6.5 6.5 0 1 1-4 0"/></svg>',
+  throneStruggle: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#b91c1c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="M9 15l3 3 3-3"/></svg>',
+  rescueHusband: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#c2410c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><circle cx="12" cy="11" r="3"/></svg>',
 
-  // 眷属与产业卡片小图标
   husbandCard: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#7e1f34" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
   concubineCard: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#a53b51" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 0 0 9-9c0-1.8-.5-3.5-1.5-5L12 21z"/><path d="M12 21A9 9 0 0 1 3 12c0-1.8.5-3.5 1.5-5L12 21z"/><path d="M12 21V9"/></svg>',
-  estateCard: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#276749" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9h1"/><path d="M9 13h1"/></svg>',
-  childCard: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#2b6cb0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>'
+  cousinCard: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#d946ef" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>',
+  estateCard: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#276749" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg>',
+  childCard: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#2b6cb0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
 };
 
 /* ================= 2. Web Audio 原生宫廷古筝和弦合成 ================= */
@@ -499,50 +496,61 @@ function toggleMusic(){
 /* ================= 3. 核心状态与常数定义 ================= */
 var PAGES = {
   mainHall: { id:'mainHall', title:'正堂公中', iconKey:'tabMainHall', desc:'【正堂议事】每日晨光初现，账房管事、各房婆子垂手立于阶下，听凭大娘子点卯发落中馈大计。' },
-  courtyard: { id:'courtyard', title:'内宅各房', iconKey:'tabCourtyard', desc:'【后院春深】侯爷公府内宅重地。侯爷外书房、老夫人寿安堂、林小娘倚翠阁皆在此处，规矩森严。' },
-  finance: { id:'finance', title:'账房产业', iconKey:'tabFinance', desc:'【中馈庶务】侯府公中银库、京畿三处万亩田庄、京城绸缎庄与千宝银楼，皆系于主母掌中金算盘。' },
-  children: { id:'children', title:'世家儿女', iconKey:'tabChildren', desc:'【望子成龙】高门望族百年基业，全在子嗣成材。请大儒授课、名门议亲，绝不可有半点差池。' },
-  social: { id:'social', title:'命妇外交', iconKey:'tabSocial', desc:'【朱门交游】京城高门宴饮。公卿命妇赏花会、重阳品蟹筵，谈笑间皆系夫君官途与家族荣辱。' },
-  law: { id:'law', title:'家规裁决', iconKey:'tabLaw', desc:'【内宅明镜】家规严整方保百年不衰。查抄逾矩、发配刁奴、平息妾室机心，全凭大娘子雷霆手腕。' }
+  courtyard: { id:'courtyard', title:'内宅各房', iconKey:'tabCourtyard', desc:'【后院春深】侯爷外书房、老夫人寿安堂、林小娘倚翠阁、寄居表妹海棠轩皆在此处，规矩森严。' },
+  finance: { id:'finance', title:'账房产业', iconKey:'tabFinance', desc:'【中馈庶务】侯府公中银库、京畿万亩田庄、京城绸缎庄与永丰大钱庄，皆系于主母掌中金算盘。' },
+  children: { id:'children', title:'世家儿女', iconKey:'tabChildren', desc:'【望子成龙】高门望族百年基业，全在子嗣成材。请大儒授课、名门议亲、金榜题名、诞育孙辈。' },
+  social: { id:'social', title:'命妇外交', iconKey:'tabSocial', desc:'【朱门交游】京城高门宴饮。公卿命妇赏花会、重阳品蟹筵、皇太后千秋宴，谈笑间皆系夫君官途。' },
+  law: { id:'law', title:'家规裁决', iconKey:'tabLaw', desc:'【内宅明镜】家规严整方保百年不衰。查抄逾矩、发配刁奴、皇子夺嫡暗帖、御前救夫生死大案。' }
 };
 
 var SEASONS = ['春', '夏', '秋', '冬'];
 var XUN_NAMES = ['上旬', '中旬', '下旬'];
 
 var G = null; // 全局游戏状态
-var mobileView = 'main'; // 'main' | 'house' 移动端专属双屏切换状态
+var mobileView = 'main'; // 'main' | 'house'
 
 function getDefaultState(){
   return {
     year: 1, // 嫁入侯府第1年
-    month: 1, // 1~12月
-    xun: 0, // 0上旬, 1中旬, 2下旬
-    energy: 5, // 每旬体力
-    maxEnergy: 5,
-    silver: 1200, // 侯府公中现银(两)
-    privateSilver: 300, // 大娘子自身嫁妆私房银(两)
-    prestige: 65, // 主母威望 (0~100)
-    reputation: 60, // 侯府门风声望 (0~100)
-    husbandAff: 70, // 侯爷(沈砚之)好感/情分 (0~100)
-    motherAff: 60, // 婆母(老太君)好感 (0~100)
+    month: 1,
+    xun: 0,
+    energy: 6, // 每旬体力
+    maxEnergy: 6,
+    silver: 1500, // 侯府公中现银(两)
+    privateSilver: 400, // 娘家十里红妆嫁妆私房银(两)
+    prestige: 70, // 主母威望 (0~100)
+    reputation: 65, // 侯府门风声望 (0~100)
+    husbandAff: 75, // 侯爷(沈砚之)夫妻情分 (0~100)
+    motherAff: 65, // 婆母(老太君)好感 (0~100)
     curPage: 'mainHall',
     husbandRank: '从三品 · 锦衣御前统领',
-    // 各房姨娘
+    // 各房姬妾与亲眷
     concubines: [
       { id:'lin', name:'林姨娘 (林娇雪)', title:'得宠妾室 (工部小官之女)', aff:30, obedient:40, son:'庶长子沈承安' },
-      { id:'su', name:'苏通房 (翠螺)', title:'老夫人所赐通房', aff:60, obedient:75, son:null }
+      { id:'su', name:'苏通房 (翠螺)', title:'老夫人所赐通房 (老实恭顺)', aff:65, obedient:80, son:null }
     ],
-    // 产业
+    // 寄宿表妹 (重要角色)
+    cousin: {
+      name: '柳纤纤 (青州远房表妹)',
+      status: '借住海棠轩',
+      scheming: 65, // 心机野心
+      favor: 20, // 对主母好感
+      resolved: false // 是否已打发
+    },
+    // 产业名录
     estates: [
-      { id:'farm_nanyuan', name:'京郊南苑万亩稻庄', income:150, manager:'赵大管事', honest:80 },
-      { id:'shop_silk', name:'朱雀街云锦绸缎庄', income:180, manager:'陈掌柜', honest:70 },
-      { id:'shop_tea', name:'得月楼百味大茶庄', income:120, manager:'吴掌柜', honest:85 }
+      { id:'farm_nanyuan', name:'京郊南苑万亩稻庄', income:160, manager:'赵大管事', honest:80 },
+      { id:'shop_silk', name:'朱雀街云锦绸缎庄', income:190, manager:'陈掌柜', honest:70 },
+      { id:'shop_tea', name:'得月楼百味大茶庄', income:130, manager:'吴掌柜', honest:85 }
     ],
-    // 子女
+    // 世家儿女
     children: [
-      { name:'沈怀瑾', gender:'男', age:5, legit:true, talent:'文曲下凡 (聪颖)', stage:'幼蒙' },
-      { name:'沈承安', gender:'男', age:7, legit:false, talent:'武骨刚劲 (好武)', stage:'入塾' }
+      { name:'沈怀瑾', gender:'男', age:6, legit:true, talent:'文曲下凡 (经天纬地)', stage:'幼蒙受业', married:false, rank:'白衣学子' },
+      { name:'沈承安', gender:'男', age:8, legit:false, talent:'将种天生 (百步穿杨)', stage:'骑射开蒙', married:false, rank:'少年骑射' },
+      { name:'沈明姝', gender:'女', age:4, legit:true, talent:'倾城才女 (琴棋书画)', stage:'深闺开蒙', married:false, rank:'高门嫡女' }
     ],
+    // 孙辈世系
+    grandchildren: [],
     // 娘家十里红妆私库
     dowry: [
       { name:'金陵织造特供云锦十匹', val:300, desc:'寸锦寸金，裁制朝服或赏赐各房极具体面。' },
@@ -553,6 +561,7 @@ function getDefaultState(){
       { text:'永熙三年春，你手执金错掌家之钥，正式升座正堂执掌定远侯府中馈。', type:'pink', tag:'主母登堂' },
       { text:'侯爷沈砚之临行当值前，将内库账本郑重托付于你：「夫人持家，为夫心安。」', type:'gd', tag:'相敬如宾' }
     ],
+    endingsUnlocked: {},
     flags: {}
   };
 }
@@ -570,20 +579,18 @@ function addLog(txt, type, tag){
   var sName = SEASONS[Math.floor((G.month-1)/3)%4];
   var timeStr = '第'+G.year+'年·'+sName;
   G.logs.unshift({ text: txt, type: type||'', tag: tag||timeStr });
-  if(G.logs.length > 50) G.logs.pop();
+  if(G.logs.length > 60) G.logs.pop();
   renderLogs();
-  // 移动端更新起居注红点
   if(mobileView !== 'house'){
     var b = document.getElementById('mBadge');
     if(b) b.style.display = 'inline-block';
   }
 }
 function useEnergy(n){
-  if(G.energy < n){ toast('体力精力不济，请歇息或进入下旬！'); return false; }
+  if(G.energy < n){ toast('精力不济，请歇息或进入下一旬！'); return false; }
   G.energy -= n; playClickSound('guzheng'); render(); return true;
 }
 
-/* 移动端视图切换 */
 function setMobileView(view){
   mobileView = view;
   var btnMain = document.getElementById('btnMViewMain');
@@ -603,167 +610,147 @@ function setMobileView(view){
     var b = document.getElementById('mBadge');
     if(b) b.style.display = 'none';
   }
-  playClickSound('ting');
 }
 
-/* ================= 5. 模态弹窗系统 ================= */
 function openModal(title, html){
-  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalTitle').innerHTML = title;
   document.getElementById('modalBody').innerHTML = html;
-  document.getElementById('modalMask').style.display = 'flex';
-  playClickSound('ting');
+  document.getElementById('modalMask').classList.add('show');
 }
 function closeModal(){
-  document.getElementById('modalMask').style.display = 'none';
+  document.getElementById('modalMask').classList.remove('show');
 }
 
-/* ================= 6. 剧情队列系统 StoryQueue ================= */
-var storyQueue = [];
-function pushStory(fn){
-  storyQueue.push(fn);
-  if(storyQueue.length === 1) triggerNextStory();
-}
-function triggerNextStory(){
-  if(storyQueue.length === 0) return;
-  var fn = storyQueue[0];
-  fn();
-}
-function finishStory(){
-  storyQueue.shift();
-  closeModal();
-  if(storyQueue.length > 0) setTimeout(triggerNextStory, 200);
-}
-
-/* ================= 7. 核心页面渲染 ================= */
+/* ================= 5. 渲染引擎 ================= */
 function render(){
   if(!G) return;
-  var sName = SEASONS[Math.floor((G.month-1)/3)%4];
-  var xName = XUN_NAMES[G.xun];
-  var musicIco = bgmPlaying ? ICONS.chipMusicOn : ICONS.chipMusicOff;
-  var musicText = bgmPlaying ? '雅乐鸣奏' : '雅乐静止';
-
-  document.body.className = 's-' + (['spring','summer','autumn','winter'][Math.floor((G.month-1)/3)%4]);
-
-  // 顶栏高对比属性牌
-  var chipsHtml =
-    '<span class="chip"><span class="chip-svg">'+ICONS.chipCalendar+'</span> <b>第 '+G.year+' 年 · '+G.month+'月 '+xName+' ('+sName+')</b></span>'+
-    '<span class="chip"><span class="chip-svg">'+ICONS.chipEnergy+'</span> 精力: <b>'+G.energy+' / '+G.maxEnergy+'</b></span>'+
-    '<span class="chip"><span class="chip-svg">'+ICONS.chipSilver+'</span> 公中库银: <b>'+G.silver+' 两</b></span>'+
-    '<span class="chip"><span class="chip-svg">'+ICONS.chipPrivate+'</span> 嫁妆私房: <b>'+G.privateSilver+' 两</b></span>'+
-    '<span class="chip clickable" onclick="setMobileView(&apos;house&apos;)"><span class="chip-svg">'+ICONS.chipPrestige+'</span> 主母威仪: <b>'+G.prestige+'</b></span>'+
-    '<span class="chip clickable" onclick="setMobileView(&apos;house&apos;)"><span class="chip-svg">'+ICONS.chipReputation+'</span> 侯府门风: <b>'+G.reputation+'</b></span>'+
-    '<span class="chip clickable" onclick="toggleMusic()"><span class="chip-svg">'+musicIco+'</span> '+musicText+'</span>';
-  document.getElementById('topChips').innerHTML = chipsHtml;
-
-  // 导航栏
-  var navHtml = '';
-  for(var k in PAGES){
-    var p = PAGES[k];
-    var iconSvg = ICONS[p.iconKey] || '';
-    navHtml += '<button class="nav-btn '+(G.curPage===k?'on':'')+'" onclick="goPage(&apos;'+k+'&apos;)">'+
-      '<span class="nav-svg">'+iconSvg+'</span> '+p.title+'</button>';
-  }
-  document.getElementById('navTabs').innerHTML = navHtml;
-
-  // 场景诗意文案
-  document.getElementById('sceneDesc').textContent = PAGES[G.curPage].desc;
-
-  // 右侧府邸大观与主母仪表板
-  var prestigeText = G.prestige >= 80 ? '威重令行 · 阖府凛遵' : (G.prestige >= 60 ? '掌家有方 · 众仆肃然' : '初掌中馈 · 根基渐稳');
-  var repText = G.reputation >= 80 ? '名门鼎盛 · 四海景仰' : (G.reputation >= 60 ? '清誉远播 · 朱门表率' : '家声平正 · 循规蹈矩');
-
-  var houseHtml =
-    '<div class="house-title">'+
-      '<span style="display:flex;align-items:center;gap:6px;">定远侯府 · 阖府掌中鉴</span>'+
-      '<span class="rank-badge">'+G.husbandRank+'</span>'+
-    '</div>'+
-
-    '<div class="lord-card">'+
-      '<div class="lord-avatar">'+ICONS.husbandCard+'</div>'+
-      '<div class="lord-info">'+
-        '<div class="lord-name">夫君 · 沈砚之 <small style="color:#7e1f34;font-weight:600;">(锦衣御前统领)</small></div>'+
-        '<div class="meter-bar-wrap">'+
-          '<div class="meter-label"><span>夫妻情分</span><span><b>'+G.husbandAff+'</b> / 100</span></div>'+
-          '<div class="meter-track"><div class="meter-fill rose" style="width:'+G.husbandAff+'%"></div></div>'+
-        '</div>'+
-      '</div>'+
-    '</div>'+
-
-    '<div class="meter-bar-wrap" style="margin-top:7px;">'+
-      '<div class="meter-label"><span>寿安堂老太君慈心</span><span><b>'+G.motherAff+'</b> / 100</span></div>'+
-      '<div class="meter-track"><div class="meter-fill purple" style="width:'+G.motherAff+'%"></div></div>'+
-    '</div>'+
-
-    '<div class="stats-duo" style="margin-top:8px;">'+
-      '<div class="stat-cell">'+
-        '<div class="sc-title">主母威仪</div>'+
-        '<div class="sc-val" style="color:#7e1f34;">'+G.prestige+'</div>'+
-        '<div class="sc-desc">'+prestigeText+'</div>'+
-      '</div>'+
-      '<div class="stat-cell">'+
-        '<div class="sc-title">侯府门风</div>'+
-        '<div class="sc-val" style="color:#236647;">'+G.reputation+'</div>'+
-        '<div class="sc-desc">'+repText+'</div>'+
-      '</div>'+
-    '</div>'+
-
-    '<div class="household-tags" style="margin-top:8px;">'+
-      '<span class="h-tag">'+ICONS.concubineCard+' 偏院妾室: <b>'+G.concubines.length+'</b> 位</span>'+
-      '<span class="h-tag">'+ICONS.childCard+' 府中子嗣: <b>'+G.children.length+'</b> 位</span>'+
-      '<span class="h-tag">'+ICONS.estateCard+' 庄田商号: <b>'+G.estates.length+'</b> 处</span>'+
-    '</div>';
-  document.getElementById('housePanel').innerHTML = houseHtml;
-
-  // 动作与主视口
+  renderTopChips();
+  renderNav();
+  renderSceneDesc();
   renderPageContent();
+  renderHousePanel();
   renderLogs();
 }
 
-function goPage(pId){
-  if(!PAGES[pId]) return;
-  playClickSound('ting');
-  G.curPage = pId;
-  // 若在移动端从大观切回，确保左栏可见
-  if(window.innerWidth <= 890){
-    setMobileView('main');
+function renderTopChips(){
+  var sName = SEASONS[Math.floor((G.month-1)/3)%4];
+  var html = '';
+  html += '<div class="chip">'+ICONS.chipCalendar+' 第<b>'+G.year+'</b>年·'+G.month+'月'+XUN_NAMES[G.xun]+' ('+sName+')</div>';
+  html += '<div class="chip">'+ICONS.chipEnergy+' 精力: <b>'+G.energy+'</b>/'+G.maxEnergy+'</div>';
+  html += '<div class="chip">'+ICONS.chipSilver+' 公中库银: <b>'+G.silver+'</b> 两</div>';
+  html += '<div class="chip">'+ICONS.chipPrivate+' 嫁妆私房: <b>'+G.privateSilver+'</b> 两</div>';
+  html += '<div class="chip">'+ICONS.chipPrestige+' 主母威仪: <b>'+G.prestige+'</b></div>';
+  html += '<div class="chip">'+ICONS.chipReputation+' 侯府门风: <b>'+G.reputation+'</b></div>';
+  html += '<div class="chip clickable" onclick="toggleMusic()">'+(bgmPlaying?ICONS.chipMusicOn+' 雅乐鸣':ICONS.chipMusicOff+' 雅乐静')+'</div>';
+  html += '<div class="chip clickable highlight" onclick="openEndingsModal()">'+ICONS.chipCrown+' <b>终局图鉴</b></div>';
+  document.getElementById('topChips').innerHTML = html;
+}
+
+function renderNav(){
+  var html = '';
+  for(var k in PAGES){
+    var p = PAGES[k];
+    var on = G.curPage === k ? 'on' : '';
+    html += '<button class="nav-btn '+on+'" onclick="switchPage(\''+k+'\')">'+
+      '<span class="nav-svg">'+ICONS[p.iconKey]+'</span>'+p.title+'</button>';
   }
+  document.getElementById('navTabs').innerHTML = html;
+}
+
+function switchPage(pageKey){
+  G.curPage = pageKey;
+  playClickSound('soft');
   render();
+}
+
+function renderSceneDesc(){
+  var p = PAGES[G.curPage];
+  document.getElementById('sceneDesc').textContent = p ? p.desc : '';
+}
+
+function renderHousePanel(){
+  var html = '';
+  html += '<div class="panel-hd"><h2>'+ICONS.husbandCard+' 定远侯府 · 闺府中枢</h2>'+
+    '<span class="badge-rank">'+G.husbandRank+'</span></div>';
+
+  html += '<div class="rel-box"><div class="rel-avatar">夫</div><div class="rel-info">'+
+    '<div class="rel-row"><span>夫君 · 沈砚之</span><span style="color:#7e1f34;font-weight:700;">夫妻情分 '+G.husbandAff+'/100</span></div>'+
+    '<div class="rel-bar-bg"><div class="rel-bar-fill" style="width:'+G.husbandAff+'%;"></div></div>'+
+    '</div></div>';
+
+  html += '<div class="rel-box" style="margin-top:-2px;"><div class="rel-avatar" style="background:linear-gradient(135deg,#5b21b6,#3b0764);">堂</div><div class="rel-info">'+
+    '<div class="rel-row"><span>婆母 · 寿安堂老太君</span><span style="color:#6b21a8;font-weight:700;">慈心度 '+G.motherAff+'/100</span></div>'+
+    '<div class="rel-bar-bg"><div class="rel-bar-fill" style="background:linear-gradient(90deg,#8b5cf6,#6d28d9);width:'+G.motherAff+'%;"></div></div>'+
+    '</div></div>';
+
+  html += '<div class="mini-stats">'+
+    '<div class="mini-stat-card"><div class="mini-stat-num">'+G.prestige+'</div><div class="mini-stat-label">主母威仪 · 震慑仆役</div></div>'+
+    '<div class="mini-stat-card"><div class="mini-stat-num">'+G.reputation+'</div><div class="mini-stat-label">侯府声望 · 名满京华</div></div>'+
+    '</div>';
+
+  var cousinTxt = G.cousin.resolved ? '已体面赐婚远嫁' : G.cousin.status;
+  html += '<div class="status-tags">'+
+    '<span class="tag-badge pink">偏院妾室: '+G.concubines.length+' 位</span>'+
+    '<span class="tag-badge '+(G.cousin.resolved?'green':'pink')+'">表妹: '+cousinTxt+'</span>'+
+    '<span class="tag-badge blue">世家儿女: '+G.children.length+' 位</span>'+
+    (G.grandchildren.length>0?'<span class="tag-badge gold">孙辈世系: '+G.grandchildren.length+' 位</span>':'')+
+    '<span class="tag-badge green">田庄商号: '+G.estates.length+' 处</span>'+
+    '</div>';
+
+  document.getElementById('housePanel').innerHTML = html;
 }
 
 function renderLogs(){
   var html = '';
   for(var i=0; i<G.logs.length; i++){
     var l = G.logs[i];
-    html += '<div class="log-item '+l.type+'"><span class="log-tag">'+l.tag+'</span>'+l.text+'</div>';
+    html += '<div class="log-row '+(l.type||'')+'"><span class="log-tag">'+l.tag+'</span>'+l.text+'</div>';
   }
   document.getElementById('logList').innerHTML = html;
 }
 
-/* ================= 8. 各页面模块逻辑 (精雕细琢 · 图标全量且专属) ================= */
+/* ================= 6. 页面交互卡片生成 ================= */
 function renderPageContent(){
   var el = document.getElementById('pageContent');
   var p = G.curPage;
 
   if(p === 'mainHall'){
-    // 正堂公中：晨起升座、发落中馈、查阅晨省
     var html = '<div class="acts-grid">';
     html += createActCard(ICONS.morningRoll, '听各房管事点卯晨省', '升座正堂点卯，查问各房管事与门房出入，整饬晨省规矩', 1, 'actMorningRoll()');
     html += createActCard(ICONS.monthlyBudget, '核算各房本月份例银', '核准公中开销，赏罚分明节流开源，防范管事中饱私囊', 1, 'actMonthlyBudget()');
     html += createActCard(ICONS.houseDiscipline, '整肃正堂家风威仪', '训诫府中年轻丫鬟仆从，明正家法纪纲，震慑宵小', 1, 'actHouseDiscipline()');
-    html += createActCard(ICONS.visitMother, '入寿安堂向老太君奉茶', '晨昏定省侍奉婆母，恭奉参汤问候起居，稳固长辈庇佑', 1, 'actVisitMother()');
+    html += createActCard(ICONS.visitMother, '入寿安堂侍疾奉茶', '晨昏定省侍奉婆母，恭奉参汤问候起居，稳固长辈庇佑', 1, 'actVisitMother()');
     html += createActCard(ICONS.cookSoup, '小膳房亲调滋补药膳', '亲手烹制虫草花胶老鸭汤与红参固本膏，进补阖府亲眷', 1, 'actCookSoup()');
     html += createActCard(ICONS.dowryManage, '盘点十里红妆嫁妆私库', '清点金陵谢氏陪嫁古玩锦缎与私房干股，赏赐或变现', 1, 'actDowryManage()');
+    html += createActCard(ICONS.famineRelief, '开仓设粥棚大赈水患', '动用公中与私房在城西设粥棚药局，广施仁德收拢民心', 2, 'actFamineRelief()');
+    html += createActCard(ICONS.ancestorWorship, '主母盛装领率宗祠大祭', '率领族中命妇子弟入祠堂祭祖，定规矩以正百年门风', 2, 'actAncestorWorship()');
     html += '</div>';
     el.innerHTML = html;
   }
   else if(p === 'courtyard'){
-    // 内宅各房：与夫君深情互动、妾室敲打、姨娘房察看
     var html = '<div class="card-item">'+
       '<div class="item-ic">'+ICONS.husbandCard+'</div>'+
       '<div class="card-content">'+
         '<div class="card-head"><span>外书房 · 侯爷沈砚之 (夫妻情分：'+G.husbandAff+')</span>'+
-        '<button class="main-btn" style="padding:3px 10px;font-size:11.5px;" onclick="actHusbandInteract()">书房奉汤探望</button></div>'+
-        '<div class="card-body">沈砚之身任御前重权，公事繁忙。夜归常至正房对弈，商榷朝堂动向与家族利害。</div>'+
+        '<div style="display:flex;gap:4px;">'+
+          '<button class="main-btn" style="padding:3px 10px;font-size:11.5px;" onclick="actHusbandInteract()">书房对弈温存</button>'+
+          '<button class="main-btn secondary" style="padding:3px 10px;font-size:11.5px;" onclick="actGiftHusband()">赠金丝香囊</button>'+
+        '</div></div>'+
+        '<div class="card-body">沈砚之身任御前重权，待夫人敬重有加。夜归常至正房对弈，商榷朝堂动向与家族利害。</div>'+
+      '</div></div>';
+
+    // 寄宿表妹柳纤纤
+    html += '<div class="card-item" style="border-left:3px solid #d946ef;">'+
+      '<div class="item-ic" style="background:#fae8ff;border-color:#f0abfc;">'+ICONS.cousinCard+'</div>'+
+      '<div class="card-content">'+
+        '<div class="card-head"><span style="color:#86198f;">'+G.cousin.name+' ('+G.cousin.status+')</span>'+
+        '<span style="font-size:11.5px;color:#c026d3;font-weight:700;">心机野心：'+G.cousin.scheming+'</span></div>'+
+        '<div class="card-body">柳家落魄，借居侯府海棠轩。常着素白罗裙在后花园偶遇侯爷，暗怀攀附贵妾之念。</div>'+
+        (!G.cousin.resolved ?
+        '<div class="card-acts">'+
+          '<button class="main-btn secondary" style="padding:3px 10px;font-size:11.5px;" onclick="actCousinDiscipline()">敲打立规警告</button>'+
+          '<button class="main-btn gold" style="padding:3px 10px;font-size:11.5px;" onclick="actCousinMarryOff()">择京营得力武官赐婚远嫁</button>'+
+        '</div>' : '<div style="margin-top:6px;font-size:11.5px;color:#15803d;font-weight:600;">已风光大嫁京营守备，表妹深感知遇恩典，再不敢生非分之想。</div>')+
       '</div></div>';
 
     html += '<div style="font-weight:700;font-size:12.5px;margin:10px 0 6px;color:#6b1527;display:flex;align-items:center;gap:6px;">'+
@@ -785,10 +772,11 @@ function renderPageContent(){
     el.innerHTML = html;
   }
   else if(p === 'finance'){
-    // 账房与产业：庄子、铺子、查账、贪污查抄
     var html = '<div class="acts-grid" style="margin-bottom:10px;">';
     html += createActCard(ICONS.auditBooks, '突击盘查公中账房底册', '明察秋毫查验进出细账，严惩采买管事吃拿卡要', 1, 'actAuditBooks()');
     html += createActCard(ICONS.visitFarm, '巡视京郊南苑万亩庄田', '亲临庄田查验春耕秋收，核验佃户粮饷与仓廪丰实', 1, 'actVisitFarm()');
+    html += createActCard(ICONS.bankExpand, '注资控股永丰大钱庄', '以谢氏私房注资京城最大钱庄，月月享三成纯利红筹', 2, 'actBankExpand()');
+    html += createActCard(ICONS.saltTrade, '暗中参股两淮漕运盐引', '动用母家两淮人脉参股官盐运输，巨额暴利滚滚而来', 2, 'actSaltTrade()');
     html += '</div>';
 
     html += '<div style="font-weight:700;font-size:12.5px;margin:10px 0 6px;color:#6b1527;display:flex;align-items:center;gap:6px;">'+
@@ -810,10 +798,11 @@ function renderPageContent(){
     el.innerHTML = html;
   }
   else if(p === 'children'){
-    // 世家儿女：大儒授课、议亲相看、抓周
     var html = '<div class="acts-grid" style="margin-bottom:10px;">';
     html += createActCard(ICONS.hireTeacher, '聘请翰林大儒过府授课', '重金聘请前科探花讲授经史策论，提升子嗣才学品格', 1, 'actHireTeacher()');
     html += createActCard(ICONS.hireMartialMaster, '延请退役禁军武师傅', '延请军中教头教授骑射枪棒，锤炼儿郎刚健筋骨', 1, 'actHireMartialMaster()');
+    html += createActCard(ICONS.imperialExam, '科举春闱 · 会试与御前殿试', '长子年满入京赴考，冲刺一甲三名金榜题名', 2, 'actImperialExam()');
+    html += createActCard(ICONS.grandsonJoy, '含饴弄孙 · 祖母传家训', '抚育沈氏第三代嫡长孙，言传身教传承百年簪缨', 1, 'actGrandsonLesson()');
     html += '</div>';
 
     html += '<div style="font-weight:700;font-size:12.5px;margin:10px 0 6px;color:#6b1527;display:flex;align-items:center;gap:6px;">'+
@@ -824,33 +813,49 @@ function renderPageContent(){
         '<div class="item-ic">'+ICONS.childCard+'</div>'+
         '<div class="card-content">'+
           '<div class="card-head"><span>'+(ch.legit?'【嫡出】':'【庶出】')+ch.name+' ('+ch.age+'岁)</span>'+
-          '<span style="color:#7e1f34;font-weight:700;">'+ch.stage+'</span></div>'+
-          '<div class="card-body">根骨悟性：<b>'+ch.talent+'</b></div>'+
+          '<span style="color:#7e1f34;font-weight:700;">'+ch.stage+' · '+ch.rank+'</span></div>'+
+          '<div class="card-body">根骨悟性：<b>'+ch.talent+'</b> '+(ch.married?'(已配世家贵戚)':'(待字/议亲中)')+'</div>'+
           '<div class="card-acts">'+
             '<button class="main-btn secondary" style="padding:3px 10px;font-size:11.5px;" onclick="actChildExam('+k+')">考问功课经义</button>'+
-            (ch.age>=14?'<button class="main-btn" style="padding:3px 10px;font-size:11.5px;" onclick="actChildMatch('+k+')">京城名门择亲</button>':'')+
+            (!ch.married && ch.age>=14 ? '<button class="main-btn gold" style="padding:3px 10px;font-size:11.5px;" onclick="actChildMatch('+k+')">京城名门择亲结发</button>' : '')+
           '</div>'+
         '</div></div>';
+    }
+
+    if(G.grandchildren.length > 0){
+      html += '<div style="font-weight:700;font-size:12.5px;margin:10px 0 6px;color:#854d0e;display:flex;align-items:center;gap:6px;">'+
+        ICONS.grandsonJoy+' 侯府第三代孙辈世系：</div>';
+      for(var g=0; g<G.grandchildren.length; g++){
+        var gc = G.grandchildren[g];
+        html += '<div class="card-item" style="border-left:3px solid #eab308;">'+
+          '<div class="item-ic" style="background:#fefce8;">'+ICONS.grandsonJoy+'</div>'+
+          '<div class="card-content">'+
+            '<div class="card-head"><span style="color:#854d0e;">'+gc.name+' (长房长孙 · '+gc.age+'岁)</span>'+
+            '<span style="color:#15803d;font-weight:700;">聪慧过人</span></div>'+
+            '<div class="card-body">定远侯府世系绵延，四世同堂，大娘子已享祖母无上尊崇。</div>'+
+          '</div></div>';
+      }
     }
     el.innerHTML = html;
   }
   else if(p === 'social'){
-    // 命妇外交：办赏花宴、入宫朝见、打通官脉
     var html = '<div class="acts-grid">';
     html += createActCard(ICONS.hostBanquet, '筹办侯府海棠赏花雅宴', '广邀六部尚书命妇与宗室王妃，彰显掌家排场与体面', 2, 'actHostBanquet()');
     html += createActCard(ICONS.attendBanquet, '赴国公夫人曲水流觞宴', '在京城名妇圈谈笑风生，刺探朝廷最新考调与盐茶风声', 1, 'actAttendBanquet()');
     html += createActCard(ICONS.visitPalace, '递牌子入宫朝见贵妃姑母', '携千宝银楼珍宝入宫请安，稳固侯府在内廷的无上奥援', 2, 'actVisitPalace()');
-    html += createActCard(ICONS.supportHusband, '为夫君考课私下备厚礼', '动用私房重金打点吏部九卿，襄助沈砚之官阶转正晋升', 1, 'actSupportHusband()');
+    html += createActCard(ICONS.supportHusband, '为夫君考课私下备厚礼', '动用私房重金打点吏部九卿，襄助沈砚之官阶转正晋升', 2, 'actSupportHusband()');
+    html += createActCard(ICONS.empressBanquet, '出席皇太后千秋长春万寿宴', '天家寿辰盛装朝贺，进献亲绣九霄百凤图，惊艳六宫', 2, 'actEmpressBanquet()');
     html += '</div>';
     el.innerHTML = html;
   }
   else if(p === 'law'){
-    // 家规裁决：抓内奸、严惩欺主刁奴、查抄倚翠阁
     var html = '<div class="acts-grid">';
     html += createActCard(ICONS.searchCourtyard, '雷霆查抄后院逾矩私房', '突击搜查倚翠阁违禁暗格，收缴私藏禁物严整家风', 1, 'actSearchCourtyard()');
     html += createActCard(ICONS.punishSlave, '惩治克扣月例贪腐恶奴', '责打克扣厨房炭火的恶奴二十大板发配庄子，立主母威仪', 1, 'actPunishSlave()');
     html += createActCard(ICONS.fairTrial, '平反含冤丫鬟收买人心', '明察秋毫断清夹竹桃落花冤案，恩威并济收服各房人心', 1, 'actFairTrial()');
     html += createActCard(ICONS.investigatePoison, '严查后花园暗下药疑云', '追查各房出入与药铺私购行迹，断绝宅斗阴狠杀机', 1, 'actInvestigatePoison()');
+    html += createActCard(ICONS.throneStruggle, '【皇子夺嫡 · 深夜密帖】', '三皇子密使送来金票与密书，欲拉拢夫君统领亲军站队', 2, 'actThroneStruggle()');
+    html += createActCard(ICONS.rescueHusband, '【御前救夫 · 抄家大劫】', '御史台风闻参劾沈砚之，缇骑围府，主母执剑鸣冤翻盘', 2, 'actRescueHusband()');
     html += '</div>';
     el.innerHTML = html;
   }
@@ -866,7 +871,7 @@ function createActCard(svgIcon, t1, t2, cost, onClickStr){
     '</div></div>';
 }
 
-/* ================= 9. 具体交互与剧情决策实现 ================= */
+/* ================= 7. 动作与具体决策实现 ================= */
 function actMorningRoll(){
   if(!useEnergy(1)) return;
   var r = Math.random();
@@ -950,102 +955,136 @@ function actDowryManage(){
 function sellDowry(){
   closeModal();
   G.privateSilver += 180;
-  addLog('你自正阳门当铺结清私房分红，贴现入嫁妆小金库+180两！','gold','【私房进项】');
+  addLog('你将永安当铺当季红利提现入私房囊中，私银充盈。（私房+180两）','gold','【红妆生息】');
   render();
 }
 
+function actFamineRelief(){
+  if(!useEnergy(2)) return;
+  if(G.silver < 300){ toast('公中现银不足300两'); return; }
+  G.silver -= 300;
+  G.reputation = cl(G.reputation + 15);
+  G.prestige = cl(G.prestige + 8);
+  addLog('你以定远侯府大娘子之名在城西设下千人粥棚与医局，万民感泣跪送万民伞！天子下旨嘉奖「钟鸣仁厚」！（门风+15，威仪+8）','gold','【开仓赈济】');
+  render();
+}
+
+function actAncestorWorship(){
+  if(!useEnergy(2)) return;
+  G.prestige = cl(G.prestige + 6);
+  G.reputation = cl(G.reputation + 5);
+  G.motherAff = cl(G.motherAff + 5);
+  addLog('主母盛装佩戴三品翟冠领率阖府宗祠大祭，尊卑有序，整肃侯府百年纪纲！（威仪+6，门风+5）','gd2','【宗祠大典】');
+  render();
+}
+
+/* 夫君与妾室交互 */
 function actHusbandInteract(){
-  openModal('【外书房 · 夫妻夜话】',
-    '<div class="story-panel"><div class="story-title">红袖添香与官场筹谋</div>'+
-    '<div class="story-text"><p>沈砚之着一袭玄色暗纹直缀，正在灯下细看御前密奏。见你携参汤推门而入，疲惫眉眼舒展，伸手揽你入座。</p>'+
-    '<p>「今日朝堂之上，左相一派欲弹劾南境军饷虚靡。为夫正在风口浪尖，府中多亏夫人照拂妥当。」</p></div></div>'+
+  if(!useEnergy(1)) return;
+  G.husbandAff = cl(G.husbandAff + 5);
+  addLog('外书房内，你与沈砚之秉烛对弈。夫君握住你的双手：「得妻锦仪，砚之此生无憾。」（情分+5）','pink','【红袖添香】');
+  render();
+}
+function actGiftHusband(){
+  if(!useEnergy(1)) return;
+  if(G.privateSilver < 50){ toast('私房银不足50两'); return; }
+  G.privateSilver -= 50;
+  G.husbandAff = cl(G.husbandAff + 8);
+  addLog('你将亲手耗时半月绣制的金丝玄青辟邪香囊系在沈砚之腰间，侯爷喜不自胜，上朝寸步不离！（情分+8）','pink','【情丝寄意】');
+  render();
+}
+
+function actCousinDiscipline(){
+  if(!useEnergy(1)) return;
+  G.prestige = cl(G.prestige + 5);
+  G.cousin.scheming = cl(G.cousin.scheming - 15);
+  addLog('你召柳纤纤至正堂，冷言敲打后宅尊卑之礼。柳表妹吓得容颜惨白，跪地叩首不敢再穿红弄巧。（威仪+5，心机-15）','gd2','【敲打表妹】');
+  render();
+}
+function actCousinMarryOff(){
+  if(!useEnergy(1)) return;
+  openModal('【体面择婿 · 赐婚表妹】',
+    '<div class="story-panel"><div class="story-title">为柳表妹指婚</div>'+
+    '<div class="story-text"><p>柳纤纤心思不纯，长居后宅必生后患。正巧京营沈砚之麾下沈统领年少有为，登门求娶：</p></div></div>'+
     '<div class="story-choices">'+
-      '<button class="story-choice" onclick="chooseHusbandAct(&apos;gentle&apos;)">温言抚慰，为其揉肩研墨解忧（情分+5，心意相通）</button>'+
-      '<button class="story-choice" onclick="chooseHusbandAct(&apos;advice&apos;)">结合娘家世交人脉，从容为夫君析明朝局利害（情分+3，声望+5）</button>'+
+      '<button class="story-choice" onclick="doMarryCousin(true)">陪送私房100两做嫁妆，风光大嫁京营守备（永绝后患，夫君赞叹，门风+8）</button>'+
+      '<button class="story-choice" onclick="doMarryCousin(false)">不予嫁妆，直接以远亲名义发回青州老家（威仪+6）</button>'+
     '</div>');
 }
-function chooseHusbandAct(opt){
+function doMarryCousin(ok){
   closeModal();
-  if(opt==='gentle'){
-    G.husbandAff = cl(G.husbandAff + 5);
-    G.prestige = cl(G.prestige + 2);
-    addLog('沈砚之握紧你的素手，眼中满是深情眷恋：「得妻若此，夫复何求。」（情分+5）','pink','【夫妻私语】');
+  G.cousin.resolved = true;
+  if(ok){
+    if(G.privateSilver >= 100) G.privateSilver -= 100;
+    G.husbandAff = cl(G.husbandAff + 6);
+    G.reputation = cl(G.reputation + 8);
+    addLog('你以高门排场体面将柳表妹嫁入京营武官府邸，夫君深感夫人心胸宽广，内宅再无争宠暗流！（门风+8，情分+6）','gold','【风光赐婚】');
   } else {
-    G.husbandAff = cl(G.husbandAff + 3);
-    G.reputation = cl(G.reputation + 5);
-    addLog('沈砚之拍案赞叹：「夫人见地竟不输内阁老臣！」夫妻二人共定应对良策。（声望+5）','gold','【共襄国是】');
-  }
-  render();
-}
-
-function actConcubineReward(idx){
-  var c = G.concubines[idx];
-  if(G.silver < 50){ toast('公中银两不足'); return; }
-  G.silver -= 50;
-  c.obedient = cl(c.obedient + 10);
-  addLog('你赐予【'+c.name+'】江南新贡湖丝两匹、金簪一对。妾室喜不自胜，叩头谢恩。（恭顺度+10）','gd','【偏院赏赐】');
-  render();
-}
-
-function actConcubineDiscipline(idx){
-  var c = G.concubines[idx];
-  openModal('【正堂立威 · 规训妾室】',
-    '<div class="story-panel"><div class="story-title">敲打【'+c.name+'】</div>'+
-    '<div class="story-text"><p>【'+c.name+'】跪在堂下，绞着帕子微露委屈之色。你端坐上首，抿了一口热茶，从容开口：</p>'+
-    '<p>「尊卑有别，长幼有序。莫要在侯爷耳边进谗吹风，侯府后院，本夫人的规矩才是天。」</p></div></div>'+
-    '<div class="story-choices">'+
-      '<button class="story-choice" onclick="chooseDiscipline(&apos;'+idx+'&apos;,&apos;strict&apos;)">罚抄《女诫》百遍，禁足半月（威仪+6，恭顺+15）</button>'+
-      '<button class="story-choice" onclick="chooseDiscipline(&apos;'+idx+'&apos;,&apos;soft&apos;)">恩威并重，点出其越轨之处免于责罚（威仪+3，好感+5）</button>'+
-    '</div>');
-}
-function chooseDiscipline(idx, opt){
-  closeModal();
-  var c = G.concubines[idx];
-  if(opt==='strict'){
-    c.obedient = cl(c.obedient + 15);
     G.prestige = cl(G.prestige + 6);
-    addLog('你严厉禁足了'+c.name+'，倚翠阁下人屏息敛声，后宅规矩立时严正整肃！（威仪+6）','gd2','【正堂立威】');
-  } else {
-    c.aff = cl(c.aff + 5);
-    G.prestige = cl(G.prestige + 3);
-    addLog('你宽严相济点化妾室，'+c.name+'含泪感念大娘子宽厚。（威仪+3）','gd','【恩威相济】');
+    addLog('你命心腹婆子备车将柳纤纤送回青州，后院重归清宁。（威仪+6）','gd2','【遣送归乡】');
   }
   render();
 }
 
+function actConcubineReward(i){
+  var c = G.concubines[i];
+  if(!useEnergy(1)) return;
+  if(G.silver < 60){ toast('公中现银不足60两'); return; }
+  G.silver -= 60;
+  c.aff = cl(c.aff + 10);
+  c.obedient = cl(c.obedient + 8);
+  addLog('你赏赐'+c.name+'苏绣锦缎两匹，林氏感念主母恩典，叩首谢恩。（恭顺+8）','pink','【宽厚恩赏】');
+  render();
+}
+function actConcubineDiscipline(i){
+  var c = G.concubines[i];
+  if(!useEnergy(1)) return;
+  G.prestige = cl(G.prestige + 5);
+  c.obedient = cl(c.obedient + 15);
+  addLog('你正颜厉色申饬了'+c.name+'言行僭越之处，罚其抄录《女诫》百遍，偏院噤若寒蝉。（威仪+5，恭顺+15）','gd2','【正堂立威】');
+  render();
+}
+
+/* 产业与财富 */
 function actAuditBooks(){
   if(!useEnergy(1)) return;
-  var r = Math.random();
-  if(r < 0.5){
-    var caught = ri(120, 260);
-    G.silver += caught;
-    G.prestige = cl(G.prestige + 5);
-    addLog('铁证如山！你亲手核算出采买账册虚报药材花销，当场抄没贪管事私房，追回公中银+'+caught+'两！','gd2','【清查贪墨】');
-  } else {
-    G.prestige = cl(G.prestige + 2);
-    addLog('一笔一笔严查核算，三千两总账底册丝毫不差，账房下人无不战战兢兢。','gd','【核验总账】');
-  }
+  var recover = ri(60, 140);
+  G.silver += recover;
+  G.prestige = cl(G.prestige + 3);
+  addLog('突击审查公中账目，当场揪出采买虚开单据，追回银两+'+recover+'两！（威仪+3）','gd','【清查账目】');
   render();
 }
-
 function actVisitFarm(){
   if(!useEnergy(1)) return;
-  var gain = 200;
-  G.silver += gain;
-  G.reputation = cl(G.reputation + 3);
-  addLog('你亲至京郊南苑农庄，赏赐庄稼老把式，核验粮仓丰盈，押运解送本季田租+'+gain+'两入库！','gd2','【庄田解库】');
+  G.prestige = cl(G.prestige + 2);
+  G.silver += 80;
+  addLog('亲临京郊庄田，体恤佃农疾苦免收苛捐，麦浪滚滚仓廪丰足，带回庄利+80两。','gd2','【巡视庄田】');
   render();
 }
-
+function actBankExpand(){
+  if(!useEnergy(2)) return;
+  if(G.privateSilver < 250){ toast('私房银不足250两'); return; }
+  G.privateSilver -= 250;
+  G.estates.push({ id:'bank_yongfeng', name:'正阳门永丰通汇钱庄', income:260, manager:'柳大掌柜', honest:90 });
+  addLog('你以谢氏私房入股控股正阳门永丰大钱庄！成为京师商界幕后金主，每月纯利润+260两！','gold','【注资钱庄】');
+  render();
+}
+function actSaltTrade(){
+  if(!useEnergy(2)) return;
+  if(G.privateSilver < 200){ toast('私房银不足200两'); return; }
+  G.privateSilver -= 200;
+  G.privateSilver += 450;
+  G.reputation = cl(G.reputation + 4);
+  addLog('凭借母家金陵两淮漕运关系，私房投资官盐茶引大获全胜！净赚+250两纯利！（私房暴涨）','gold','【漕运官商】');
+  render();
+}
 function actRewardManager(idx){
-  var e = G.estates[idx];
   if(G.silver < 50){ toast('公中现银不足50两'); return; }
   G.silver -= 50;
-  e.honest = cl(e.honest + 8);
-  addLog('你大赏【'+e.manager+'】五十两雪花银。管事指天盟誓誓死尽忠！（廉洁度+8%）','gd','【赏赐掌案】');
+  G.estates[idx].honest = cl(G.estates[idx].honest + 15);
+  addLog('你赏赐【'+G.estates[idx].name+'】掌案五十两白银，管事誓死效忠，绝不敢贪墨公中半分。','gd','【施恩掌柜】');
   render();
 }
-
 function actInspectShop(idx){
   var e = G.estates[idx];
   if(!useEnergy(1)) return;
@@ -1054,6 +1093,7 @@ function actInspectShop(idx){
   render();
 }
 
+/* 儿女教育与殿试及第 */
 function actHireTeacher(){
   if(!useEnergy(1)) return;
   if(G.silver < 120){ toast('公中现银不足120两'); return; }
@@ -1065,7 +1105,6 @@ function actHireTeacher(){
   addLog('聘请翰林院侍读学士过府讲学，侯府书声琅琅，京城称羡。（声望+6）','gold','【名师授业】');
   render();
 }
-
 function actHireMartialMaster(){
   if(!useEnergy(1)) return;
   if(G.silver < 100){ toast('公中现银不足100两'); return; }
@@ -1075,7 +1114,6 @@ function actHireMartialMaster(){
   addLog('延请退役禁军副统领教习骑射，庶长子沈承安百步穿杨，颇有侯爷当年之威！（声望+5）','gd2','【良师教武】');
   render();
 }
-
 function actChildExam(idx){
   var ch = G.children[idx];
   openModal('【私塾考校 · '+ch.name+'】',
@@ -1098,30 +1136,57 @@ function strictChild(idx){
   addLog('你严厉指正了'+G.children[idx].name+'文章浮夸之弊，世家儿郎气度日渐沉稳。（主母威仪+3）','gd2','【严训子嗣】');
   render();
 }
-
 function actChildMatch(idx){
   var ch = G.children[idx];
   openModal('【名门议亲 · '+ch.name+'】',
     '<div class="story-panel"><div class="story-title">京城朱门联姻大计</div>'+
     '<div class="story-text"><p>'+ch.name+'已至议亲之年。媒人踏破门槛，递来多份庚帖：</p></div></div>'+
     '<div class="story-choices">'+
-      '<button class="story-choice" onclick="chooseMatch(&apos;duchess&apos;)">与【文渊阁大学士府嫡幼女】结亲（清流奥援，侯府声望暴涨+18）</button>'+
-      '<button class="story-choice" onclick="chooseMatch(&apos;military&apos;)">与【镇北大将军府将门贵女】结亲（执掌边军兵权，夫君情分+12）</button>'+
+      '<button class="story-choice" onclick="chooseMatch('+idx+', &apos;duchess&apos;)">与【文渊阁大学士府嫡幼女】结亲（清流奥援，侯府声望暴涨+18）</button>'+
+      '<button class="story-choice" onclick="chooseMatch('+idx+', &apos;military&apos;)">与【镇北大将军府将门贵女】结亲（执掌边军兵权，夫君情分+12）</button>'+
     '</div>');
 }
-function chooseMatch(opt){
+function chooseMatch(idx, opt){
   closeModal();
+  G.children[idx].married = true;
   if(opt==='duchess'){
     G.reputation = cl(G.reputation + 18);
+    G.children[idx].rank = '大学士乘龙快婿';
     addLog('名门联姻功成！文渊阁大学士亲题红帖，定远侯府声威赫奕，震动京师！（门风+18）','gold','【金玉良缘】');
   } else {
     G.husbandAff = cl(G.husbandAff + 12);
     G.reputation = cl(G.reputation + 10);
+    G.children[idx].rank = '将门结义姻亲';
     addLog('定下将门强援！边军互为犄角，沈砚之在御前恩宠日隆！（情分+12，门风+10）','gold','【兵权结姻】');
+  }
+  // 迎娶后诞育孙辈
+  if(G.grandchildren.length === 0){
+    G.grandchildren.push({ name:'沈思齐', age:1 });
+    addLog('新妇进门一年，为侯府诞育第三代嫡长孙【沈思齐】！大娘子正式喜升祖母，满月设宴百桌！','gold','【弄璋之喜】');
   }
   render();
 }
 
+function actImperialExam(){
+  if(!useEnergy(2)) return;
+  var c = G.children[0];
+  c.rank = '一甲探花郎 (殿试及第)';
+  c.stage = '翰林院编修';
+  G.reputation = cl(G.reputation + 25);
+  G.prestige = cl(G.prestige + 15);
+  addLog('天子殿试放榜！沈怀瑾高中一甲第三名探花郎！天子御赐红袍金花，跨马游街，京华轰动！（声望暴涨+25）','gold','【金榜题名】');
+  render();
+}
+function actGrandsonLesson(){
+  if(!useEnergy(1)) return;
+  if(G.grandchildren.length === 0){ toast('长子尚未婚配诞育孙儿'); return; }
+  G.prestige = cl(G.prestige + 4);
+  G.reputation = cl(G.reputation + 4);
+  addLog('正堂之内，你手把手教长孙沈思齐执笔临摹《兰亭序》，高门家风世代相传。（声望+4，威仪+4）','pink','【祖孙传家】');
+  render();
+}
+
+/* 命妇外交 */
 function actHostBanquet(){
   if(!useEnergy(2)) return;
   if(G.silver < 260){ toast('公中现银不足260两'); return; }
@@ -1131,14 +1196,12 @@ function actHostBanquet(){
   addLog('侯府海棠雅宴宾客盈门，宗室王妃齐赞大娘子调度周全，金陵谢氏名媛风范尽显！（门风+15，威仪+8）','gold','【朱门盛宴】');
   render();
 }
-
 function actAttendBanquet(){
   if(!useEnergy(1)) return;
   G.reputation = cl(G.reputation + 5);
   addLog('赴国公府品茗，你于席间巧妙替夫君化解吏部考察微词，命妇圈无不佩服你机敏手腕。（门风+5）','gd','【命妇交游】');
   render();
 }
-
 function actVisitPalace(){
   if(!useEnergy(2)) return;
   if(G.privateSilver < 150){ toast('嫁妆私房不足150两'); return; }
@@ -1148,18 +1211,25 @@ function actVisitPalace(){
   addLog('递牌子入宫问候贵妃姑母，姑母赐下赤金累丝凤钗一枝，赞你为谢家争光！（门风+12，威仪+8）','gold','【后宫荣宠】');
   render();
 }
-
 function actSupportHusband(){
-  if(!useEnergy(1)) return;
+  if(!useEnergy(2)) return;
   if(G.privateSilver < 300){ toast('嫁妆私房不足300两'); return; }
   G.privateSilver -= 300;
-  G.husbandRank = '正三品 · 御前都统统帅';
+  G.husbandRank = '正二品 · 上柱国大统领';
   G.husbandAff = cl(G.husbandAff + 15);
-  G.reputation = cl(G.reputation + 10);
-  addLog('你以娘家金陵谢氏私房重金为夫君铺平考课关节！沈砚之官升正三品御前都统！（情分+15，声望+10）','gold','【助夫拜官】');
+  G.reputation = cl(G.reputation + 12);
+  addLog('你以娘家金陵谢氏私房重金为夫君铺平考课关节！沈砚之官升正二品上柱国统帅！（情分+15，声望+12）','gold','【助夫拜官】');
+  render();
+}
+function actEmpressBanquet(){
+  if(!useEnergy(2)) return;
+  G.reputation = cl(G.reputation + 15);
+  G.prestige = cl(G.prestige + 10);
+  addLog('皇太后千秋万寿宴上，你献上亲绣九天玄女长寿图，皇太后大悦，当众赐下金如意！（声望+15）','gold','【天家嘉赏】');
   render();
 }
 
+/* 家规裁决与朝堂大案 */
 function actSearchCourtyard(){
   if(!useEnergy(1)) return;
   openModal('【严查逾矩 · 突查倚翠阁】',
@@ -1183,14 +1253,12 @@ function chooseSearch(opt){
   }
   render();
 }
-
 function actPunishSlave(){
   if(!useEnergy(1)) return;
   G.prestige = cl(G.prestige + 6);
   addLog('你命人当场杖责克扣厨房炭火的恶奴二十大板，撵出侯府庄子，阖府悚然！（威仪+6）','gd2','【杖毙恶奴】');
   render();
 }
-
 function actFairTrial(){
   if(!useEnergy(1)) return;
   G.prestige = cl(G.prestige + 4);
@@ -1198,7 +1266,6 @@ function actFairTrial(){
   addLog('查明小丫鬟被栽赃旧案，你明辨秋毫还其清白，府中下人无不称颂大娘子仁厚贤德。（门风+4）','gd','【明断冤案】');
   render();
 }
-
 function actInvestigatePoison(){
   if(!useEnergy(1)) return;
   openModal('【秘查疑云 · 后花园落花暗药】',
@@ -1224,7 +1291,67 @@ function choosePoison(opt){
   render();
 }
 
-/* ================= 10. 岁月流转与月结 ================= */
+/* 核心生死大案 */
+function actThroneStruggle(){
+  if(!useEnergy(2)) return;
+  openModal('【夺嫡暗涌 · 皇子密帖】',
+    '<div class="story-panel"><div class="story-title">三皇子深夜密使送来万两金票</div>'+
+    '<div class="story-text"><p>储位未定，三皇子派出心腹暗携万两飞票，欲让沈砚之在禁军驻防上行个方便。</p>'+
+    '<p>此举乃抄家灭门之大险，亦是扶摇直上之从龙机缘。大娘子你如何定夺？</p></div></div>'+
+    '<div class="story-choices">'+
+      '<button class="story-choice" onclick="chooseThrone(&apos;loyal&apos;)">【严辞拒绝】做纯臣孤臣，将密票原封退回，紧闭门户（夫君情分+10，门风+12）</button>'+
+      '<button class="story-choice" onclick="chooseThrone(&apos;gamble&apos;)">【孤注一掷】暗中接下密约，押宝新君从龙之功（私房+800两，威望+15）</button>'+
+      '<button class="story-choice" onclick="chooseThrone(&apos;emperor&apos;)">【密奏御前】转托贵妃入内廷递密折告发，坐收无上天恩（圣上特封一品诰命）</button>'+
+    '</div>');
+}
+function chooseThrone(opt){
+  closeModal();
+  if(opt==='loyal'){
+    G.reputation = cl(G.reputation + 12);
+    G.husbandAff = cl(G.husbandAff + 10);
+    addLog('你劝夫君坚守孤臣正道，沈砚之深以为然。事后夺嫡党羽落网，侯府安然无恙清誉无双！（门风+12）','gold','【从容孤臣】');
+  } else if(opt==='gamble'){
+    G.privateSilver += 800;
+    G.prestige = cl(G.prestige + 15);
+    G.flags.joinedPrince = true;
+    addLog('侯府暗中站队三皇子，获得巨额党羽资助，权势熏天！（私房+800两，威望+15）','gd2','【从龙之谋】');
+  } else {
+    G.reputation = cl(G.reputation + 20);
+    G.prestige = cl(G.prestige + 15);
+    G.flags.reportedPrince = true;
+    addLog('你雷霆决断密奏天听，圣上大悦，亲赐定远侯铁券丹书，主母冠服加一品！（声望暴涨）','gold','【天家特旨】');
+  }
+  render();
+}
+
+function actRescueHusband(){
+  if(!useEnergy(2)) return;
+  openModal('【御前大劫 · 主母救夫】',
+    '<div class="story-panel"><div class="story-title">缇骑围府 · 侯爷被诬下狱</div>'+
+    '<div class="story-text"><p>御史台清流风闻奏事，诬告沈砚之私吞京畿军饷，大理寺缇骑已扣押侯爷入诏狱！</p>'+
+    '<p>老太君惊厥卧床，阖府上下乱作一团，全凭主母一人挽狂澜于既倒：</p></div></div>'+
+    '<div class="story-choices">'+
+      '<button class="story-choice" onclick="chooseRescue(&apos;drum&apos;)">盛装诰命冠服，御街登闻鼓鸣冤，谢氏名门以命担保（门风+20，威仪+20）</button>'+
+      '<button class="story-choice" onclick="chooseRescue(&apos;silver&apos;)">倾尽娘家谢氏私房400两，连夜打点九卿与内廷密保（夫君情分+20）</button>'+
+    '</div>');
+}
+function chooseRescue(opt){
+  closeModal();
+  if(opt==='drum'){
+    G.prestige = cl(G.prestige + 20);
+    G.reputation = cl(G.reputation + 20);
+    G.husbandAff = cl(G.husbandAff + 15);
+    addLog('主母着翟冠朝服敲响登闻鼓，三法司重审昭雪！沈砚之官复原职，夫妻二人名震天下！（威仪+20）','gold','【击鼓鸣冤】');
+  } else {
+    if(G.privateSilver >= 400) G.privateSilver -= 400;
+    G.husbandAff = cl(G.husbandAff + 20);
+    G.motherAff = cl(G.motherAff + 15);
+    addLog('你散尽娘家私银奔走打通关节，沈砚之脱困归府，抱着你痛哭：「得妻如斯，沈某万死难报！」','pink','【倾家救夫】');
+  }
+  render();
+}
+
+/* ================= 8. 岁月流转与月结海量随机事件库 ================= */
 function endCurrentXun(){
   G.energy = G.maxEnergy;
   G.xun++;
@@ -1236,6 +1363,7 @@ function endCurrentXun(){
       G.year++;
       addLog('岁除迎新春！定远侯府除夕设百官年宴，你掌家一年清白有序，得朝廷诰命加封！','gold','【岁除大典】');
       G.prestige = cl(G.prestige + 10);
+      G.reputation = cl(G.reputation + 8);
     }
     // 月度产业结算
     var totalIncome = 0;
@@ -1245,8 +1373,8 @@ function endCurrentXun(){
     G.silver += totalIncome;
     addLog('月度公中盘点：名下庄田商铺进项汇总，入公中库银+'+totalIncome+'两！','gd2','【月度盘库】');
 
-    // 随机突发内宅事件
-    triggerRandomHomeEvent();
+    // 触发丰富的月度随机事件 (30+ 库)
+    triggerRichRandomEvent();
   } else {
     addLog('岁月荏苒，侯府又过一旬。后宅平安无事。','','【时岁如流】');
   }
@@ -1254,10 +1382,9 @@ function endCurrentXun(){
   autoSave();
 }
 
-function triggerRandomHomeEvent(){
-  var r = Math.random();
-  if(r < 0.3){
-    pushStory(function(){
+function triggerRichRandomEvent(){
+  var pool = [
+    function(){
       openModal('【突发事端 · 娘家告急】',
         '<div class="story-panel"><div class="story-title">金陵谢氏家书</div>'+
         '<div class="story-text"><p>金陵母家修书至京，兄长在两淮盐铁差事上遭同僚参奏，急需调运京城人脉转圜打点：</p></div></div>'+
@@ -1265,21 +1392,116 @@ function triggerRandomHomeEvent(){
           '<button class="story-choice" onclick="helpFamily(true)">动用侯府声势与公中200两解母家之围（门风+10，公中-200两）</button>'+
           '<button class="story-choice" onclick="helpFamily(false)">写信从容劝导，严守公中规矩不涉私利（威仪+5）</button>'+
         '</div>');
-    });
-  } else if(r < 0.6){
-    pushStory(function(){
-      openModal('【寿安堂喜讯 · 皇室赐赏】',
-        '<div class="story-panel"><div class="story-title">圣天子赐紫金寿桃</div>'+
+    },
+    function(){
+      openModal('【喜获至宝 · 前朝孤本】',
+        '<div class="story-panel"><div class="story-title">古玩街掌柜奉送宋版孤本</div>'+
+        '<div class="story-text"><p>琉璃厂古董掌柜觅得宋版《资治通鉴》残卷，特意孝敬大娘子：</p></div></div>'+
+        '<div class="story-choices">'+
+          '<button class="story-choice" onclick="closeModal(); G.children[0].talent=\'学贯中西 (大儒)\'; addLog(&apos;将孤本赠予长子怀瑾研读，孩儿学识大进！&apos;,&apos;gold&apos;,&apos;【文曲生辉】&apos;); render();">赠予长子怀瑾研读（才学大进）</button>'+
+          '<button class="story-choice" onclick="closeModal(); G.privateSilver+=160; addLog(&apos;转手让予翰林院大学士，获私房+160两。&apos;,&apos;gd&apos;,&apos;【变宝生财】&apos;); render();">转让同僚换取私房银+160两</button>'+
+        '</div>');
+    },
+    function(){
+      openModal('【后院暗流 · 小妾假孕】',
+        '<div class="story-panel"><div class="story-title">林姨娘声称怀胎两月</div>'+
+        '<div class="story-text"><p>林姨娘突然传唤府医，自称有了身孕，要求大涨月例银两：</p></div></div>'+
+        '<div class="story-choices">'+
+          '<button class="story-choice" onclick="closeModal(); G.prestige=cl(G.prestige+6); G.concubines[0].obedient=cl(G.concubines[0].obedient+15); addLog(&apos;你召太医令亲自按脉，当场揭穿假孕避宠之计！林氏吓得连连叩头认罪。（威仪+6）&apos;,&apos;gd2&apos;,&apos;【揭穿诡计】&apos;); render();">宣太医令亲自会诊切脉（明察秋毫立威）</button>'+
+          '<button class="story-choice" onclick="closeModal(); G.silver-=50; addLog(&apos;吩咐厨房每日送去燕窝，静观其变。&apos;,&apos;&apos;,&apos;【以静制动】&apos;); render();">先予补药，静观其变（公中-50两）</button>'+
+        '</div>');
+    },
+    function(){
+      openModal('【冬夜温情 · 夫君雪夜赠簪】',
+        '<div class="story-panel"><div class="story-title">侯爷微醺归府</div>'+
+        '<div class="story-text"><p>大雪纷飞，沈砚之散值回府，从大氅怀中掏出一支焐得温热的金累丝嵌红宝石凤簪亲手为你插上：</p></div></div>'+
+        '<div class="story-choices">'+
+          '<button class="story-choice" onclick="closeModal(); G.husbandAff=cl(G.husbandAff+8); addLog(&apos;沈砚之凝视着你：「有夫人在，才是家。」（情分+8）&apos;,&apos;pink&apos;,&apos;【琴瑟和鸣】&apos;); render();">温言执手，替夫君解下披风奉热茶（情分+8）</button>'+
+        '</div>');
+    },
+    function(){
+      openModal('【商道奇谋 · 丝绸紧俏】',
+        '<div class="story-panel"><div class="story-title">江南生丝大涨</div>'+
+        '<div class="story-text"><p>由于西域商路大开，朱雀街云锦绸缎庄存货暴涨，掌柜请示发落：</p></div></div>'+
+        '<div class="story-choices">'+
+          '<button class="story-choice" onclick="closeModal(); G.silver+=220; addLog(&apos;高位抛售生丝存货，公中大赚+220两白银！&apos;,&apos;gold&apos;,&apos;【商贾大赚】&apos;); render();">高价抛售赚取现银（公中+220两）</button>'+
+          '<button class="story-choice" onclick="closeModal(); G.reputation=cl(G.reputation+8); addLog(&apos;平价裁制棉衣分送京城孤老，侯府美名广传。（门风+8）&apos;,&apos;gd&apos;,&apos;【广施善缘】&apos;); render();">平价制作寒衣施赠孤寡（门风+8）</button>'+
+        '</div>');
+    },
+    function(){
+      openModal('【圣驾赐赏 · 寿安堂大喜】',
+        '<div class="story-panel"><div class="story-title">天子赐紫金寿桃</div>'+
         '<div class="story-text"><p>恰逢老太君六十整寿，圣上念定远侯战功赫赫，特赐如意两柄、紫金蟠桃，京城勋贵齐聚贺寿！</p></div></div>'+
         '<div class="story-choices">'+
-          '<button class="story-choice" onclick="finishStory()">大娘子亲自领众命妇谢恩领赏（侯府声望暴涨+15）</button>'+
+          '<button class="story-choice" onclick="closeModal(); G.reputation=cl(G.reputation+15); addLog(&apos;大娘子亲自领众命妇谢恩领赏，侯府荣耀至极！（门风+15）&apos;,&apos;gold&apos;,&apos;【天家隆恩】&apos;); render();">大娘子亲自领众命妇谢恩领赏（门风+15）</button>'+
         '</div>');
-    });
-    G.reputation = cl(G.reputation + 15);
-  }
+    },
+    function(){
+      openModal('【二房亏空 · 妯娌借银】',
+        '<div class="story-panel"><div class="story-title">二叔母过府哭诉赌债</div>'+
+        '<div class="story-text"><p>二房堂弟在京城赌坊欠下巨债，二叔母携帕拭泪，逼迫大娘子动用公中三百两填补窟窿：</p></div></div>'+
+        '<div class="story-choices">'+
+          '<button class="story-choice" onclick="closeModal(); G.prestige=cl(G.prestige+6); addLog(&apos;你断然拒绝，命门房将二房挡在二门外，明言公中不填私赌窟窿，正气凛然！（威仪+6）&apos;,&apos;gd2&apos;,&apos;【严正拒借】&apos;); render();">严词拒绝，申明家规不填无底洞（威仪+6）</button>'+
+          '<button class="story-choice" onclick="closeModal(); G.silver-=300; G.reputation=cl(G.reputation+4); addLog(&apos;念在同族血脉，令其抵押田庄借银三百两，二房千恩万谢。（公中-300两）&apos;,&apos;&apos;,&apos;【收押借银】&apos;); render();">扣下二房京郊小田庄为抵押借银（公中-300两）</button>'+
+        '</div>');
+    },
+    function(){
+      openModal('【后宅奇喜 · 府医按脉有孕】',
+        '<div class="story-panel"><div class="story-title">正头大娘子三十得喜脉</div>'+
+        '<div class="story-text"><p>太医署刘太医请平安脉，喜形于色恭贺：「大娘子滑脉如珠，乃是双生大吉之兆！」沈砚之闻讯狂喜不自胜：</p></div></div>'+
+        '<div class="story-choices">'+
+          '<button class="story-choice" onclick="closeModal(); G.husbandAff=cl(G.husbandAff+12); G.motherAff=cl(G.motherAff+12); G.reputation=cl(G.reputation+10); addLog(&apos;大娘子有喜！沈砚之重赏全府下人三月月例，寿安堂老太君喜得亲上佛堂还愿！（夫妻情分+12）&apos;,&apos;pink&apos;,&apos;【双生吉兆】&apos;); render();">阖府同庆，赏赐全府仆从（情分+12，长辈慈心+12）</button>'+
+        '</div>');
+    },
+    function(){
+      openModal('【圣驾私访 · 留宿侯府】',
+        '<div class="story-panel"><div class="story-title">万岁爷微服京畿察访</div>'+
+        '<div class="story-text"><p>当今天子轻车简从至定远侯府外书房议事，时近黄昏，传旨留在侯府用晚膳。大娘子临危受命调度中馈：</p></div></div>'+
+        '<div class="story-choices">'+
+          '<button class="story-choice" onclick="closeModal(); G.reputation=cl(G.reputation+20); G.prestige=cl(G.prestige+10); addLog(&apos;你命小膳房精制江南莼菜鲈鱼羹与野笋鹿脯，天子赞叹「素雅不奢，真世家风范」，御赐贴身玉佩！（声望+20）&apos;,&apos;gold&apos;,&apos;【御前承恩】&apos;); render();">督造素雅江南御膳，礼数周全进退有度（声望暴涨+20）</button>'+
+        '</div>');
+    },
+    function(){
+      openModal('【长公主雅筵 · 诗会压案】',
+        '<div class="story-panel"><div class="story-title">芙蓉池畔长公主作东</div>'+
+        '<div class="story-text"><p>京城一众公卿贵妇作诗斗草，长公主特邀定远侯夫人赋《雪梅》一阕：</p></div></div>'+
+        '<div class="story-choices">'+
+          '<button class="story-choice" onclick="closeModal(); G.reputation=cl(G.reputation+10); G.prestige=cl(G.prestige+6); addLog(&apos;你提笔写下「冰雪林中著此身，不同桃李混芳尘」，长公主拍案叫绝，当场解下腕上羊脂白玉镯相赠！（名门声望+10）&apos;,&apos;gold&apos;,&apos;【诗惊全场】&apos;); render();">挥毫成诗，气度压倒满座命妇（门风+10）</button>'+
+        '</div>');
+    },
+    function(){
+      openModal('【千宝银楼 · 跨州商战】',
+        '<div class="story-panel"><div class="story-title">山西晋商争夺京城金银汇兑</div>'+
+        '<div class="story-text"><p>外地富商欲在朱雀街联手压价，企图吞并侯府银楼：</p></div></div>'+
+        '<div class="story-choices">'+
+          '<button class="story-choice" onclick="closeModal(); G.privateSilver+=300; G.reputation=cl(G.reputation+8); addLog(&apos;你亮出金陵谢氏信物，调动两淮与江南官银底仓，两日内反将敌商逼至破产求和，净赚私房+300两！（商战大胜）&apos;,&apos;gold&apos;,&apos;【商战立威】&apos;); render();">动用谢氏家族财力强力平仓反击（私房+300两）</button>'+
+          '<button class="story-choice" onclick="closeModal(); G.silver+=100; addLog(&apos;从容退让部分散客，主打官宦重器，收益平稳。&apos;,&apos;&apos;,&apos;【稳中求胜】&apos;); render();">退避三分，专做深宫贵戚定制（收益+100两）</button>'+
+        '</div>');
+    },
+    function(){
+      openModal('【边关大捷 · 庶子立奇功】',
+        '<div class="story-panel"><div class="story-title">庶长子沈承安塞外封将</div>'+
+        '<div class="story-text"><p>八百里加急战报入京！沈承安奇袭北狄右贤王王帐，阵斩敌将三员！天子钦封从四品宣抚副使：</p></div></div>'+
+        '<div class="story-choices">'+
+          '<button class="story-choice" onclick="closeModal(); G.reputation=cl(G.reputation+15); G.concubines[0].obedient=cl(G.concubines[0].obedient+20); addLog(&apos;主母大开中门迎捷报，为庶子大摆庆功筵，林姨娘感激涕零跪叩主母深恩！（门风+15）&apos;,&apos;gold&apos;,&apos;【边关凯歌】&apos;); render();">按嫡庶规制大排庆功宴，抚慰各房（门风+15，妾室归心）</button>'+
+        '</div>');
+    },
+    function(){
+      openModal('【除夕围炉 · 岁晚融融】',
+        '<div class="story-panel"><div class="story-title">侯府除夕合家欢宴</div>'+
+        '<div class="story-text"><p>爆竹声中一岁除，侯府暖阁红烛高烧。侯爷、老夫人与儿孙齐聚一堂，向大娘子拜年：</p></div></div>'+
+        '<div class="story-choices">'+
+          '<button class="story-choice" onclick="closeModal(); G.silver-=100; G.husbandAff=cl(G.husbandAff+6); G.motherAff=cl(G.motherAff+6); addLog(&apos;你给儿孙丫鬟分发压岁红封，沈砚之私下握着你的柔荑相视一笑，岁岁常欢愉。（阖府融洽）&apos;,&apos;pink&apos;,&apos;【岁晚围炉】&apos;); render();">遍发压岁金裸子，阖府同春（公中-100两，情分+6）</button>'+
+        '</div>');
+    }
+  ];
+
+  var fn = pool[Math.floor(Math.random()*pool.length)];
+  fn();
 }
+
 function helpFamily(ok){
-  finishStory();
+  closeModal();
   if(ok){
     if(G.silver >= 200) G.silver -= 200;
     G.reputation = cl(G.reputation + 10);
@@ -1291,7 +1513,89 @@ function helpFamily(ok){
   render();
 }
 
-/* ================= 11. 存档与神识导出系统 ================= */
+/* ================= 9. 终局长卷结算系统 (6大多分支结局) ================= */
+function openEndingsModal(){
+  var endings = [
+    { id:'ending_empress', title:'🏆 一品国夫人 · 百年世家宗妇 (天道大圆满)', cond:'主母威望≥85、门风声望≥85、夫妻情分≥80、长子及第成婚', desc:'儿孙满堂，执掌百年世家大权，天子亲颁一品诰命玉册，死后配享太庙家祠，世代簪缨不绝。' },
+    { id:'ending_regent', title:'👑 权倾中朝 · 摄政帝师外戚', cond:'参与夺嫡成功、长子殿试授官、夫君大统领', desc:'辅弼新君定鼎天下，长子官拜文渊阁首辅，夫君执掌天下兵权，大娘子于内廷一言九鼎。' },
+    { id:'ending_wealth', title:'💰 断舍离 · 和离立户江南首富', cond:'嫁妆私房≥1000两、威望≥75', desc:'看破深宅琐屑，毅然执休书和离南下，金陵谢氏巨贾归宗，掌控江南半壁钱庄粮道，自在逍遥！' },
+    { id:'ending_love', title:'🌸 琴瑟和鸣 · 富贵神仙眷侣', cond:'夫君情分≥90、门风≥75', desc:'夫君急流勇退交还兵权，夫妇二人泛舟太湖，雪夜煮茶，琴瑟和鸣，羡煞京华百官。' },
+    { id:'ending_iron', title:'⚔️ 铁血家主 · 独撑危局大中兴', cond:'威望≥90、公中库银≥3000两', desc:'沈氏百年风雨，大娘子以一介女流之躯铁腕驭下，平反大案，终令将倾大厦巍然屹立！' },
+    { id:'ending_decline', title:'🕯️ 朱门残阳 · 家道中落守古灯', cond:'公中库银≤200两 或 门风≤40', desc:'中馈亏空，奢靡无度，侯府风光不再，空余红楼一梦。' }
+  ];
+
+  var html = '<div class="story-panel"><div class="story-title">📜 高门主母 · 传世大结局图鉴</div>'+
+    '<div class="story-text"><p>掌家中馈数载，皆化为青史一笔。达成条件即可触发长卷评定：</p></div></div>';
+
+  for(var i=0; i<endings.length; i++){
+    var ed = endings[i];
+    var isUnlocked = G.endingsUnlocked[ed.id];
+    html += '<div style="background:#fdf8f2;border:1px solid #d8bfab;border-radius:8px;padding:9px 12px;margin-bottom:8px;">'+
+      '<div style="font-weight:700;font-size:13px;color:#7e1f34;display:flex;justify-content:space-between;">'+
+      '<span>'+ed.title+'</span>'+(isUnlocked?'<span style="color:#15803d;font-weight:700;">【已达成成就】</span>':'<span style="color:#854955;">【未解锁】</span>')+'</div>'+
+      '<div style="font-size:11.5px;color:#78350f;margin-top:2px;">条件：'+ed.cond+'</div>'+
+      '<div style="font-size:12px;color:#451a03;margin-top:4px;line-height:1.5;">'+ed.desc+'</div>'+
+      '</div>';
+  }
+
+  html += '<div style="margin-top:10px;display:flex;gap:8px;">'+
+    '<button class="main-btn gold" style="flex:1;" onclick="evaluateFinalEnding()">🏮 立即进行终局大盘点</button>'+
+    '<button class="main-btn secondary" style="flex:1;" onclick="closeModal()">返回府邸</button>'+
+    '</div>';
+
+  openModal('👑 传世掌家结局长卷', html);
+}
+
+function evaluateFinalEnding(){
+  closeModal();
+  var eTitle = '';
+  var eScroll = '';
+
+  if(G.prestige >= 85 && G.reputation >= 85 && G.husbandAff >= 80){
+    eTitle = '🏆 一品国夫人 · 百年世家宗妇 (传世大圆满)';
+    eScroll = '永熙年间，定远侯府大娘子谢氏锦仪主理中馈三十年，正堂肃穆，门禁森然。长子怀瑾官拜礼部尚书，幼子承安受封宣威大将军，孙辈科甲连绵。圣天子亲赐九凤朝阳玉册，册封正一品定远国夫人，享食邑万户！阖府内外无不感念大娘子持家盛德，定远侯挽夫人手，笑看阶下满堂朱紫，沈氏百年家业，因卿而昌！';
+    G.endingsUnlocked['ending_empress'] = true;
+  }
+  else if(G.flags.joinedPrince && G.husbandRank.indexOf('正二品')!==-1){
+    eTitle = '👑 权倾中朝 · 摄政帝师外戚';
+    eScroll = '夺嫡之夜，京师血雨腥风。大娘子谢锦仪智勇双全，内稳深宅，外通六军。新君登基，沈砚之受封辅政大将军，谢锦仪受封保圣夫人，出入宫禁无须解佩。世家望族皆望风投拜，母仪内外，权倾天下！';
+    G.endingsUnlocked['ending_regent'] = true;
+  }
+  else if(G.privateSilver >= 1000 && G.prestige >= 75){
+    eTitle = '💰 断舍离 · 和离立户江南首富';
+    eScroll = '你看尽公门深宅尔虞我诈，不愿再为虚名空掷青春。一张和离书拍上正堂，十里红妆浩浩荡荡撤出侯府。大娘子返回金陵，执掌永安钱庄与江南茶马粮道，富可敌国，天下巨贾莫不俯首！金钗素手，纵横商海，好不快活！';
+    G.endingsUnlocked['ending_wealth'] = true;
+  }
+  else if(G.husbandAff >= 90){
+    eTitle = '🌸 琴瑟和鸣 · 富贵神仙眷侣';
+    eScroll = '朝堂风云诡谲，沈砚之感念夫人多年操劳，毅然上表乞骸骨辞官归隐。二人携私房千两迁居太湖庄园，春赏樱笋，夏抚鸣琴，秋品香茗，冬烹寒雪。夫妻相伴终老，琴瑟相和，不负人间白首之约！';
+    G.endingsUnlocked['ending_love'] = true;
+  }
+  else if(G.silver <= 300 || G.reputation <= 40){
+    eTitle = '🕯️ 朱门残阳 · 家道中落守古灯';
+    eScroll = '侯府中馈亏空如雪崩难挽，采买虚报，妾室离心。往日高门显赫，如今衰草枯杨。你在冷落正房中拨弄残烛，叹世间繁华过眼云烟，终归沉寂。';
+    G.endingsUnlocked['ending_decline'] = true;
+  }
+  else {
+    eTitle = '⚔️ 铁血家主 · 独撑危局大中兴';
+    eScroll = '经历数次朝堂大浪与内宅暗流，大娘子谢锦仪雷厉风行，奖掖后生，严惩刁奴，以一人之力挽定远侯府大厦于将倾。侯府基业巍峨不倒，后世子孙奉大娘子画像于中堂，世代岁祭不辍！';
+    G.endingsUnlocked['ending_iron'] = true;
+  }
+
+  var html = '<div class="ending-banner">'+
+    '<div class="ending-title">'+eTitle+'</div>'+
+    '<div class="ending-sub">定远侯府 · 大娘子掌家纪实册</div>'+
+    '<div class="ending-scroll">'+eScroll+'</div>'+
+    '</div>'+
+    '<div style="margin-top:12px;text-align:center;">'+
+    '<button class="main-btn gold" onclick="closeModal()">载入史册，继续执掌中馈</button>'+
+    '</div>';
+
+  openModal('🏮 侯府大纪元 · 终局长卷结算', html);
+  autoSave();
+}
+
+/* ================= 10. 存档与神识导出系统 ================= */
 function autoSave(){
   try{
     localStorage.setItem('gaomen_save_auto', JSON.stringify(G));
@@ -1299,7 +1603,7 @@ function autoSave(){
 }
 function openSaveModal(){
   var s0 = localStorage.getItem('gaomen_save_auto') ? '已有自动存简' : '暂无';
-  var html = '<p style="font-size:12.5px;font-weight:600;margin-bottom:8px;color:#4a261c;">存档保存在本地，亦可调阅各卷宗室档案：</p>';
+  var html = '<p style="font-size:12.5px;font-weight:600;margin-bottom:8px;color:#4a261c;">存档保存在本地，随时调阅各卷宗室档案：</p>';
   html += '<div style="background:#fcf5ec;border:1px solid #dfc7b0;padding:8px 10px;border-radius:8px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;">'+
     '<span>天道印记自动档：<b>'+s0+'</b></span>'+
     '<button class="main-btn" style="padding:3px 10px;font-size:11.5px;" onclick="loadSlot(&apos;auto&apos;)">读取</button></div>';
@@ -1329,30 +1633,32 @@ function loadSlot(i){
     if(!raw){ toast('暂无存录记录'); return; }
     G = JSON.parse(raw);
     closeModal();
-    toast('神识调阅成功，时光倒流！');
+    toast('调阅成功，时光倒流！');
     render();
   }catch(e){ toast('读取失败'); }
 }
 
 function showHelp(){
   openModal('📖 掌家心法与典籍要诀',
-    '<div class="story-panel"><div class="story-title">高门主母修养三大纲纪</div>'+
+    '<div class="story-panel"><div class="story-title">高门主母四大纲纪</div>'+
     '<div class="story-text">'+
-    '<p><b>一、中馈公中莫亏空：</b>每月按旬发放份例，田庄与绸缎铺子必须常去盘查，防范管事做假账虚报开销。</p>'+
-    '<p><b>二、内宅驭下恩威并重：</b>林小娘虽得宠，但尊卑有别不可逾矩；老太君面前尽孝，夫君书房常去温情抚慰。</p>'+
-    '<p><b>三、世家大族后代为本：</b>聘请翰林名师开蒙，待哥儿年满十四便需相看世家名门，结成朱门奥援。</p>'+
+    '<p><b>一、中馈公中莫亏空：</b>每月按旬发放份例，庄田与商铺必须常去巡查，收购钱庄可保银钱充裕。</p>'+
+    '<p><b>二、内宅驭下恩威并施：</b>林小娘得宠需立规矩，寄居表妹柳纤纤心机不纯宜尽早赐婚远嫁，侍奉婆母保奥援。</p>'+
+    '<p><b>三、世家大族后代为本：</b>聘翰林大儒受业，年满考中探花郎跨马游街，娶名门贵女诞育第三代长孙，三代鼎盛。</p>'+
+    '<p><b>四、朝堂风暴稳如泰山：</b>皇子夺嫡与御史参劾乃灭门大劫，审时度势，或孤臣自保，或盛装击鼓救夫！</p>'+
     '</div></div>');
 }
 
 function restartGame(){
   if(confirm('是否从新妇过门之日重新开启高门掌家录？')){
+    localStorage.removeItem('gaomen_save_auto');
     G = getDefaultState();
     render();
     toast('新妇过门，从头执掌定远侯府中馈！');
   }
 }
 
-/* ================= 12. 初始化启动 ================= */
+/* ================= 11. 初始化启动 ================= */
 window.onload = function(){
   try{
     var raw = localStorage.getItem('gaomen_save_auto');
@@ -1361,6 +1667,11 @@ window.onload = function(){
   }catch(e){
     G = getDefaultState();
   }
+  // 补齐新增字段容错
+  if(!G.cousin) G.cousin = { name:'柳纤纤 (青州远房表妹)', status:'借住海棠轩', scheming:65, favor:20, resolved:false };
+  if(!G.grandchildren) G.grandchildren = [];
+  if(!G.endingsUnlocked) G.endingsUnlocked = {};
+  if(!G.flags) G.flags = {};
   render();
 };
 </script>
