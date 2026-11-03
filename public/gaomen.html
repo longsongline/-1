@@ -53,6 +53,8 @@ body{
 .chip.highlight{background:#7e1f34;color:#fff;border-color:#5c1222;box-shadow:0 2px 6px rgba(126,31,52,.25);}
 .chip.highlight b{color:#ffe482;}
 .chip.highlight .chip-svg svg{stroke:#fff;}
+.chip .d-text{display:inline;}
+.chip .m-text{display:none;}
 
 /* 移动端视图切换条 */
 .mobile-switch-bar{display:none;background:#fffdfa;border:1px solid #d4bda8;border-radius:10px;
@@ -225,18 +227,71 @@ body{
   opacity:0;display:none;}
 #toastBox.show{display:block;opacity:1;transform:translateX(-50%) translateY(-5px);}
 
-/* 响应式断点适配 */
+/* 响应式断点适配 (移动端极致空间优化) */
 @media (max-width:860px){
-  .wrap{padding:6px;gap:6px;}
-  .mobile-switch-bar{display:flex;}
-  .main{grid-template-columns:1fr;position:relative;}
-  .left-col.m-hidden{display:none;}
-  .right-col.m-hidden{display:none;}
-  .right-col{height:100%;}
-  .house-panel{padding:9px;}
-  .topbar{padding:6px 10px;}
-  .brand-box h1{font-size:14.5px;}
-  .bottom-bar{padding:6px 10px;}
+  .wrap{padding:4px;gap:4px;}
+
+  /* 顶栏极致收拢：高度由200px骤减至约65px */
+  .topbar{padding:5px 7px;gap:4px;flex-direction:column;align-items:stretch;border-radius:8px;}
+  .brand-box{justify-content:flex-start;width:100%;gap:6px;}
+  .mansion-logo{width:22px;height:22px;border-radius:5px;}
+  .mansion-logo svg{width:13px;height:13px;}
+  .brand-box h1{font-size:13px;letter-spacing:0.2px;}
+  .brand-box h1 small{display:none;}
+  .brand-sub{display:none;}
+
+  /* 状态栏变成精准的4列x2行高密度微徽章矩阵，杜绝臃肿折行 */
+  .chips{display:grid !important;grid-template-columns:repeat(4,1fr) !important;gap:2.5px !important;width:100% !important;}
+  .chip{padding:3px 2px !important;font-size:10.5px !important;border-radius:5px !important;gap:2.5px !important;justify-content:center !important;box-shadow:none !important;white-space:nowrap !important;}
+  .chip .d-text{display:none !important;}
+  .chip .m-text{display:inline !important;}
+  .chip-svg{width:11px;height:11px;}
+  .chip-svg svg{width:11px;height:11px;}
+
+  /* 切换栏紧凑化 */
+  .mobile-switch-bar{display:flex;padding:2px;gap:3px;border-radius:6px;}
+  .m-switch-btn{padding:5px 6px;font-size:11.5px;border-radius:5px;}
+
+  /* 主体单视口与严密分屏，杜绝右栏泄漏 */
+  .main{grid-template-columns:1fr !important;position:relative;}
+  .left-col.m-hidden{display:none !important;}
+  .right-col.m-hidden{display:none !important;}
+  .left-col{padding:7px;border-radius:8px;gap:5px;height:100%;}
+  .right-col{padding:7px;border-radius:8px;gap:5px;height:100%;}
+  .house-panel{padding:8px;}
+
+  /* 导航选项卡小巧化 */
+  .nav-tabs{gap:4px;padding-bottom:2px;}
+  .nav-btn{padding:4px 8px;font-size:11px;border-radius:6px;gap:4px;}
+  .nav-btn .nav-svg{width:13px;height:13px;}
+  .nav-btn .nav-svg svg{width:13px;height:13px;}
+
+  /* 场景文案收拢为精炼单行提示 */
+  .scene-desc{padding:4px 7px;font-size:11px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:5px;border-left-width:3px;}
+
+  /* 动作卡片收拢，一屏可看4~5个行动 */
+  .acts-grid{grid-template-columns:1fr !important;gap:5px !important;}
+  .act-card{padding:6px 8px !important;gap:7px !important;border-radius:8px !important;}
+  .act-ic{width:30px !important;height:30px !important;border-radius:6px !important;}
+  .act-ic svg{width:17px !important;height:17px !important;}
+  .act-t1{font-size:12px !important;}
+  .act-t2{font-size:10.5px !important;line-height:1.35 !important;margin-top:2px !important;}
+  .act-cost{font-size:9.5px !important;padding:1px 5px !important;}
+
+  .card-item{padding:6px 8px !important;gap:7px !important;margin-bottom:5px !important;}
+  .item-ic{width:28px !important;height:28px !important;}
+  .item-ic svg{width:15px !important;height:15px !important;}
+  .card-head{font-size:12px !important;}
+  .card-body{font-size:11px !important;}
+  .card-acts{margin-top:4px !important;}
+
+  /* 底栏单行高密度Dock栏，收窄至38px */
+  .bottom-bar{padding:4px 6px !important;gap:4px !important;border-radius:8px !important;}
+  .bottom-identity{display:none !important;}
+  .bottom-btns{width:100% !important;display:flex !important;gap:3px !important;flex-wrap:nowrap !important;}
+  .bottom-btns .main-btn{padding:5px 5px !important;font-size:11px !important;flex:1 !important;justify-content:center !important;white-space:nowrap !important;}
+  .bottom-btns .main-btn.primary-turn{flex:1.8 !important;font-weight:700 !important;}
+  .bottom-btns .main-btn.btn-endings{display:none !important;}
 }
 </style>
 </head>
@@ -293,8 +348,8 @@ body{
       </div>
     </div>
 
-    <!-- 右侧：府邸状态与流水日志 -->
-    <div class="right-col" id="rightCol">
+    <!-- 右侧：府邸状态与流水日志 (移动端默认隐藏，通过切换栏按需呈现) -->
+    <div class="right-col m-hidden" id="rightCol">
       <div class="house-panel" id="housePanel">
         <!-- 动态渲染 -->
       </div>
@@ -313,15 +368,15 @@ body{
     </div>
   </div>
 
-  <!-- 底栏 -->
+  <!-- 底栏 (移动端单行微型Dock栏) -->
   <footer class="bottom-bar">
-    <div style="font-size:12px;color:#4a261c;font-weight:600;display:flex;align-items:center;gap:6px;">
+    <div class="bottom-identity" style="font-size:12px;color:#4a261c;font-weight:600;display:flex;align-items:center;gap:6px;">
       <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#7e1f34" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
       当前身份：<b>定远侯正头大娘子 (谢氏锦仪)</b>
     </div>
-    <div style="display:flex;gap:6px;flex-wrap:wrap;">
-      <button class="main-btn" onclick="endCurrentXun()">⏳ 岁月流转 (下旬)</button>
-      <button class="main-btn gold" onclick="openEndingsModal()">📜 终局图鉴</button>
+    <div class="bottom-btns" style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="main-btn primary-turn" onclick="endCurrentXun()">⏳ 岁月流转 (下旬)</button>
+      <button class="main-btn gold btn-endings" onclick="openEndingsModal()">📜 终局图鉴</button>
       <button class="main-btn secondary" onclick="openSaveModal()">💾 存简</button>
       <button class="main-btn secondary" onclick="showHelp()">❓ 典籍</button>
       <button class="main-btn secondary" onclick="restartGame()">🔄 重开</button>
@@ -635,14 +690,14 @@ function render(){
 function renderTopChips(){
   var sName = SEASONS[Math.floor((G.month-1)/3)%4];
   var html = '';
-  html += '<div class="chip">'+ICONS.chipCalendar+' 第<b>'+G.year+'</b>年·'+G.month+'月'+XUN_NAMES[G.xun]+' ('+sName+')</div>';
-  html += '<div class="chip">'+ICONS.chipEnergy+' 精力: <b>'+G.energy+'</b>/'+G.maxEnergy+'</div>';
-  html += '<div class="chip">'+ICONS.chipSilver+' 公中库银: <b>'+G.silver+'</b> 两</div>';
-  html += '<div class="chip">'+ICONS.chipPrivate+' 嫁妆私房: <b>'+G.privateSilver+'</b> 两</div>';
-  html += '<div class="chip">'+ICONS.chipPrestige+' 主母威仪: <b>'+G.prestige+'</b></div>';
-  html += '<div class="chip">'+ICONS.chipReputation+' 侯府门风: <b>'+G.reputation+'</b></div>';
-  html += '<div class="chip clickable" onclick="toggleMusic()">'+(bgmPlaying?ICONS.chipMusicOn+' 雅乐鸣':ICONS.chipMusicOff+' 雅乐静')+'</div>';
-  html += '<div class="chip clickable highlight" onclick="openEndingsModal()">'+ICONS.chipCrown+' <b>终局图鉴</b></div>';
+  html += '<div class="chip"><span class="chip-svg">'+ICONS.chipCalendar+'</span><span class="d-text">第<b>'+G.year+'</b>年·'+G.month+'月'+XUN_NAMES[G.xun]+' ('+sName+')</span><span class="m-text"><b>'+G.year+'</b>年·'+G.month+'月'+XUN_NAMES[G.xun]+'</span></div>';
+  html += '<div class="chip"><span class="chip-svg">'+ICONS.chipEnergy+'</span><span class="d-text">精力: <b>'+G.energy+'</b>/'+G.maxEnergy+'</span><span class="m-text">精力 <b>'+G.energy+'</b>/'+G.maxEnergy+'</span></div>';
+  html += '<div class="chip"><span class="chip-svg">'+ICONS.chipSilver+'</span><span class="d-text">公中库银: <b>'+G.silver+'</b> 两</span><span class="m-text">公中 <b>'+G.silver+'</b></span></div>';
+  html += '<div class="chip"><span class="chip-svg">'+ICONS.chipPrivate+'</span><span class="d-text">嫁妆私房: <b>'+G.privateSilver+'</b> 两</span><span class="m-text">私房 <b>'+G.privateSilver+'</b></span></div>';
+  html += '<div class="chip"><span class="chip-svg">'+ICONS.chipPrestige+'</span><span class="d-text">主母威仪: <b>'+G.prestige+'</b></span><span class="m-text">威仪 <b>'+G.prestige+'</b></span></div>';
+  html += '<div class="chip"><span class="chip-svg">'+ICONS.chipReputation+'</span><span class="d-text">侯府门风: <b>'+G.reputation+'</b></span><span class="m-text">门风 <b>'+G.reputation+'</b></span></div>';
+  html += '<div class="chip clickable" onclick="toggleMusic()"><span class="chip-svg">'+(bgmPlaying?ICONS.chipMusicOn:ICONS.chipMusicOff)+'</span><span class="d-text">'+(bgmPlaying?'雅乐鸣':'雅乐静')+'</span><span class="m-text">'+(bgmPlaying?'乐鸣':'乐静')+'</span></div>';
+  html += '<div class="chip clickable highlight" onclick="openEndingsModal()"><span class="chip-svg">'+ICONS.chipCrown+'</span><span class="d-text"><b>终局图鉴</b></span><span class="m-text"><b>图鉴</b></span></div>';
   document.getElementById('topChips').innerHTML = html;
 }
 
@@ -1673,6 +1728,7 @@ window.onload = function(){
   if(!G.endingsUnlocked) G.endingsUnlocked = {};
   if(!G.flags) G.flags = {};
   render();
+  setMobileView('main');
 };
 </script>
 </body>
