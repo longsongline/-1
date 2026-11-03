@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#e9eef3">
+<meta name="color-scheme" content="light">
+<title>滨江市 · 打工人生</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{color-scheme:light;height:100%;-webkit-text-size-adjust:100%;}
+body{font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+  color:#2b3440;background:#e9eef3;line-height:1.55;font-size:14px;
+  height:100%;overflow:hidden;}
+body.s-spring{background:#eef7fb;}
+body.s-summer{background:#eef9f1;}
+body.s-autumn{background:#fbf3e9;}
+body.s-winter{background:#eef2f8;}
+.wrap{position:relative;max-width:1080px;margin:0 auto;
+  padding:6px;height:100vh;height:100dvh;display:flex;flex-direction:column;
+  gap:6px;overflow:hidden;}
+.topbar{background:#fff;border:1px solid #cdd8e3;border-radius:12px;
+  padding:8px 13px;display:flex;flex-wrap:wrap;gap:6px;
+  align-items:center;justify-content:space-between;flex-shrink:0;
+  box-shadow:0 2px 10px rgba(40,70,110,.08);}
+.topbar h1{font-size:16px;font-weight:600;letter-spacing:2px;color:#2f6fb0;}
+.topbar h1 small{font-size:10px;color:#8a99a8;letter-spacing:1px;font-weight:normal;}
+.chips{display:flex;flex-wrap:wrap;gap:5px;}
+.chip{background:#eef3f8;border:1px solid #cdd8e3;border-radius:20px;
+  padding:2px 10px;font-size:11.5px;color:#5a6a7a;white-space:nowrap;}
+.chip b{color:#2f6fb0;font-weight:600;font-size:13px;}
+.chip.warn{background:#fdeeee;border-color:#e0a0a0;color:#a03030;}
+.main{flex:1;min-height:0;display:flex;gap:6px;overflow:hidden;}
+.side{flex:0 0 250px;min-height:0;display:flex;overflow:hidden;}
+.content{flex:1;min-height:0;display:flex;overflow:hidden;}
+.panel{background:#fff;border:1px solid #cdd8e3;border-radius:12px;
+  padding:10px 12px;box-shadow:0 2px 8px rgba(40,70,110,.07);
+  display:flex;flex-direction:column;min-height:0;width:100%;}
+.panel h3{font-size:12.5px;font-weight:600;letter-spacing:2px;color:#2f6fb0;
+  border-bottom:1px dashed #cdd8e3;padding-bottom:5px;margin-bottom:7px;
+  flex-shrink:0;display:flex;justify-content:space-between;align-items:center;}
+.panel h3 em{font-style:normal;font-size:10.5px;color:#8a99a8;letter-spacing:0;}
+.scene-mood{font-size:11px;color:#8a9bb0;margin:-3px 0 8px;line-height:1.5;flex-shrink:0;font-style:italic;}
+.log-panel{flex:1;min-height:0;overflow:hidden;}
+.log-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.6;color:#4a5a6a;}
+.log-body p{padding:2px 0;border-bottom:1px dotted #e4ecf3;word-break:break-word;}
+.log-body p:last-child{border-bottom:none;}
+.log-body .dt{color:#8a99a8;font-size:10.5px;margin-right:5px;}
+.log-body .gd{color:#2e8b57;}
+.log-body .bd{color:#c0392b;}
+.log-body .gd2{color:#2f6fb0;}
+.acts{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:6px;align-content:start;}
+.act{display:flex;gap:7px;align-items:flex-start;
+  background:#f7fafc;border:1px solid #cdd8e3;border-radius:10px;
+  padding:8px 10px;text-align:left;cursor:pointer;font-family:inherit;
+  font-size:13px;color:#2b3440;transition:all .15s;-webkit-appearance:none;}
+.act:hover{border-color:#4aa3df;background:#eef6fc;}
+.act:active{transform:scale(.97);}
+.act.off{opacity:.38;pointer-events:none;}
+.act .ic{font-size:17px;line-height:1.1;flex-shrink:0;}
+.act .bd2{display:flex;flex-direction:column;gap:1px;flex:1;min-width:0;}
+.act .t1{font-size:13px;letter-spacing:1px;}
+.act .t2{font-size:10.5px;color:#8a99a8;line-height:1.3;}
+.person{background:#f7fafc;border:1px solid #cdd8e3;border-radius:10px;
+  padding:8px 10px;margin-bottom:6px;font-size:12.5px;}
+.person .nm{display:flex;justify-content:space-between;margin-bottom:3px;}
+.person .nm b{color:#2f6fb0;font-weight:600;}
+.person .nm span{color:#8a99a8;font-size:11px;}
+.bar{height:6px;background:#e4ecf3;border-radius:4px;overflow:hidden;}
+.bar i{display:block;height:100%;background:#e15b8a;border-radius:4px;transition:width .3s;}
+.nav{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;flex-shrink:0;
+  background:#fff;border:1px solid #cdd8e3;border-radius:12px;
+  padding:6px;box-shadow:0 2px 8px rgba(40,70,110,.07);}
+.nav button{flex:1 1 auto;min-width:60px;font-family:inherit;font-size:12.5px;
+  letter-spacing:1px;padding:8px 4px;border-radius:9px;cursor:pointer;
+  background:#eef4fb;border:1px solid #cdd8e3;color:#4a5a6a;
+  -webkit-appearance:none;transition:all .15s;}
+.nav button:active{transform:scale(.96);}
+.nav button.util{background:#e4ecf3;}
+.mask{position:fixed;inset:0;background:rgba(30,45,60,.5);z-index:50;
+  display:flex;align-items:center;justify-content:center;padding:16px;}
+.modal{background:#fff;border:1px solid #cdd8e3;border-radius:16px;
+  padding:18px;max-width:420px;width:100%;max-height:82vh;overflow-y:auto;
+  box-shadow:0 10px 30px rgba(20,40,60,.25);}
+.modal h2{font-size:15px;color:#2f6fb0;letter-spacing:2px;margin-bottom:10px;font-weight:600;}
+.modal .desc{font-size:13px;color:#4a5a6a;margin-bottom:10px;}
+.modal button.main-btn{font-family:inherit;font-size:14px;letter-spacing:2px;padding:11px 16px;
+  cursor:pointer;background:#2f6fb0;color:#fff;border:none;border-radius:10px;width:100%;}
+.story-choice{display:block;width:100%;font-family:inherit;font-size:13.5px;padding:12px 16px;text-align:left;
+  background:linear-gradient(90deg,rgba(74,163,223,.12),rgba(74,163,223,.04));
+  border:1px solid #cdd8e3;border-radius:10px;cursor:pointer;color:#2b3440;margin-bottom:8px;-webkit-appearance:none;}
+.story-choice:active{background:rgba(74,163,223,.25);}
+.qty-input{width:100%;padding:10px;border:1px solid #cdd8e3;border-radius:10px;
+  font-family:inherit;font-size:16px;text-align:center;background:#f7fafc;color:#2b3440;}
+#toastRoot{position:fixed;left:50%;bottom:70px;transform:translateX(-50%);z-index:99;pointer-events:none;}
+#toastRoot div{background:rgba(35,50,65,.93);color:#fff;font-size:13px;padding:9px 20px;
+  border-radius:20px;opacity:0;transition:opacity .2s;margin-top:6px;}
+#toastRoot div.show{opacity:1;}
+#toastRoot div:not(.show){display:none;}
+html,body{overscroll-behavior:none;}
+.act,.nav button,.story-choice,.main-btn,input{touch-action:manipulation;}
+/* ================= 移动端适配（手机优先） ================= */
+@media (max-width:760px){
+  .wrap{padding:4px;gap:4px;padding-bottom:calc(4px + env(safe-area-inset-bottom));}
+  .topbar{padding:6px 9px;gap:4px 5px;flex-wrap:wrap;}
+  .topbar h1{font-size:13px;letter-spacing:1px;flex-shrink:0;}
+  .topbar h1 small{display:none;}
+  /* 状态栏：多行完整显示，不再横向滚动 */
+  .chips{flex:1 1 100%;flex-wrap:wrap;overflow:visible;min-width:0;
+    justify-content:flex-start;align-content:flex-start;gap:4px;padding-bottom:0;}
+  .chip{font-size:10.5px;padding:1px 7px;line-height:1.5;}
+  .chip b{font-size:11.5px;}
+  .main{flex-direction:column;gap:4px;}
+  .content{order:1;flex:1;min-height:0;}
+  .side{order:2;flex:0 0 24vh;max-height:24vh;}
+  .panel{padding:7px 8px;}
+  .panel h3{font-size:11.5px;margin-bottom:4px;padding-bottom:4px;letter-spacing:1px;}
+  .panel h3 em{font-size:9.5px;}
+  #actHead em{display:none;}
+  .act .t2{white-space:normal;word-break:break-word;}
+  .scene-mood{font-size:10px;margin:-2px 0 5px;}
+  .acts{grid-template-columns:repeat(2,1fr);gap:4px;}
+  .act{padding:6px 7px;gap:5px;border-radius:9px;}
+  .act .ic{font-size:15px;}
+  .act .t1{font-size:12px;letter-spacing:0;}
+  .act .t2{font-size:9.5px;line-height:1.25;}
+  #peoplePanel{max-height:24vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  .person{padding:6px 8px;font-size:11.5px;margin-bottom:5px;}
+  .log-body{font-size:11px;line-height:1.5;}
+  .log-body p{padding:1px 0;}
+  .nav{flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;justify-content:flex-start;
+    gap:4px;padding:5px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .nav::-webkit-scrollbar{display:none;}
+  .nav button{flex:0 0 auto;min-width:0;white-space:nowrap;font-size:11.5px;
+    padding:7px 10px;letter-spacing:0;}
+  .modal{max-width:94vw;max-height:80vh;padding:14px;border-radius:14px;}
+  .modal h2{font-size:14px;margin-bottom:8px;}
+  .modal .desc{font-size:12.5px;margin-bottom:8px;}
+  .story-choice{font-size:12.5px;padding:11px 13px;}
+  #toastRoot{bottom:calc(84px + env(safe-area-inset-bottom));}
+  #toastRoot div{font-size:12px;padding:8px 16px;}
+}
+/* 横屏 / 超矮屏 */
+@media (max-height:480px){
+  .side{flex:0 0 20vh;max-height:20vh;}
+  #peoplePanel{max-height:20vh;}
+  .nav button{padding:5px 8px;font-size:11px;}
+}
+/* 手机横屏：状态栏多行时再压缩一点，避免挤压内容区 */
+@media (max-width:760px) and (max-height:480px){
+  .topbar{padding:4px 8px;gap:3px 4px;}
+  .topbar h1{font-size:12px;}
+  .chip{font-size:9.5px;padding:0 6px;line-height:1.45;}
+  .chip b{font-size:10.5px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <h1>滨江市 · 打工人生 <small>都市生存模拟</small></h1>
+    <div class="chips" id="chips"></div>
+  </div>
+  <div class="main">
+    <div class="side">
+      <div class="panel log-panel">
+        <h3>生活日志 <em id="cDate"></em></h3>
+        <div class="log-body" id="logBody"></div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="panel">
+        <h3 id="actHead"></h3>
+        <div class="scene-mood" id="sceneMood"></div>
+        <div class="acts" id="actGrid"></div>
+        <div id="peoplePanel" style="margin-top:8px;overflow-y:auto;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="nav" id="nav"></div>
+</div>
+<div id="modalRoot"></div>
+<div id="toastRoot"></div>
+<script>
+/* ================= 工具 ================= */
+function ri(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function pk(a){return a[Math.floor(Math.random()*a.length)];}
+function cl(v,a,b){if(a===undefined)a=0;if(b===undefined)b=100;return Math.max(a,Math.min(b,v));}
+function num(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+var XUN_NAME=['上旬','中旬','下旬'];
+var SEASON={1:'winter',2:'winter',3:'spring',4:'spring',5:'spring',6:'summer',7:'summer',8:'summer',9:'autumn',10:'autumn',11:'autumn',12:'winter'};
+var FLAVOR={
+  work:['你把一个卡了三天的 bug 修好了，组长拍了下你肩膀。','你把需求文档重写了第三遍，终于过审。','你在会上硬着头皮汇报，手心全是汗。','你顺手帮实习生改了段代码，对方千恩万谢。','你把工位收拾了一遍，效率莫名高了些。','你替同事顶了一个下午的会，回来嗓子都哑了。'],
+  study:['你把错题本翻到卷边。','你啃下了最难的那一章。','你对着网课记满三页笔记，手指发酸。','你在图书馆坐了一整天，抬头天都黑了。','你把一道题算了五遍，终于在第六遍算对。'],
+  side:['你接了单代排队的活，站到腿麻。','你帮人代写了份材料，改到凌晨。','你跑了几趟同城急送，电动车半路没电了。','你摆摊卖了两小时，遇到个砍价的。','你替人搬了次家，腰差点闪了。'],
+  rest:['你把攒了半年的剧一口气刷完。','你睡了个昏天黑地，醒来下午四点。','你窝在沙发上打了半天游戏，真爽。','你点了份外卖，边吃边看综艺，笑出声。'],
+  gym:['你出了一身汗，感觉整个人都轻了。','你把器械区练了个遍，第二天酸得下不来床。','你在跑步机上跑完五公里，歌单循环了两遍。','你跟隔壁的人轮流用深蹲架，聊了两句。']
+};
+function flav(k){return FLAVOR[k]?pk(FLAVOR[k]):'';}
+var SCENE_SEASON={
+  home:{spring:'窗台的多肉抽出新芽，屋里飘着淡淡的花香。',summer:'空调嗡嗡响，桌上的西瓜切了一半。',autumn:'阳光斜斜照进来，楼下桂花的香气顺着窗缝钻进来。',winter:'暖气片烫手，窗外阴沉，你不太想出门。'},
+  company:{spring:'窗外的玉兰开了，会议室里却还是那股速溶咖啡味。',summer:'空调开得很足，前台小姑娘穿着短袖喊冷。',autumn:'落地窗外银杏黄了，你却没空看一眼。',winter:'暖气烘得人犯困，键盘上的手有点僵。'},
+  street:{spring:'街边的樱花开了，咖啡馆把桌椅搬到了人行道上。',summer:'蝉鸣震天，便利店门口的冰柜被抢空了一半。',autumn:'梧桐叶落了一地，踩上去沙沙响。',winter:'冷风往领口里钻，行人都缩着脖子快步走。'},
+  wealth:{spring:'中介门店的玻璃上贴着新盘广告，销售笑得格外热情。',summer:'大厅冷气充足，看房的人却不多。',autumn:'门口摆着「金九银十」的易拉宝，中介嘴皮子磨得飞快。',winter:'年底了，中介说「现在不买，明年就涨」。'},
+  hospital:{spring:'走廊里飘着消毒水味，挂号窗口排着长队。',summer:'空调开得很低，候诊区坐满了人。',autumn:'换季流感高发，儿科门口哭声一片。',winter:'急诊灯火通明，走廊里都是加床。'},
+  hometown:{spring:'田埂上油菜花开了，爸妈在门口晒着太阳等你。',summer:'院子里的葡萄架结满了果，蝉在树上叫个不停。',autumn:'晒谷场上堆满金黄，空气里是稻香。',winter:'屋檐下挂着腊肉，灶膛的火烧得正旺。'},
+  trip:{spring:'目的地漫山花海，朋友圈九宫格都不够发。',summer:'海边人挤人，但海风一吹什么都不想管了。',autumn:'层林尽染，随手一拍都是壁纸。',winter:'你去了个下雪的地方，第一次看见那么大的雪。'}
+};
+function sceneMood(p){var o=SCENE_SEASON[p];return o?(o[SEASON[G.month]]||''):'';}
+function setPhase(p){G.phase=p;render();}
+
+/* ================= 数据表 ================= */
+var JOBS=[
+  {name:'实习生',   salary:4000,  need:0},
+  {name:'正式员工', salary:6500,  need:50},
+  {name:'主管',     salary:9500,  need:70},
+  {name:'经理',     salary:13500, need:92},
+  {name:'总监',     salary:19000, need:115},
+  {name:'高管',     salary:27000, need:140}
+];
+var HOUSE_PRICE=300000;
+var INDUSTRIES=[
+  {name:'互联网', mult:1.0},
+  {name:'金融',   mult:1.3},
+  {name:'制造业', mult:0.8},
+  {name:'教培',   mult:0.95},
+  {name:'国企',   mult:0.9}
+];
+function salaryNow(){return Math.round(JOBS[G.level].salary*G.indMult*(G.salaryPenalty||1));}
+function c0(){return G.children.length?G.children[0].name:'孩子';}
+function childName(){return pk(['小满','豆豆','糖糖','乐乐','康康','安安','一一','果果','年年','团团']);}
+var NPC_DEFS=[
+  {id:'lin', name:'林晓', title:'同组同事', via:'work',
+   s15:'刚入职那周，她主动带你认了全组的工位和咖啡机：「以后有事喊我。」',
+   s30:'项目熬夜时她递给你一杯热咖啡，说「别硬撑，效率比时长重要。」',
+   s50:'项目庆功宴上，她悄悄把你不爱吃的香菜挑走了：「这个我帮你解决。」',
+   s60:'下班路上她忽然说：「其实每次加班，我都是为了能和你多待一会儿。」',
+   s75:'某个加完班的深夜，她问你：「如果有一天我们都累了，还能一起坐下来吃顿饭吗？」',
+   s90:'她把一把钥匙放进你手心：「我租的房子到期了。要不要……一起找个更大的家？」',
+   sMarried:'婚后你们约好：再忙也每周五一起做饭。哪怕只是煮泡面，也要面对面坐着吃。',
+   sPet:'婚后你们一起给宠物铲屎、遛弯，拌嘴的次数反而少了：「家里有它，总能听见动静。」'},
+  {id:'su',  name:'苏芮', title:'楼下咖啡师', via:'social',
+   s15:'你第一次忘带手机，她帮你收好了：「下次别这么马大哈。」',
+   s30:'你常点的那杯拿铁，杯套上多了一行手写字：「今天也要加油鸭。」',
+   s50:'下雨天她多给你拉了一杯：「今天这杯算我请，看你淋的。」',
+   s60:'打烊后她留在店里陪你聊天到深夜：「认识你之后，打烊的时间都变快了。」',
+   s75:'她把店里的备用钥匙塞给你：「打烊后想坐坐就来，不用非得消费。」',
+   s90:'她在你的拿铁拉花里画了一枚戒指：「这杯不要钱。但往后的人生，想请你多关照。」',
+   sMarried:'婚后她辞了店里的班，和你合伙盘下了那家小店，招牌换成了你们俩的名字。',
+   sPet:'婚后她把咖啡馆的角落留给你们的宠物，熟客都知道「那是老板娘的心头肉」。'},
+  {id:'chen',name:'陈默', title:'健身教练', via:'gym',
+   s15:'第一次上课他记错了你的名字，红着脸道歉了半天。',
+   s30:'你卧推力竭时他稳稳护住杠铃：「没事，有我在。」',
+   s50:'看你总吃外卖，他甩给你一份食谱：「照着吃，别再糊弄自己。」',
+   s60:'深夜他发来消息：「看你最近状态不对。有事别一个人扛，我请你吃夜宵。」',
+   s75:'他难得没提训练：「今天不练了。陪我去趟江边走走？」',
+   s90:'他在私教课结束时单膝跪地，掏出戒指：「这辈子，让我一直护着你好吗？」',
+   sMarried:'婚后的清晨，他不再当你是学员，而是把牛奶燕麦端到你床头。',
+   sPet:'婚后他每天带你俩（你+宠物）一起去跑步，说「一家人都要健康」，谁也赖不掉。'},
+  {id:'xu',  name:'许念', title:'图书馆常客', via:'study',
+   s15:'你打瞌睡时，她轻轻把你滑落的笔帽盖好，没吵醒你。',
+   s30:'你两道题卡了半小时，旁边的她递来一张写满推导过程的草稿纸：「这样会快一点。」',
+   s50:'她说要把考研笔记借你：「反正我也用不上了，给你当参考。」',
+   s60:'闭馆音乐响起，她说：「不知道为什么，看到你在，我复习的效率特别高。」',
+   s75:'闭馆后她没走：「其实……我考上了，但想留在这座城市，因为有你在。」',
+   s90:'她合上书看着你：「我决定了，以后的人生习题，想和你一起解。」',
+   sMarried:'婚后的书房，两面墙都是书。她说最贵的一本，是你当年给她写的第一张草稿纸。',
+   sPet:'婚后她给宠物读诗，说「它比你还爱听」。你笑她，却觉得日子很暖。'},
+  {id:'peng',name:'大鹏', title:'便利店店长', via:'side',
+   s15:'你深夜跑单回来，他留了盏灯：「看你这光景，不容易。」',
+   s30:'你跑单到深夜，他在店里塞给你一个热包子：「干了这行，都辛苦。」',
+   s50:'他偷偷把你副业用的包装箱攒着：「这个你拿去用，省得买。」',
+   s60:'他盘店时问：「有没有想过，跟我合伙开第二家店？」认真得不像开玩笑。',
+   s75:'盘店算账时他说：「要是哪天你混出来了，记得回来吃碗泡面，免费。」',
+   s90:'他把一枚戒指放在收银台上：「我这人没什么浪漫细胞。但我能让你顿顿吃上热乎的。」',
+   sMarried:'婚后你们真开了第二家店，他在收银台贴了张纸条：老板最爱吃的口味——只有你懂。',
+   sPet:'婚后你们在店里给宠物留了个小窝，它成了便利店的「编外店员」，熟客都认得。'}
+];
+
+/* ================= 状态 ================= */
+var G;
+function newGame(){
+  G={
+    year:1,month:1,xun:0,over:false,totalXun:0,page:'home',phase:'day',
+    money:8000,rent:1500,house:false,
+    level:0,perf:0,perfYear:0,warned:0,unemployed:false,
+    indName:'互联网',indMult:1.0,onProbation:0,salaryPenalty:1,
+    children:[],pregnant:false,schoolDistrict:false,
+    fund:0,ins:false,fixed:0,pet:null,
+    me:{name:'小滨',age:24,health:80,mood:70,ability:30},
+    parents:{health:82},
+    spouse:null,npcs:[],flags:{},logs:[]
+  };
+  addLog('🏙️ 你拖着行李箱来到滨江市，在城中村租了间小屋，入职了一家互联网公司。','');
+  addLog('💼 职位：实习生（月薪4000元）。房租1500元/月。三十年，足够改变一生。','gd2');
+  addLog('⚠️ 听同事说：连续两个月绩效垫底会被劝退，35岁还是基层可能被「优化」。','bd');
+}
+
+/* ================= 日志/弹窗 ================= */
+function addLog(msg,cls){
+  if(!cls)cls='';
+  var d=G.year+'年'+G.month+'月'+XUN_NAME[G.xun];
+  G.logs.push({d:d,m:msg,c:cls});
+  if(G.logs.length>400)G.logs.shift();
+}
+function drawLog(){
+  var h='';
+  for(var i=G.logs.length-1;i>=0;i--){
+    var l=G.logs[i];
+    h+='<p><span class="dt">'+l.d+'</span><span class="'+l.c+'">'+l.m+'</span></p>';
+  }
+  document.getElementById('logBody').innerHTML=h;
+  var lb=document.getElementById('logBody');lb.scrollTop=0;
+}
+function toast(msg){
+  var r=document.getElementById('toastRoot');
+  var t=document.createElement('div');t.textContent=msg;t.className='show';
+  r.appendChild(t);
+  setTimeout(function(){t.className='';},1600);
+  setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},1900);
+}
+var modalOpen=false;
+function openModal(title,html){
+  modalOpen=true;
+  document.getElementById('modalRoot').innerHTML=
+    '<div class="mask"><div class="modal"><h2>'+title+'</h2>'+html+'</div></div>';
+}
+function closeModal(){modalOpen=false;document.getElementById('modalRoot').innerHTML='';render();}
+
+/* ================= 开局取名 ================= */
+function startGameNaming(){
+  var html='<div class="desc">你只身来到滨江市。</div>'+
+    '<div class="desc">看着逼仄的出租屋、拥挤的通勤地铁和陌生的一切，你深吸了一口气。</div>'+
+    '<div class="desc">从今天起，你要在这座城市站稳脚跟。</div>'+
+    '<div class="desc">请给自己取一个名字吧：</div>'+
+    '<input type="text" id="playerNameInput" class="qty-input" maxlength="6" value="小滨">'+
+    '<button class="main-btn" style="margin-top:10px" onclick="confirmPlayerName()">✅ 确 定</button>';
+  openModal('【取 名】',html);
+  setTimeout(function(){
+    var inp=document.getElementById('playerNameInput');
+    if(inp){inp.focus();inp.select();}
+  },50);
+}
+function confirmPlayerName(){
+  var inp=document.getElementById('playerNameInput');
+  var nm=inp?inp.value.trim():'';
+  if(!nm){toast('请输入名字');return;}
+  if(nm.length>6)nm=nm.substring(0,6);
+  G.me.name=nm;
+  closeModal();render();autoSave();
+}
+
+/* ================= 场景（页面） ================= */
+var PAGES={
+  home:{icon:'🏠',title:'家',sub:'出租屋/自购房 · 休整、宠物、父母'},
+  company:{icon:'💼',title:'公司',sub:'职场主战场，绩效决定一切'},
+  street:{icon:'🏙️',title:'街区',sub:'图书馆·健身房·咖啡馆·便利店·商场，出门就是生活'},
+  wealth:{icon:'🏦',title:'房产理财',sub:'买房卖房、基金保险、定期存款'},
+  hospital:{icon:'🏥',title:'医院',sub:'看病、体检、产检'},
+  hometown:{icon:'🚄',title:'老家',sub:'寄钱、探亲、赡养父母'},
+  trip:{icon:'✈️',title:'旅行',sub:'周边游、长途旅行换心情'}
+};
+var PAGE_ALIAS={library:'street',gym:'street',cafe:'street',store:'street',mall:'street',estate:'wealth',finance:'wealth'};
+function go(p){G.page=p;render();}
+
+/* ================= 行为（按场景） =================
+   每个行为：ic图标 t1标题 t2说明 cost花费 page所属场景
+   can() 显示条件  run() 效果（多数消耗一旬 advanceXun）                 */
+var ACTS={
+  /* —— 家 —— */
+  rest:{ic:'🎮',t1:'歇息放松',t2:'心情+14 健康+2 · 300元',cost:300,page:'home',run:function(){
+    G.me.mood=cl(G.me.mood+14);G.me.health=cl(G.me.health+2);
+    addLog('🎮 你在家里放松了一旬，心情+14。','gd');
+    if(Math.random()<0.5)addLog('　'+flav('rest'),'');
+    advanceXun();}},
+  cook:{ic:'🍳',t1:'做饭省钱',t2:'心情+8 健康+2 · 还省150元',page:'home',run:function(){
+    G.me.mood=cl(G.me.mood+8);G.me.health=cl(G.me.health+2);G.money+=150;
+    addLog('🍳 你自己做了一顿饭，热气腾腾，还省了150元。','gd');advanceXun();}},
+  callParents:{ic:'📞',t1:'视频父母',t2:'寄500元 · 父母健康+ 心情+5',page:'home',run:function(){
+    G.money-=500;G.parents.health=cl(G.parents.health+5,0,100);G.me.mood=cl(G.me.mood+5);
+    addLog('📞 你和爸妈视频了一旬，寄了500元回去，二老笑得合不拢嘴。','gd');advanceXun();}},
+  clean:{ic:'🧹',t1:'收拾屋子',t2:'心情+4 · 免费',page:'home',run:function(){
+    G.me.mood=cl(G.me.mood+4);addLog('🧹 你把出租屋收拾干净，心情也跟着敞亮了。','gd');advanceXun();}},
+  lie:{ic:'🛌',t1:'躺平过旬',t2:'健康+4 心情+4（什么也不做）',page:'home',run:function(){
+    G.me.health=cl(G.me.health+4);G.me.mood=cl(G.me.mood+4);
+    addLog('🛌 你躺平了一旬，什么也没干，也挺好。','');advanceXun();}},
+  adopt:{ic:'🐾',t1:'领养宠物',t2:'花800元 · 从此有个伴',page:'home',can:function(){return !G.pet&&G.money>=800;},run:function(){openAdopt();}},
+  feedPet:{ic:'🍖',t1:'喂宠物',t2:'50元 · 饱食+ 成长+',cost:50,page:'home',can:function(){return !!G.pet;},run:function(){
+    G.pet.hunger=cl(G.pet.hunger+30);G.pet.love=cl(G.pet.love+5);G.me.mood=cl(G.me.mood+2);
+    G.pet.exp=(G.pet.exp||0)+6;
+    addLog('🍖 你给'+G.pet.name+'添了粮，它吃得啧啧响，尾巴摇个不停。','gd');advanceXun();}},
+  playPet:{ic:'🎾',t1:'陪宠物玩',t2:'心情+8 健康+2 · 成长+',page:'home',can:function(){return !!G.pet;},run:function(){
+    G.me.mood=cl(G.me.mood+8);G.me.health=cl(G.me.health+2);
+    G.pet.love=cl(G.pet.love+8);G.pet.hunger=cl(G.pet.hunger-8);
+    G.pet.exp=(G.pet.exp||0)+10;
+    addLog('🎾 你陪'+G.pet.name+'玩了一旬，它赖在你腿边不肯走，心都化了。','gd');advanceXun();}},
+  neuter:{ic:'✂️',t1:'给宠物绝育',t2:'1200元 · 不再发情、不能配种',cost:1200,page:'home',can:function(){return !!G.pet&&!G.pet.neutered&&G.pet.age>=1;},run:function(){
+    G.pet.neutered=true;G.pet.love=cl(G.pet.love-10);
+    addLog('✂️ 你带'+G.pet.name+'做了绝育手术，它蔫了两天，你有点心疼。（好感-10，以后不再发情）','');advanceXun();}},
+  breed:{ic:'💞',t1:'给宠物配种',t2:'600元 · 3个月后添丁',cost:600,page:'home',can:function(){return !!G.pet&&!G.pet.neutered&&!G.pet.pregnant&&G.pet.age>=2&&(G.pet.stage||0)>=1;},run:function(){
+    G.pet.pregnant=true;G.pet.pregMonths=0;
+    addLog('💞 你给'+G.pet.name+'牵了线，配种成功！三个月后就要添丁了。-600元','gd');advanceXun();}},
+
+  /* —— 公司 —— */
+  work:{ic:'💼',t1:'专注工作',t2:'绩效+8（心情低打折）· 精力-3 心情-3',page:'company',can:function(){return !G.unemployed;},run:function(){
+    var m=G.me;var gain=(m.mood<30)?4:8;
+    G.perf+=gain;G.perfYear+=gain;m.health=cl(m.health-3);m.mood=cl(m.mood-3);m.ability=cl(m.ability+1,0,200);
+    if(m.mood<30)addLog('😮‍💨 你心情很低落，工作效率减半（绩效+'+gain+'）。','bd');
+    else addLog('💼 你专注工作了一旬，绩效+'+gain+'。','gd2');
+    if(Math.random()<0.5)addLog('　'+flav('work'),'');
+    if(m.mood<15&&Math.random()<0.3){G.perf=cl(G.perf-4,0,999);m.mood=cl(m.mood-4);addLog('❌ 你状态太差做错方案被退回，绩效-4，被领导约谈。','bd');}
+    if(Math.random()<0.2){G.money+=500;addLog('🌙 项目冲刺，加班费+500元。','gd2');}
+    tryMeet('work');advanceXun();}},
+  overtime:{ic:'🌙',t1:'主动加班',t2:'绩效+12 健康-6 心情-2 · 加班费+800',page:'company',can:function(){return !G.unemployed;},run:function(){
+    G.perf+=12;G.perfYear+=12;G.money+=800;G.me.health=cl(G.me.health-6);G.me.mood=cl(G.me.mood-2);
+    addLog('🌙 你主动加了一旬班，绩效+12，加班费+800元。','gd2');
+    if(Math.random()<0.2){G.me.health=cl(G.me.health-4);addLog('😵 连轴转让你有点撑不住。','bd');}
+    advanceXun();}},
+  slack:{ic:'😪',t1:'摸鱼划水',t2:'绩效+2 心情+6 · 有被抓风险',page:'company',can:function(){return !G.unemployed;},run:function(){
+    G.perf+=2;G.me.mood=cl(G.me.mood+6);G.me.health=cl(G.me.health+1);
+    addLog('😪 你这一旬都在摸鱼，绩效+2，但挺开心。','gd');
+    if(Math.random()<0.12){G.perf=cl(G.perf-3,0,999);G.warned=1;addLog('👀 摸鱼被领导撞见，绩效-3，还被敲打了一下。','bd');}
+    advanceXun();}},
+  report:{ic:'📈',t1:'汇报表现',t2:'展示成果 · 绩效+6 心情-2',page:'company',can:function(){return !G.unemployed;},run:function(){
+    G.perf+=6;G.perfYear+=6;G.me.mood=cl(G.me.mood-2);
+    addLog('📈 你主动找领导汇报了一旬进度，绩效+6。','gd2');
+    if(Math.random()<0.25)addLog('👍 领导点头：「年轻人，有想法。」','gd');advanceXun();}},
+  teambuild:{ic:'🍻',t1:'部门团建',t2:'心情+10 健康+2 · 花钱500',cost:500,page:'company',can:function(){return !G.unemployed;},run:function(){
+    G.me.mood=cl(G.me.mood+10);G.me.health=cl(G.me.health+2);G.money-=500;
+    addLog('🍻 部门团建，平时不说话的同事居然挺有趣。-500元，心情+10。','gd');advanceXun();}},
+  gossip:{ic:'🗣️',t1:'茶水间八卦',t2:'听听风声 · 心情+3',page:'company',can:function(){return !G.unemployed;},run:function(){
+    G.me.mood=cl(G.me.mood+3);
+    var g=pk(['听说隔壁组要合并了，人心惶惶。','总监要调走了，位置空出来。','公司要搬去郊区，通勤噩梦。','老板又画了个大饼。']);
+    addLog('🗣️ 茶水间闲聊：'+g,'');advanceXun();}},
+
+  /* —— 图书馆 —— */
+  study:{ic:'📚',t1:'学习考证',t2:'能力+6 · 报班500元 心情-3',cost:500,page:'library',run:function(){
+    G.me.ability=cl(G.me.ability+6,0,200);G.me.mood=cl(G.me.mood-3);
+    addLog('📚 你报班学习了一旬，能力+6。','gd');
+    if(Math.random()<0.5)addLog('　'+flav('study'),'');
+    tryMeet('study');advanceXun();}},
+  selfstudy:{ic:'✏️',t1:'安静自习',t2:'能力+3 · 免费 心情-1',page:'library',run:function(){
+    G.me.ability=cl(G.me.ability+3,0,200);G.me.mood=cl(G.me.mood-1);
+    addLog('✏️ 你在图书馆安静自习了一旬，能力+3。','gd');tryMeet('study');advanceXun();}},
+
+  /* —— 健身房 —— */
+  gym:{ic:'🏋️',t1:'健身',t2:'健康+12 心情+4 · 100元',cost:100,page:'gym',run:function(){
+    G.me.health=cl(G.me.health+12);G.me.mood=cl(G.me.mood+4);
+    addLog('🏋️ 你去练了一旬铁，健康+12。','gd');
+    if(Math.random()<0.5)addLog('　'+flav('gym'),'');
+    tryMeet('gym');advanceXun();}},
+  trainer:{ic:'💪',t1:'私教课',t2:'健康+18 心情+3 · 400元',cost:400,page:'gym',run:function(){
+    G.me.health=cl(G.me.health+18);G.me.mood=cl(G.me.mood+3);
+    addLog('💪 你上了一节私教课，健康+18。','gd');tryMeet('gym');advanceXun();}},
+
+  /* —— 咖啡馆 —— */
+  social:{ic:'☕',t1:'社交约会',t2:'好感+8 心情+6 · 400元',cost:400,page:'cafe',run:function(){
+    G.me.mood=cl(G.me.mood+6);
+    var tgt=pickSocialTarget();
+    if(tgt){tgt.aff=cl(tgt.aff+8);G.me.health=cl(G.me.health+2);addLog('☕ 你和'+tgt.name+'约会了一旬，好感+8。','gd');npcBeat(tgt);}
+    else{addLog('☕ 你和朋友小聚了一旬，心情+6。','gd');if(!G.spouse&&Math.random()<0.3)tryMeet('social');}
+    advanceXun();}},
+  readcafe:{ic:'📖',t1:'咖啡馆看书',t2:'能力+2 心情+4',page:'cafe',run:function(){
+    G.me.ability=cl(G.me.ability+2,0,200);G.me.mood=cl(G.me.mood+4);
+    addLog('📖 你在咖啡馆窝了一旬看书，能力+2，心情+4。','gd');tryMeet('social');advanceXun();}},
+  daze:{ic:'🌿',t1:'发呆放空',t2:'心情+6 · 免费',page:'cafe',run:function(){
+    G.me.mood=cl(G.me.mood+6);addLog('🌿 你对着窗外发呆了一旬，什么都不想，也挺好。','gd');advanceXun();}},
+
+  /* —— 便利店（副业） —— */
+  side:{ic:'🛵',t1:'副业接单',t2:'赚钱（能力越高接单越大）',page:'store',can:function(){return !G.unemployed;},run:function(){
+    var m=G.me;var got=Math.round((600+m.ability*12+ri(0,400))*(G.spouse?1.2:1));
+    G.money+=got;m.health=cl(m.health-6);m.mood=cl(m.mood-4);
+    addLog('🛵 你下班后跑了副业，收入+'+num(got)+'元。','gd2');
+    if(Math.random()<0.5)addLog('　'+flav('side'),'');
+    if(Math.random()<0.12){G.money-=got;addLog('😤 接的单被客户放鸽子，全白跑了。（-'+num(got)+'元）','bd');}
+    tryMeet('side');advanceXun();}},
+  errand:{ic:'📦',t1:'跑腿代购',t2:'小赚一笔 · 健康-2',page:'store',can:function(){return !G.unemployed;},run:function(){
+    var got=ri(300,900);G.money+=got;G.me.health=cl(G.me.health-2);
+    addLog('📦 你接了几单跑腿，到手+'+num(got)+'元。','gd');tryMeet('side');advanceXun();}},
+
+  /* —— 商场/江边 —— */
+  shop:{ic:'🛍️',t1:'商场剁手',t2:'心情+8 · 花钱随缘',page:'mall',run:function(){
+    var c=ri(500,2500);G.money-=c;G.me.mood=cl(G.me.mood+8);
+    addLog('🛍️ 你在商场血拼了一旬，-'+num(c)+'元，拆快递很快乐。','gd2');
+    if(Math.random()<0.3)addLog('😅 买完才发现有些根本用不上。','');advanceXun();}},
+  walk:{ic:'🚶',t1:'江边散步',t2:'心情+7 健康+3 · 免费',page:'mall',run:function(){
+    G.me.mood=cl(G.me.mood+7);G.me.health=cl(G.me.health+3);
+    addLog('🚶 你在江边散步了一旬，吹着风，心情+7。','gd');
+    if(Math.random()<0.15)tryMeet('social');advanceXun();}},
+  morningRun:{ic:'🏃',t1:'公园晨跑',t2:'健康+8 心情+5 · 免费',page:'street',ph:'day',run:function(){
+    G.me.health=cl(G.me.health+8);G.me.mood=cl(G.me.mood+5);
+    addLog('🏃 清晨的公园空气很好，你跑了三圈，出了一身薄汗。','gd');
+    if(Math.random()<0.2)tryMeet('gym');advanceXun();}},
+  parkChess:{ic:'♟️',t1:'公园看下棋',t2:'心情+5 · 免费',page:'street',ph:'day',run:function(){
+    G.me.mood=cl(G.me.mood+5);
+    addLog('♟️ 你蹲在公园看大爷们下了一下午棋，杀得难解难分，你比他们还激动。','gd');advanceXun();}},
+  nightMarket:{ic:'🍢',t1:'夜市宵夜',t2:'心情+8 健康-3 · 80元',cost:80,page:'street',ph:'night',run:function(){
+    G.me.mood=cl(G.me.mood+8);G.me.health=cl(G.me.health-3);
+    addLog('🍢 你逛了夜市，烤串、臭豆腐、糖水轮着来，撑得走不动道。-80元','gd');advanceXun();}},
+  riversideNight:{ic:'🌃',t1:'江边看夜景',t2:'心情+8 · 免费',page:'street',ph:'night',run:function(){
+    G.me.mood=cl(G.me.mood+8);
+    addLog('🌃 你坐在江边看对岸的灯火，风一吹，白天的烦心事好像也没那么重了。','gd');advanceXun();}},
+  barNight:{ic:'🍸',t1:'酒吧小酌',t2:'心情+10 · 200元 有断片风险',cost:200,page:'street',ph:'night',run:function(){
+    G.me.mood=cl(G.me.mood+10);G.me.health=cl(G.me.health-4);
+    addLog('🍸 你在小酒馆喝了点，跟陌生人聊到很晚，很久没这么放松了。-200元','gd');
+    if(Math.random()<0.2){G.money-=300;G.me.health=cl(G.me.health-5);addLog('🥴 你喝断片了，第二天手机还丢了，补卡+打车又花了300。','bd');}
+    advanceXun();}},
+
+  /* —— 房产中介 —— */
+  buyHouse:{ic:'🏠',t1:'买房安家',t2:'全款'+num(HOUSE_PRICE)+'元，告别房租',page:'estate',can:function(){return !G.house&&G.money>=HOUSE_PRICE;},run:function(){
+    G.money-=HOUSE_PRICE;G.house=true;addLog('🏠 你在滨江市买了自己的房子！从此不用看房东脸色。','gd2');render();autoSave();}},
+  viewHouse:{ic:'🔑',t1:'看房踩盘',t2:'了解行情 · 免费',page:'estate',run:function(){
+    G.me.mood=cl(G.me.mood+2);addLog('🔑 你跑了几个楼盘，中介嘴皮子都磨破了，你心里有数了。','');advanceXun();}},
+  sellHouse:{ic:'💸',t1:'卖房变现',t2:'+'+num(Math.round(HOUSE_PRICE*0.9))+'元（被套牢就亏）',page:'estate',can:function(){return G.house;},run:function(){
+    G.house=false;var g=Math.round(HOUSE_PRICE*0.9);G.money+=g;
+    addLog('💸 你卖了房子，到手'+num(g)+'元，又回去租房了。','bd');advanceXun();}},
+
+  /* —— 医院 —— */
+  seeDoctorAct:{ic:'🏥',t1:'去医院',t2:'健康+25 · 费用见应急按钮',page:'hospital',run:function(){seeDoctor();}},
+  checkup:{ic:'🩺',t1:'年度体检',t2:'花500元了解身体',cost:500,page:'hospital',run:function(){
+    G.me.health=cl(G.me.health+3);G.me.mood=cl(G.me.mood-1);
+    addLog('🩺 你做了个全面体检，各项指标还好，松了口气。-500元 健康+3。','gd');advanceXun();}},
+  prenatal:{ic:'🤰',t1:'产检',t2:'花800元关注宝宝',cost:800,page:'hospital',can:function(){return G.pregnant;},run:function(){
+    G.me.health=cl(G.me.health+2);G.me.mood=cl(G.me.mood+5);
+    addLog('🤰 你陪'+G.spouse.name+'做了产检，宝宝胎心正常，你们相视一笑。-800元。','gd');advanceXun();}},
+
+  /* —— 老家 —— */
+  sendMoney:{ic:'💝',t1:'给父母寄钱',t2:'-1000元 · 父母健康+',page:'hometown',run:function(){
+    G.money-=1000;G.parents.health=cl(G.parents.health+8,0,100);G.me.mood=cl(G.me.mood+4);
+    addLog('💝 你给爸妈寄了1000元，电话那头直说别乱花。','gd');advanceXun();}},
+  visitParents:{ic:'🚄',t1:'回老家探亲',t2:'花2000元 · 心情大+（春节）',cost:2000,page:'hometown',run:function(){
+    G.money-=2000;G.me.mood=cl(G.me.mood+12);G.parents.health=cl(G.parents.health+6,0,100);
+    addLog('🚄 你请了假回老家，爸妈做了一桌你最爱吃的菜。-2000元 心情+12。','gd');advanceXun();}},
+
+  /* —— 理财 —— */
+  buyFund:{ic:'📊',t1:'买基金',t2:'投入5000元 · 有风险',cost:5000,page:'finance',run:function(){
+    G.fund+=5000;addLog('📊 你投入5000元买了一只基金，期待它涨。','gd');advanceXun();}},
+  sellFund:{ic:'💰',t1:'赎回基金',t2:'赎回全部持仓',page:'finance',can:function(){return G.fund>0;},run:function(){
+    var r=G.fund*(0.8+Math.random()*0.5);G.money+=Math.round(r);
+    addLog('💰 你赎回了基金，到手'+num(Math.round(r))+'元。'+(r>=G.fund?'小赚。':'亏了点。'),r>=G.fund?'gd':'bd');
+    G.fund=0;advanceXun();}},
+  buyIns:{ic:'🛡️',t1:'买商业保险',t2:'花3000元 · 看病打4折',cost:3000,page:'finance',can:function(){return !G.ins;},run:function(){
+    G.ins=true;addLog('🛡️ 你买了份商业医疗险，以后看病便宜多了。-3000元。','gd');advanceXun();}},
+  deposit:{ic:'🏦',t1:'存定期',t2:'存入10000元 · 年息2.5%',cost:10000,page:'finance',run:function(){
+    G.fixed+=10000;addLog('🏦 你把10000元存了定期，钱生钱才踏实。','gd');advanceXun();}},
+
+  /* —— 旅行 —— */
+  localTrip:{ic:'🚲',t1:'周边游',t2:'花800元 · 心情+12 健康+3',cost:800,page:'trip',run:function(){
+    G.money-=800;G.me.mood=cl(G.me.mood+12);G.me.health=cl(G.me.health+3);
+    addLog('🚲 周末去了趟近郊，绿水青山洗掉了班味。-800元 心情+12。','gd');advanceXun();}},
+  longTrip:{ic:'✈️',t1:'长途旅行',t2:'花5000元 · 心情+20 健康+5',cost:5000,page:'trip',can:function(){return !G.unemployed;},run:function(){
+    G.money-=5000;G.me.mood=cl(G.me.mood+20);G.me.health=cl(G.me.health+5);
+    addLog('✈️ 你请了年假去了趟远方，回来满血复活。-5000元 心情+20。','gd');advanceXun();}}
+};
+function doAction(k){
+  if(G.over||modalOpen)return;
+  var a=ACTS[k];
+  if(!a)return;
+  if(a.cost&&G.money<a.cost){toast('钱不够（需'+num(a.cost)+'元）');return;}
+  if(a.cost)G.money-=a.cost;
+  a.run();
+}
+function findJob(){
+  if(!G.unemployed||modalOpen)return;
+  var m=G.me;
+  m.mood=cl(m.mood-5);
+  var need=JOBS[G.level].need;
+  if(m.ability>=need){
+    G.unemployed=false;G.warned=0;
+    addLog('📨 面试通过！你回到了'+JOBS[G.level].name+'岗位（月薪'+num(JOBS[G.level].salary)+'元）。','gd2');
+  }else if(G.level>0&&m.ability>=JOBS[G.level-1].need){
+    G.level--;G.unemployed=false;G.warned=0;
+    addLog('📨 几轮面试后，你接受了降一级的'+JOBS[G.level].name+'岗位（月薪'+num(JOBS[G.level].salary)+'元）。','gd2');
+  }else{
+    G.level=0;G.unemployed=false;G.warned=0;
+    addLog('📨 投了几十份简历，最后只能从实习生重新做起。','bd');
+  }
+  advanceXun();
+}
+function pickSocialTarget(){
+  var c=G.npcs.filter(function(n){return n.met&&!n.lover&&n.aff<100;});
+  if(!c.length)return null;
+  c.sort(function(a,b){return a.aff-b.aff;});
+  return c[0];
+}
+function tryMeet(via){
+  if(G.spouse)return;
+  var pool=NPC_DEFS.filter(function(d){return d.via===via;});
+  for(var i=0;i<pool.length;i++){
+    var d=pool[i];
+    var known=G.npcs.some(function(n){return n.id===d.id;});
+    if(!known&&Math.random()<0.35){
+      G.npcs.push({id:d.id,name:d.name,title:d.title,aff:10,met:true,lover:false});
+      addLog('✨ 你认识了'+d.title+d.name+'。','gd2');
+      openModal('【初识 · '+d.name+'】',
+        '<div class="desc">'+d.name+'（'+d.title+'）走进了你的生活。</div>'+
+        '<div class="desc">「初次见面，请多关照。」</div>'+
+        '<button class="main-btn" onclick="closeModal()">🙂 认识一下</button>');
+      return;
+    }
+  }
+}
+
+/* ================= 剧情节点 ================= */
+function npcBeat(n){
+  if(modalOpen)return;
+  var d=null,key=n.id;
+  for(var i=0;i<NPC_DEFS.length;i++)if(NPC_DEFS[i].id===n.id)d=NPC_DEFS[i];
+  if(!d)return;
+  if(n.aff>=15&&!G.flags['s15_'+key]){
+    G.flags['s15_'+key]=1;
+    openModal('【'+d.name+' · 好感15】','<div class="desc">'+d.s15+'</div><button class="main-btn" onclick="closeModal()">💗 有点心动</button>');
+    return;
+  }
+  if(n.aff>=30&&!G.flags['s30_'+key]){
+    G.flags['s30_'+key]=1;
+    openModal('【'+d.name+' · 好感30】','<div class="desc">'+d.s30+'</div><button class="main-btn" onclick="closeModal()">💗 心里暖暖的</button>');
+    return;
+  }
+  if(n.aff>=50&&!G.flags['s50_'+key]){
+    G.flags['s50_'+key]=1;
+    openModal('【'+d.name+' · 好感50】','<div class="desc">'+d.s50+'</div><button class="main-btn" onclick="closeModal()">💗 越来越近</button>');
+    return;
+  }
+  if(n.aff>=60&&!n.lover&&!G.flags['s60_'+key]){
+    G.flags['s60_'+key]=1;
+    openModal('【'+d.name+' · 表白】','<div class="desc">'+d.s60+'</div>'+
+      '<button class="story-choice" onclick="acceptLove(\''+key+'\')">💐 接受心意</button>'+
+      '<button class="story-choice" onclick="rejectLove(\''+key+'\')">🤐 装作没听见</button>');
+    return;
+  }
+  if(n.aff>=75&&n.lover&&!G.spouse&&!G.flags['s75_'+key]){
+    G.flags['s75_'+key]=1;
+    openModal('【'+d.name+' · 好感75】','<div class="desc">'+d.s75+'</div><button class="main-btn" onclick="closeModal()">💗 想定下来</button>');
+    return;
+  }
+  if(n.aff>=90&&n.lover&&!G.spouse&&!G.flags['s90_'+key]){
+    G.flags['s90_'+key]=1;
+    openModal('【'+d.name+' · 求婚】','<div class="desc">'+d.s90+'</div>'+
+      '<div class="desc">（办婚礼需要20000元）</div>'+
+      '<button class="story-choice" onclick="marry(\''+key+'\')">💍 我愿意</button>'+
+      '<button class="story-choice" onclick="closeModal()">🕊️ 再等等</button>');
+    return;
+  }
+  if(G.spouse&&G.spouse.name===n.name&&!G.flags['sM_'+key]){
+    G.flags['sM_'+key]=1;
+    openModal('【婚后 · '+d.name+'】','<div class="desc">'+d.sMarried+'</div><button class="main-btn" onclick="closeModal()">🏠 柴米油盐</button>');
+    return;
+  }
+}
+function parentingEvent(){
+  var ch=G.children[ri(0,G.children.length-1)];
+  var evs=[
+    '🌙 你给'+ch.name+'讲睡前故事，TA在你怀里睡着了。',
+    '🍼 '+ch.name+'半夜哭闹，你起来冲了三次奶粉，第二天顶着黑眼圈上班。',
+    '🎨 '+ch.name+'在墙上画了幅「全家福」，你舍不得擦。',
+    '🤝 '+ch.name+'第一次自己走路扑进你怀里，你鼻子一酸。'
+  ];
+  G.me.mood=cl(G.me.mood+5);addLog(pk(evs),'gd');
+}
+function openAdopt(){
+  openModal('【领养宠物】',
+    '<div class="desc">一个人的出租屋太安静了。去楼下救助站看看？</div>'+
+    '<button class="story-choice" onclick="choosePet(\'猫\')">🐱 领养一只猫（粘人，爱撒娇）</button>'+
+    '<button class="story-choice" onclick="choosePet(\'狗\')">🐶 领养一只狗（忠诚，要遛）</button>'+
+    '<button class="story-choice" onclick="choosePet(\'仓鼠\')">🐹 领养一只仓鼠（省心，好养）</button>'+
+    '<button class="story-choice" onclick="closeModal()">再想想</button>');
+}
+function choosePet(kind){
+  if(G.money<800){toast('钱不够（需800元）');closeModal();return;}
+  G.money-=800;
+  var names={猫:['团子','咪咪','橘座','雪球'],狗:['豆包','旺财','阿黄','可乐'],仓鼠:['球球','芝麻','布丁']};
+  var nm=pk(names[kind]);
+  G.pet={kind:kind,name:nm,hunger:70,love:60,age:0,exp:0,stage:0,neutered:false,pregnant:false,pregMonths:0};
+  G.me.mood=cl(G.me.mood+10);
+  addLog('🐾 你从救助站领养了一只'+kind+'，取名「'+nm+'」。空荡的出租屋突然有了生气。','gd2');
+  closeModal();advanceXun();
+}
+function petSpouseEvent(){
+  if(!G.spouse||!G.pet)return;
+  if(G.flags.petSpouseDone||modalOpen)return;
+  var d=null;
+  for(var i=0;i<NPC_DEFS.length;i++)if(NPC_DEFS[i].name===G.spouse.name)d=NPC_DEFS[i];
+  if(!d||!d.sPet)return;
+  G.flags.petSpouseDone=1;
+  G.me.mood=cl(G.me.mood+8);
+  openModal('【'+G.spouse.name+' · 一起养宠物】',
+    '<div class="desc">'+d.sPet+'</div>'+
+    '<button class="main-btn" onclick="closeModal()">🐾 一家三口（?）</button>');
+}
+function findNpc(id){for(var i=0;i<G.npcs.length;i++)if(G.npcs[i].id===id)return G.npcs[i];return null;}
+function acceptLove(id){
+  var n=findNpc(id);if(!n)return;
+  n.lover=true;G.me.mood=cl(G.me.mood+10);
+  addLog('💗 你和'+n.name+'在一起了！','gd2');
+  closeModal();
+}
+function rejectLove(id){
+  var n=findNpc(id);if(!n)return;
+  n.aff=cl(n.aff-15);addLog('🤐 你没有回应'+n.name+'的心意。（好感-15）','bd');
+  closeModal();
+}
+function marry(id){
+  var n=findNpc(id);if(!n)return;
+  if(G.money<20000){toast('存款不足20000元，婚礼只好推迟');G.flags['s90_'+n.id]=0;closeModal();return;}
+  G.money-=20000;G.spouse={name:n.name,title:n.title};
+  n.lover=true;G.me.mood=cl(G.me.mood+15);
+  addLog('💍 你和'+n.name+'结婚了！往后的人生，是两个人的了。','gd2');
+  closeModal();
+}
+function marriageCrisis(){
+  if(G.flags.crisisDone)return;
+  G.flags.crisisDone=1;
+  openModal('【婚姻危机】',
+    '<div class="desc">'+G.spouse.name+'因为你还房贷的计划和你大吵了一架：「你眼里只有钱！」</div>'+
+    '<div class="desc">沙发上，你们背对背，谁都没说话。</div>'+
+    '<button class="story-choice" onclick="fixCrisis()">🤝 主动和好，认真道歉</button>'+
+    '<button class="story-choice" onclick="coldCrisis()">🛋️ 冷战，各睡各的</button>');
+}
+function fixCrisis(){
+  G.me.mood=cl(G.me.mood-4);
+  addLog('🤝 你主动道了歉。那晚你们聊到凌晨三点，把心里的话都说开了。（心情-4）','gd2');
+  closeModal();
+}
+function coldCrisis(){
+  G.me.mood=cl(G.me.mood-12);
+  addLog('🛋️ 你们冷战了整整半个月，家里安静得可怕。（心情-12）','bd');
+  closeModal();
+}
+
+/* ================= 时间推进 ================= */
+function advanceXun(){
+  G.xun++;
+  if(G.xun>2){
+    G.xun=0;G.month++;
+    monthSettle();
+    if(G.month>12){G.month=1;G.year++;yearSettle();}
+  }
+  G.totalXun++;
+  G.me.mood=cl(G.me.mood-1);
+  checkBad();
+  if(!G.over&&G.year>30)triggerEnd();
+  render();autoSave();
+}
+function lifeCost(){return 1000+G.year*100+G.children.length*600;}
+function monthSettle(){
+  if(!G.unemployed){
+    var base=salaryNow();
+    var pay=base+G.perf*20;
+    G.money+=pay;
+    addLog('💰 发工资了（'+G.indName+'）：底薪'+num(base)+'+绩效'+num(G.perf*20)+'='+num(pay)+'元。','gd2');
+    if(G.onProbation>0){
+      if(G.perf<8){
+        G.onProbation=0;G.level=Math.max(0,G.level-1);
+        G.money-=salaryNow();
+        addLog('⏳ 试用期没通过，你被退回'+JOBS[G.level].name+'岗位，还赔了违约金。','bd');
+      }else{
+        G.onProbation--;
+        addLog('⏳ 试用期还剩'+G.onProbation+'个月，稳住了。','gd');
+      }
+    }
+    if(G.perf<10){
+      if(G.warned){
+        fire('绩效连续垫底');
+      }else{
+        G.warned=1;
+        addLog('⚠️ 领导找你谈话：这个月绩效太低，再这样下去要走「优化流程」了。','bd');
+      }
+    }else{
+      G.warned=0;
+    }
+  }else{
+    addLog('📉 你还在失业中，没有任何收入。','bd');
+  }
+  G.perf=0;
+  if(G.house){
+    addLog('🏠 自己的房子，不用交房租。','');
+  }else{
+    G.money-=G.rent;
+    addLog('🏠 交房租 -'+num(G.rent)+'元。','bd');
+  }
+  var lc=lifeCost();
+  G.money-=lc;
+  addLog('🍜 日常生活开支 -'+num(lc)+'元。','');
+  if(G.spouse){G.me.mood=cl(G.me.mood+5);}
+  if(G.pregnant)G.me.mood=cl(G.me.mood+3);
+  if(Math.random()<0.5)randomEvent();
+  if(G.spouse&&!G.flags.crisisDone&&Math.random()<0.06)marriageCrisis();
+  if(G.spouse&&G.children.length>0&&Math.random()<0.04)parentingEvent();
+  if(G.pet){
+    G.pet.hunger=cl(G.pet.hunger-18);
+    if(G.pet.hunger<20){G.me.mood=cl(G.me.mood-5);addLog('😿 '+G.pet.name+'饿得直叫，你才想起没添粮。（心情-5）','bd');}
+    else if(G.pet.love>=60){G.me.mood=cl(G.me.mood+3);}
+    if(G.pet.love<20){G.me.mood=cl(G.me.mood-3);addLog('😔 '+G.pet.name+'最近有点躲着你。（心情-3）','bd');}
+    G.pet.exp=(G.pet.exp||0)+2;
+    var oStage=G.pet.stage||0;
+    if(G.pet.exp>=120)G.pet.stage=2;else if(G.pet.exp>=40)G.pet.stage=1;
+    if(G.pet.stage>oStage){G.me.mood=cl(G.me.mood+6);addLog('✨ '+G.pet.name+'好像更通人性了，眼睛里有了光。（成长 · 心情+6）','gd2');}
+    if(G.pet.pregnant){
+      G.pet.pregMonths=(G.pet.pregMonths||0)+1;
+      if(G.pet.pregMonths>=3){
+        G.pet.pregnant=false;G.pet.pregMonths=0;G.pet.love=cl(G.pet.love+15);G.pet.exp+=30;
+        var bm=ri(500,1500);G.money+=bm;
+        addLog('🐣 '+G.pet.name+'生了！一窝小'+G.pet.kind+'，你留一只作伴，其余送人还收了红包 +'+num(bm)+'元。','gd2');
+      }
+    }
+  }
+  if(G.spouse&&G.pet&&!G.flags.petSpouseDone&&Math.random()<0.12)petSpouseEvent();
+}
+function fire(reason){
+  G.unemployed=true;G.warned=0;G.perf=0;
+  G.me.mood=cl(G.me.mood-15);
+  addLog('📦 '+reason+'，你被辞退了。收拾工位那天，没人敢跟你对视。（心情-15）','bd');
+  addLog('⚠️ 失业期间没有工资，但房租和开销照旧。快找工作！','bd');
+}
+function yearSettle(){
+  G.me.age++;
+  if(!G.house){G.rent=Math.round(G.rent*1.05);addLog('📈 房东通知：明年房租涨到'+num(G.rent)+'元/月。','bd');}
+  var base=salaryNow();
+  var bonus=Math.round(base*Math.min(2,G.perfYear/40));
+  if(bonus>0){G.money+=bonus;addLog('🧧 年终奖+'+num(bonus)+'元！','gd2');}
+  G.perfYear=0;G.salaryPenalty=1;
+  if(G.fixed>0){var fx=Math.round(G.fixed*0.025);G.money+=fx;addLog('🏦 定期存款利息 +'+num(fx)+'元。','gd');}
+  if(G.pet){G.pet.age++;if(G.pet.age===12)addLog('🐾 '+G.pet.name+'不知不觉陪了你十二年，动作慢了些，却还是每天等你回家。','gd');}
+  var lucky=ri(0,2000);
+  if(lucky>0){G.money+=lucky;addLog('🎰 公司年会抽中'+num(lucky)+'元红包。','gd2');}
+  else addLog('🎰 年会什么也没抽中，好歹吃了顿好的。（心情+4）','gd');
+  G.me.mood=cl(G.me.mood+4);
+  G.money-=2000;
+  addLog('🧧 春节回家：车票+给爸妈的年货 -2000元。','');
+  if(G.spouse){
+    G.me.mood=cl(G.me.mood+8);G.parents.health=cl(G.parents.health+8,0,100);
+    addLog('🏠 你带着'+G.spouse.name+'回了老家，爸妈乐得合不拢嘴。（心情+8）','gd');
+  }else{
+    G.me.mood=cl(G.me.mood-6);
+    addLog('📵 饭桌上又被亲戚围着催婚，你低头扒饭没说话。（心情-6）','bd');
+  }
+  // 孩子成长
+  if(G.children.length){for(var ci=0;ci<G.children.length;ci++)G.children[ci].age++;}
+  if(G.spouse){
+    if(G.pregnant){
+      var bn=childName();
+      G.children.push({name:bn,age:0,schoolChosen:false});G.pregnant=false;G.money-=5000;
+      addLog('👶 '+G.spouse.name+'生了，是个小宝宝（'+bn+'）！生产+月子 -5000元。','gd2');
+    }else if(G.children.length<2&&G.me.age>=26&&G.me.age<=44&&Math.random()<0.45){
+      G.pregnant=true;G.me.mood=cl(G.me.mood+6);
+      addLog('🤰 你（或'+G.spouse.name+'）怀孕了！明年家里就热闹了。','gd2');
+    }
+    for(var ci2=0;ci2<G.children.length;ci2++){
+      var ch=G.children[ci2];
+      if(ch.age===6&&!ch.schoolChosen){
+        ch.schoolChosen=true;
+        if(modalOpen){G.money-=20000;addLog('🎒 '+ch.name+'上小学，家人代办交了2万择校费。','bd');}
+        else schoolChoice(ch);
+        break;
+      }
+    }
+  }
+  G.parents.health=cl(G.parents.health-ri(2,5),0,100);
+  if(G.parents.health<35){
+    G.parents.health=55;G.money-=12000;G.me.mood=cl(G.me.mood-10);
+    addLog('🏥 爸/妈大病住院，你连夜赶回去，押金和手术费 -12000元。钱是身外之物，人没事就好。','bd');
+  }
+  addLog('🎂 新的一年开始了，你'+G.me.age+'岁。','gd2');
+  if(G.me.age>=35&&Math.random()<0.15&&!G.unemployed){
+    G.money+=salaryNow()*3;
+    fire('公司「结构性优化」，35岁的你在名单上（拿到'+num(salaryNow()*3)+'元赔偿）');
+    return;
+  }
+  if(!G.unemployed&&G.level<JOBS.length-1){
+    var need=JOBS[G.level+1].need;
+    if(G.me.ability>=need){
+      if(modalOpen){
+        G.level++;G.me.mood=cl(G.me.mood+8);
+        addLog('🎉 恭喜！你晋升为'+JOBS[G.level].name+'，月薪'+num(salaryNow())+'元。','gd2');
+      }else{
+        openModal('【年度考核 · 晋升机会】',
+          '<div class="desc">你的能力（'+G.me.ability+'）达到了'+JOBS[G.level+1].name+'的要求（'+need+'）。</div>'+
+          '<div class="desc">领导找你谈话：「明年，敢不敢挑大梁？」</div>'+
+          '<button class="story-choice" onclick="acceptPromo()">🚀 接受晋升（月薪'+num(salaryNow())+'）</button>'+
+          '<button class="story-choice" onclick="closeModal()">😌 再稳一年</button>');
+      }
+    }
+  }
+}
+function schoolChoice(ch){
+  openModal('【'+ch.name+'要上小学了】',
+    '<div class="desc">'+ch.name+'今年6岁，该上学了。学区房还是普通学校，是个重要选择。</div>'+
+    '<button class="story-choice" onclick="chooseSchool(\''+ch.name+'\',\'district\')">🏫 买学区房（-15万，一步到位）</button>'+
+    '<button class="story-choice" onclick="chooseSchool(\''+ch.name+'\',\'fee\')">💰 交择校费（-2万，省心）</button>'+
+    '<button class="story-choice" onclick="chooseSchool(\''+ch.name+'\',\'normal\')">🏘️ 上普通小学（免费）</button>');
+}
+function chooseSchool(name,opt){
+  if(opt==='district'){G.money-=150000;G.schoolDistrict=true;addLog('🏫 你咬牙买了学区房，'+name+'进了重点小学。-15万。','gd2');}
+  else if(opt==='fee'){G.money-=20000;addLog('💰 '+name+'交了2万择校费，进了不错的学校。','gd');}
+  else{addLog('🏘️ '+name+'上了家门口的普通小学，童年也挺好。','');}
+  closeModal();
+}
+function acceptPromo(){
+  G.level++;G.me.mood=cl(G.me.mood+8);
+  addLog('🎉 恭喜！你晋升为'+JOBS[G.level].name+'，月薪'+num(JOBS[G.level].salary)+'元。','gd2');
+  closeModal();
+}
+function headhunter(){
+  if(G.unemployed||G.level>=JOBS.length-1)return;
+  var need=JOBS[G.level+1].need;
+  if(G.me.ability<need)return;
+  openModal('【猎头来电 · 金三银四】',
+    '<div class="desc">一家'+pk(INDUSTRIES).name+'公司看中了你的履历，直接给到'+JOBS[G.level+1].name+'岗位（试用期3个月）。</div>'+
+    '<div class="desc">「跳槽有风险，新环境要重新证明自己——但机会只有这一通电话。」</div>'+
+    '<button class="story-choice" onclick="jumpShip()">🚀 跳了！</button>'+
+    '<button class="story-choice" onclick="closeModal()">🤚 算了，苟住</button>');
+}
+function jumpShip(){
+  if(G.level>=JOBS.length-1){G.me.mood=cl(G.me.mood+5);addLog('🚀 你已到顶，但仍跳去了一家更稳的老牌公司，换个环境。','gd2');closeModal();return;}
+  G.level++;
+  var oldInd=G.indName;
+  var newInd=pk(INDUSTRIES.filter(function(x){return x.name!==oldInd;}));
+  G.indName=newInd.name;G.indMult=newInd.mult;
+  G.onProbation=3;G.perf=0;G.perfYear=0;G.me.mood=cl(G.me.mood+8);
+  addLog('🚀 你跳槽到'+G.indName+'行业，直接任'+JOBS[G.level].name+'（试用期3个月）。一切从头开始。','gd2');
+  closeModal();
+}
+function buyHouse(){
+  if(G.house||G.money<HOUSE_PRICE){toast('钱不够（需'+num(HOUSE_PRICE)+'元）');return;}
+  G.money-=HOUSE_PRICE;G.house=true;
+  addLog('🏠 你在滨江市买了自己的房子！从此不用再看房东脸色。','gd2');
+  render();autoSave();
+}
+function seeDoctor(){
+  var cost=G.ins?800:2000;
+  if(G.money<cost){toast('看病要'+cost+'元，钱不够');return;}
+  G.money-=cost;G.me.health=cl(G.me.health+25);
+  addLog('🏥 你去医院做了检查好好休养，健康+25。','gd');
+  render();autoSave();
+}
+
+/* ================= 随机事件 ================= */
+var EVENTS=[
+  {c:function(){return true;},f:function(){G.perfYear+=6;G.me.health=cl(G.me.health-5);addLog('🌙 项目上线通宵加班，绩效+6，健康-5。','bd');}},
+  {c:function(){return true;},f:function(){G.perf=cl(G.perf-4,0,999);G.me.mood=cl(G.me.mood-3);addLog('🚇 地铁故障迟到，被领导点名，绩效-4。','bd');}},
+  {c:function(){return true;},f:function(){G.perf+=2;G.me.mood=cl(G.me.mood-4);addLog('📊 领导画了个大饼，你信了一半。绩效+2，心情-4。','gd2');}},
+  {c:function(){return true;},f:function(){G.perf=cl(G.perf-8,0,999);G.me.mood=cl(G.me.mood-6);addLog('🗡️ 组里的事故被同事甩锅到你头上，绩效-8，你有苦说不出。','bd');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood-8);addLog('📄 你熬了两周的方案，署名却是组长。心情-8。','bd');}},
+  {c:function(){return true;},f:function(){G.money-=800;addLog('💌 同学结婚随礼 -800元。','bd');}},
+  {c:function(){return true;},f:function(){G.money+=500;addLog('🎁 你随手发的动态中了平台奖励 +500元。','gd');}},
+  {c:function(){return true;},f:function(){G.me.health=cl(G.me.health-8);G.money-=300;addLog('🤧 换季感冒，买药看病 -300元，健康-8。','bd');}},
+  {c:function(){return true;},f:function(){G.me.health=cl(G.me.health-12);G.money-=2000;addLog('🤒 重感冒发烧到39度，吊了两天水 -2000元，健康-12。','bd');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood+4);G.me.health=cl(G.me.health+2);addLog('🌇 周末天气很好，你在江边走了走，心情+4。','gd');}},
+  {c:function(){return true;},f:function(){G.money+=ri(200,800);addLog('🧧 你收到一笔莫名其妙的退款，小惊喜。','gd');}},
+  {c:function(){return true;},f:function(){G.money+=400;addLog('📦 你在二手平台卖掉了闲置，回血+400元。','gd');}},
+  {c:function(){return true;},f:function(){G.money-=1200;addLog('📱 手机屏幕摔碎了，换屏 -1200元。','bd');}},
+  {c:function(){return true;},f:function(){G.perf=cl(G.perf-5,0,999);addLog('💻 电脑突然蓝屏，没保存的方案全没了，绩效-5。','bd');}},
+  {c:function(){return true;},f:function(){G.money-=1500;G.me.mood=cl(G.me.mood+4);addLog('🛒 双十一剁手 -1500元，拆快递真的很快乐。','gd2');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood-5);addLog('🛵 接的单被拖欠尾款，白忙活一场。心情-5。','bd');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood+3);G.me.health=cl(G.me.health-4);addLog('🌙 熬夜刷手机到三点，很爽，第二天很困。心情+3 健康-4。','gd2');}},
+  {c:function(){return !G.house;},f:function(){G.rent+=100;addLog('🏠 房东说要涨租100元，你无力反驳。','bd');}},
+  {c:function(){return !G.house;},f:function(){G.money-=3000;addLog('🚚 房东要卖房，你被迫搬家，中介费+搬家费 -3000元。','bd');}},
+  {c:function(){return G.money>20000;},f:function(){G.money-=2000;addLog('📉 你跟风买的基金跌了，割肉 -2000元。','bd');}},
+  {c:function(){return G.money>20000;},f:function(){G.money+=1200;addLog('📈 基金小涨，你见好就收 +1200元。','gd');}},
+  {c:function(){return G.money>5000;},f:function(){G.money-=1500;G.me.health=cl(G.me.health+8);addLog('💳 你咬牙办了健身房年卡，健康+8。-1500元。','gd2');}},
+  {c:function(){return !G.spouse&&G.npcs.some(function(n){return n.met&&!n.lover;});},
+   f:function(){var n=pk(G.npcs.filter(function(x){return x.met&&!x.lover;}));n.aff=cl(n.aff+5);G.me.mood=cl(G.me.mood+4);addLog('💭 你收到'+n.name+'的消息，聊了几句，心里有点甜。好感+5。','gd');}},
+  {c:function(){return !G.spouse;},f:function(){G.me.mood=cl(G.me.mood-4);addLog('💔 街上全是成双成对的人，你一个人吃完火锅回家。心情-4。','bd');}},
+  {c:function(){return !!G.spouse;},f:function(){G.me.mood=cl(G.me.mood-8);addLog('😤 你和'+G.spouse.name+'因为琐事拌嘴了，谁也不让谁。心情-8。','bd');}},
+  {c:function(){return !!G.spouse;},f:function(){G.money-=600;G.me.mood=cl(G.me.mood+8);addLog('🌹 你们过了个纪念日，虽然花了600元，但笑得很开心。','gd');}},
+  {c:function(){return true;},f:function(){G.money-=500;G.me.mood=cl(G.me.mood+8);addLog('🍻 外地的老同学来滨江市出差，你们撸了一顿串。-500元，心情+8。','gd2');}},
+  {c:function(){return true;},f:function(){G.money-=ri(3000,6000);G.me.mood=cl(G.me.mood-6);addLog('☎️ 妈妈打电话说身体不太舒服，你立刻转了笔钱回去，让她别省。（心情-6）','bd');}},
+  {c:function(){return true;},f:function(){G.money-=2000;addLog('👨 爸爸的老寒腿又犯了，你网购了理疗仪寄回家 -2000元。','bd');}},
+  {c:function(){return !G.spouse;},f:function(){G.me.mood=cl(G.me.mood-4);addLog('☎️ 妈妈在电话里又问「有对象了吗」，你说快了。（心情-4）','bd');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood+8);addLog('🥫 家里寄来一大箱老家的特产，你在出租屋吃到了妈妈的味道。心情+8。','gd');}},
+  {c:function(){return G.me.age>=32;},f:function(){G.me.mood=cl(G.me.mood-6);addLog('📰 又一家大厂曝出裁员，工位上人人自危，你也开始悄悄更新简历。心情-6。','bd');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood+5);addLog('🌧️ 下雨天没带伞，便利店店员借你一把伞，明天记得还。心情+5。','gd');}},
+  {c:function(){return true;},f:function(){G.money+=ri(300,900);addLog('🎰 你在公司楼下顺手买了一张彩票，居然中了。','gd');}},
+  {c:function(){return G.month>=3&&G.month<=4&&G.unemployed===false;},f:function(){if(!modalOpen)headhunter();else addLog('📞 一个猎头加了你好友，你没顾上回。','gd2');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood+6);addLog('🍱 楼下新开了一家好吃的饭馆，你连吃了一个月。心情+6。','gd');}},
+  // —— 育儿线 ——
+  {c:function(){return G.children.length>0;},f:function(){G.money-=800;G.me.mood=cl(G.me.mood-4);addLog('🤒 '+c0()+'半夜发烧，你抱着去急诊，挂号+药 -800元。','bd');}},
+  {c:function(){return G.children.length>0;},f:function(){G.money-=200;G.me.mood=cl(G.me.mood+4);addLog('🏫 你去开了'+c0()+'的家长会，被老师夸「孩子很乖」。（-200元）','gd');}},
+  {c:function(){return G.children.length>0&&G.money>2000;},f:function(){G.money-=1500;addLog('🎹 给'+c0()+'报了兴趣班，-1500元。值吗以后再说。','bd');}},
+  {c:function(){return G.children.length>0;},f:function(){G.me.mood=cl(G.me.mood+8);addLog('🏆 '+c0()+'在学校拿了奖，你偷偷红了眼眶。','gd');}},
+  {c:function(){return G.children.length>0&&G.money>5000;},f:function(){G.money-=3000;addLog('⛺ 送'+c0()+'去了夏令营，-3000元。孩子晒黑了也开心。','gd');}},
+  {c:function(){return G.children.length>0&&!G.schoolDistrict;},f:function(){G.rent=Math.round(G.rent*1.03);addLog('📋 学区政策又变，家长群炸了，你默默收藏了攻略。','bd');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood-2);addLog('📰 教育新政落地，你重新盘了下孩子的规划。','');}},
+  // —— 行业寒冬 / 行业线 ——
+  {c:function(){return G.indName==='互联网'||G.indName==='金融';},f:function(){G.salaryPenalty=0.7;addLog('❄️ '+G.indName+'迎来寒冬，今年工资打折（系数70%）。','bd');}},
+  {c:function(){return G.indName==='教培';},f:function(){G.me.mood=cl(G.me.mood-6);addLog('📉 '+G.indName+'遭政策重锤，身边同事走了一半，你侥幸留下。','bd');}},
+  {c:function(){return G.indName==='制造业';},f:function(){G.me.mood=cl(G.me.mood+4);addLog('🏭 '+G.indName+'订单回暖，车间加班多了，但也踏实。','gd');}},
+  {c:function(){return G.indName==='国企';},f:function(){G.me.mood=cl(G.me.mood+2);addLog('🏛️ 国企稳如老狗，今年只涨了点死工资，但心安。','gd');}},
+  {c:function(){return !G.unemployed;},f:function(){var g=ri(3000,9000);G.money+=g;addLog('🚀 你所在公司上市，期权变现 +'+num(g)+'元！','gd2');}},
+  {c:function(){return G.onProbation>0;},f:function(){G.me.mood=cl(G.me.mood-3);addLog('😰 试用期如履薄冰，每天担心被刷掉。','bd');}},
+  // —— 邻居 / 社区 ——
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood+3);addLog('🤝 隔壁邻居借了你一把葱，还送来两个橘子。','gd');}},
+  {c:function(){return !G.house;},f:function(){G.me.mood=cl(G.me.mood-3);addLog('🔨 楼上装修电钻从早响到晚，你戴着耳机也睡不着。','bd');}},
+  {c:function(){return true;},f:function(){G.money-=300;G.me.mood=cl(G.me.mood+2);addLog('🥬 参加了小区团购，囤了一冰箱菜，-300元。','');}},
+  // —— 网络 / 消费 ——
+  {c:function(){return true;},f:function(){G.money-=1000;G.me.mood=cl(G.me.mood+3);addLog('📺 深夜直播没忍住，下单了一堆用不上的东西。-1000元。','gd2');}},
+  {c:function(){return G.money>8000;},f:function(){G.money-=400;addLog('💳 视频/外卖会员自动续费，-400元。下次一定关。','bd');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood-3);addLog('📱 朋友圈都在晒旅游，只有你在改bug。','bd');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood+5);addLog('📹 刷到个治愈短视频，笑了整整一分钟。','gd');}},
+  // —— 健康 / 运动 ——
+  {c:function(){return G.me.health<60;},f:function(){G.me.health=cl(G.me.health-3);addLog('🩺 年度体检几项指标亮了红灯，医生让你少熬夜。','bd');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood+6);G.me.health=cl(G.me.health+3);addLog('🚴 周末和朋友骑行三十公里，浑身舒畅。','gd');}},
+  {c:function(){return true;},f:function(){G.me.health=cl(G.me.health-4);addLog('🌃 为了赶项目连熬三晚，黑眼圈快掉到下巴。','bd');}},
+  // —— 金钱 / 理财 ——
+  {c:function(){return G.money>30000;},f:function(){G.money-=2000;addLog('📈 花2000报了理财课，学了个寂寞。','bd');}},
+  {c:function(){return true;},f:function(){G.money+=ri(50,300);addLog('🎟️ 路过彩票站刮了一张，中了顿饭钱。','gd');}},
+  {c:function(){return true;},f:function(){var b=ri(500,2000);G.money-=b;addLog('🤝 老同学开口借钱，你抹不开面子转了'+b+'元过去。','bd');}},
+  // —— 职场补充 ——
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood+3);addLog('⛰️ 部门团建爬山，平时不说话的同事居然挺有趣。','gd');}},
+  {c:function(){return true;},f:function(){G.perf+=5;addLog('🛡️ 之前背的锅被澄清，领导公开道歉，绩效+5。','gd');}},
+  {c:function(){return G.unemployed;},f:function(){G.me.mood=cl(G.me.mood-4);addLog('📪 面了家心仪的公司，收到感谢信（其实是拒信）。','bd');}},
+  {c:function(){return G.unemployed;},f:function(){var d=ri(800,2000);G.money+=d;G.me.mood=cl(G.me.mood-2);addLog('🧰 失业期间做了点日结兼职，手头松了点，但心累。（+'+num(d)+'元）','');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood+2);addLog('🌿 你在工位养了盆绿萝，开会瞥见它心情好点。','gd');}},
+  // —— 宠物线 ——
+  {c:function(){return !!G.pet;},f:function(){G.money-=300;G.me.mood=cl(G.me.mood-3);addLog('🪑 '+G.pet.name+'把沙发咬了个洞，你气笑了。（-300元）','bd');}},
+  {c:function(){return !!G.pet;},f:function(){G.money-=800;G.me.mood=cl(G.me.mood-5);G.pet.love=cl(G.pet.love-5);addLog('🤒 '+G.pet.name+'病恹恹的，你赶紧带去宠物医院。（-800元）','bd');}},
+  {c:function(){return !!G.pet;},f:function(){G.me.mood=cl(G.me.mood+6);G.pet.love=cl(G.pet.love+5);addLog('🐾 '+G.pet.name+'蹭了蹭你的手，一天的疲惫都散了。','gd');}},
+  {c:function(){return !!G.pet;},f:function(){G.me.mood=cl(G.me.mood+8);addLog('🏠 你加完班回家，'+G.pet.name+'早就蹲在门口等你了。','gd');}},
+  {c:function(){return !!G.pet;},f:function(){G.me.mood=cl(G.me.mood-3);G.me.health=cl(G.me.health-2);addLog('🌙 '+G.pet.name+'凌晨在屋里跑酷，把你吵醒两次。','bd');}},
+  {c:function(){return !!G.pet&&G.pet.hunger<30;},f:function(){G.pet.hunger=cl(G.pet.hunger+25);G.me.mood=cl(G.me.mood-2);addLog('🥣 '+G.pet.name+'的碗空了，你赶紧补上。','');}},
+  // —— 生活细节 ——
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood-3);addLog('🚇 早高峰地铁挤成沙丁鱼罐头，你的早饭差点被挤没。','bd');}},
+  {c:function(){return G.money>=30;},f:function(){G.money-=30;G.me.health=cl(G.me.health-2);addLog('🥡 外卖又点重了同一家，你吃得很麻木。','');}},
+  {c:function(){return G.money>=200;},f:function(){G.money-=200;G.me.mood=cl(G.me.mood+5);addLog('🍲 同事组局吃火锅，你被拉着去了，聊到很晚。（-200元）','gd');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood+3);addLog('♟️ 楼下大爷拉你下了盘棋，你输了，他不收徒弟。','gd');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood+3);addLog('🌱 你在阳台种的小葱发芽了，莫名很有成就感。','gd');}},
+  {c:function(){return G.money>=150;},f:function(){G.money-=150;G.me.mood=cl(G.me.mood+4);addLog('🍢 加班到深夜，你在便利店买了关东煮，热汤下肚，人活了。','gd');}},
+  {c:function(){return true;},f:function(){G.me.mood=cl(G.me.mood+6);addLog('📦 收到老家寄来的腊肉和辣酱，你在出租屋吃出了年的味道。','gd');}},
+  {c:function(){return !G.house;},f:function(){G.me.mood=cl(G.me.mood-4);addLog('📱 房东发来消息：「这个月房租记得转一下。」','bd');}},
+  {c:function(){return G.me.health<70;},f:function(){G.me.health=cl(G.me.health-3);G.me.mood=cl(G.me.mood-3);addLog('😴 你翻来覆去到凌晨三点才睡着，第二天顶着黑眼圈。','bd');}},
+  {c:function(){return !G.spouse;},f:function(){G.me.mood=cl(G.me.mood-3);addLog('💌 公园相亲角的大妈往你手里塞了三张照片，你哭笑不得。','bd');}},
+  {c:function(){return G.money>=400;},f:function(){G.money-=400;G.me.mood=cl(G.me.mood+6);addLog('🎉 你为了庆祝最近的好消息请同事喝奶茶，花了400元。','gd');}},
+  // —— 宠物发情 / 灵性 ——
+  {c:function(){return !!G.pet&&!G.pet.neutered&&G.pet.age>=2;},f:function(){G.me.mood=cl(G.me.mood-4);addLog('😾 '+G.pet.name+'最近在发情，半夜叫个不停，楼下邻居都来敲门了。（心情-4）','bd');}},
+  {c:function(){return !!G.pet&&(G.pet.stage||0)>=2;},f:function(){G.me.mood=cl(G.me.mood+5);addLog('✨ '+G.pet.name+'越来越通人性，你下班一开门它就知道你今天累不累。','gd');}},
+  // —— 街区昼夜 ——
+  {c:function(){return G.phase==='day';},f:function(){G.me.mood=cl(G.me.mood+4);addLog('☀️ 上班路上的阳光正好，你难得没戴耳机，听了会儿街边的鸟叫。','gd');}},
+  {c:function(){return G.phase==='day';},f:function(){G.me.health=cl(G.me.health+2);addLog('🌤️ 午休你下楼晒了会儿太阳，下午的班都好熬了些。','gd');}},
+  {c:function(){return G.phase==='night';},f:function(){G.me.mood=cl(G.me.mood+5);addLog('🌙 夜风很舒服，你在便利店门口坐了会儿，什么也没想。','gd');}},
+  {c:function(){return G.phase==='night';},f:function(){G.me.health=cl(G.me.health-2);G.me.mood=cl(G.me.mood-2);addLog('🌃 夜深了还在改方案，窗外的城市却已经睡了一半。','bd');}}
+];
+function randomEvent(){
+  var pool=EVENTS.filter(function(e){try{return e.c();}catch(err){return false;}});
+  if(!pool.length)return;
+  pk(pool).f();
+}
+
+/* ================= 风险与结局 ================= */
+function checkBad(){
+  if(G.over)return;
+  if(G.me.health<10){
+    G.over=true;
+    showEnd('身体亮红灯','长年透支，你倒在了工位上。<br>病床上你终于想明白：<b>身体才是1，其余都是0。</b><br><br><b>—— 健康崩坏 · 游戏结束 ——</b>');
+    return;
+  }
+  if(G.money<-20000){
+    G.over=true;
+    showEnd('债务危机','信用卡、网贷、借呗……窟窿再也填不上了。<br>你收拾行李，黯然离开了滨江市。<br><br><b>—— 负债离场 · 游戏结束 ——</b>');
+    return;
+  }
+  if(G.me.mood<8){
+    G.me.mood=35;G.money-=2000;
+    addLog('🧠 你情绪崩溃了，请假看了心理医生（-2000元）。要注意休息。','bd');
+  }
+}
+function triggerEnd(){
+  G.over=true;
+  var m=G.me;
+  var spouseLine=G.spouse?('身边是'+G.spouse.name+'。'):'';
+  if(G.money>=1000000){
+    showEnd('财务自由','三十年，你从一间出租屋起家，攒下了'+num(G.money)+'元存款。<br>滨江市的车水马龙里，终于有了一盏真正属于你的灯。<br>'+spouseLine+'<br><br><b>—— 结局一 · 财务自由 ——</b>');
+  }else if(G.level>=5){
+    showEnd('打工人巅峰','你做到了'+JOBS[G.level].name+'，站在了写字楼的顶层。<br>只是偶尔路过便利店，还是会想起刚来那年吃过的热包子。<br>'+spouseLine+'<br><br><b>—— 结局二 · 打工人巅峰 ——</b>');
+  }else if(G.house&&G.spouse&&G.children.length>0){
+    showEnd('阖家美满','房子是你们的，家是你们的，孩子'+G.children.map(function(c){return c.name;}).join('、')+'也是你们的。<br>周末的菜市场和深夜的沙发，都装着实实在在的幸福。<br><br><b>—— 结局三 · 阖家美满 ——</b>');
+  }else if(G.house&&G.spouse){
+    showEnd('人生赢家','房子是你们的，家是你们的，存款'+num(G.money)+'元也是你们的。<br>周末的菜市场和深夜的沙发，都装着实实在在的幸福。<br><br><b>—— 结局四 · 人生赢家 ——</b>');
+  }else if(G.house){
+    showEnd('安家立业','你在这座城市有了自己的房子，存款'+num(G.money)+'元。<br>装修花了大半积蓄，但晚上回家亮起的那盏灯，值。<br><br><b>—— 结局四 · 安家立业 ——</b>');
+  }else if(G.spouse&&G.money>=200000){
+    showEnd('稳稳的幸福','没有大富大贵，但你们有小家、有存款'+num(G.money)+'元、有彼此。<br>周末逛逛菜市场，日子平平常常，也踏踏实实。<br><br><b>—— 结局五 · 稳稳的幸福 ——</b>');
+  }else if(G.money>=300000){
+    showEnd('孤身贵族','存款'+num(G.money)+'元，一个人也过得有声有色。<br>只是搬家的时候，没人帮你抬那张沙发。<br><br><b>—— 结局六 · 孤身贵族 ——</b>');
+  }else if(G.level>=3){
+    showEnd('中层骨干','你做到了'+JOBS[G.level].name+'，带起了自己的团队。<br>不上不下，但好歹在这座城市有了自己的位置。<br><br><b>—— 结局七 · 中层骨干 ——</b>');
+  }else{
+    showEnd('城市过客','三十年过去，你依然在租房，存款'+num(G.money)+'元。<br>滨江市很大，你来了，努力过，但好像从未真正留下。<br><br><b>—— 结局八 · 城市过客 ——</b>');
+  }
+}
+function showEnd(title,text){
+  G.over=true;
+  document.getElementById('modalRoot').innerHTML=
+    '<div class="mask"><div class="modal"><h2>'+title+'</h2><div class="desc">'+text+'</div>'+
+    '<button class="main-btn" onclick="doRestart()">🔄 重 新 开 始</button></div></div>';
+}
+
+/* ================= 渲染 ================= */
+function drawTop(){
+  var jobChip=G.unemployed?'💼 <b>失业中</b>':'💼 <b>'+JOBS[G.level].name+'</b> 月薪'+num(JOBS[G.level].salary);
+  var chips=[
+    '💰 <b>'+num(G.money)+'</b>元',
+    jobChip,
+    '🏭 <b>'+G.indName+'</b>',
+    '🧠 能力<b>'+G.me.ability+'</b>',
+    '❤️ 健康<b>'+G.me.health+'</b>',
+    '😊 心情<b>'+G.me.mood+'</b>',
+    '🎂 '+G.me.age+'岁',
+    '👵 父母<b>'+G.parents.health+'</b>',
+    '👶 孩子×'+G.children.length,
+    G.pet?('🐾 '+G.pet.name):'',
+    G.house?'🏠 有房':'🏠 房租'+num(G.rent)
+  ];
+  chips=chips.filter(function(x){return x;});
+  var h='';
+  for(var i=0;i<chips.length;i++){
+    var cls='chip';
+    if(chips[i].indexOf('健康')>=0&&G.me.health<40)cls='chip warn';
+    if(chips[i].indexOf('心情')>=0&&G.me.mood<25)cls='chip warn';
+    if(chips[i].indexOf('失业')>=0)cls='chip warn';
+    if(chips[i].indexOf('父母')>=0&&G.parents.health<40)cls='chip warn';
+    h+='<span class="'+cls+'">'+chips[i]+'</span>';
+  }
+  document.getElementById('chips').innerHTML=h;
+  document.getElementById('cDate').textContent='第'+G.year+'年 '+G.month+'月 '+XUN_NAME[G.xun];
+  document.body.className='s-'+SEASON[G.month];
+}
+function drawNav(){
+  var h='';
+  for(var k in PAGES){
+    h+='<button class="'+(G.page===k?'on':'')+'" onclick="go(\''+k+'\')">'+PAGES[k].icon+' '+PAGES[k].title+'</button>';
+  }
+  h+='<button class="util" onclick="showHelp()">❓</button>';
+  h+='<button class="util" onclick="showGoal()">🎯</button>';
+  h+='<button class="util" onclick="doRestart()">🔄</button>';
+  document.getElementById('nav').innerHTML=h;
+}
+function drawActs(){
+  var pg=PAGES[G.page];
+  var phSuf=(G.page==='street')?(' · '+(G.phase==='day'?'☀️ 白天':'🌙 夜晚')):'';
+  document.getElementById('actHead').innerHTML=pg.icon+' '+pg.title+' <em>'+pg.sub+phSuf+'</em>';
+  var sm=document.getElementById('sceneMood');if(sm)sm.textContent=sceneMood(G.page);
+  var h='';
+  if(G.page==='street'){
+    h+='<button class="act" onclick="setPhase(\'day\')"><span class="ic">☀️</span><span class="bd2"><span class="t1">白天出门</span><span class="t2">晨跑、逛商场</span></span></button>';
+    h+='<button class="act" onclick="setPhase(\'night\')"><span class="ic">🌙</span><span class="bd2"><span class="t1">夜晚出门</span><span class="t2">夜市、江边夜景、酒吧</span></span></button>';
+  }
+  for(var k in ACTS){
+    var a=ACTS[k];
+    if(a.page!==G.page&&PAGE_ALIAS[a.page]!==G.page)continue;
+    if(a.can&&!a.can())continue;
+    if(a.ph&&a.ph!==G.phase)continue;
+    var off=(a.cost&&G.money<a.cost)?' off':'';
+    h+='<button class="act'+off+'" onclick="doAction(\''+k+'\')">'+
+      '<span class="ic">'+a.ic+'</span><span class="bd2"><span class="t1">'+a.t1+'</span><span class="t2">'+a.t2+'</span></span></button>';
+  }
+  if(G.unemployed){
+    h+='<button class="act" onclick="findJob()"><span class="ic">📨</span><span class="bd2">'+
+      '<span class="t1">投简历找工作</span><span class="t2">花费一旬 · 能力决定能否复职</span></span></button>';
+  }
+  if(G.me.health<40){
+    h+='<button class="act" onclick="seeDoctor()"><span class="ic">🏥</span><span class="bd2">'+
+      '<span class="t1">去医院</span><span class="t2">健康+25 · '+(G.ins?'800':'2000')+'元</span></span></button>';
+  }
+  if(!G.house&&G.money>=HOUSE_PRICE){
+    h+='<button class="act" onclick="buyHouse()"><span class="ic">🏠</span><span class="bd2">'+
+      '<span class="t1">买房安家</span><span class="t2">全款'+num(HOUSE_PRICE)+'元，从此告别房租</span></span></button>';
+  }
+  document.getElementById('actGrid').innerHTML=h;
+}
+function drawPeople(){
+  var h='<h3 style="margin-top:4px">人际关系</h3>';
+  if(G.spouse){
+    h+='<div class="person"><div class="nm"><b>💍 '+G.spouse.name+'</b><span>配偶 · '+G.spouse.title+'</span></div>'+
+      '<div class="bar"><i style="width:100%"></i></div></div>';
+  }
+  if(G.pet){
+    var pic=G.pet.kind==='猫'?'🐱':(G.pet.kind==='狗'?'🐶':'🐹');
+    h+='<div class="person"><div class="nm"><b>'+pic+' '+G.pet.name+'</b><span>'+G.pet.kind+' · '+G.pet.age+'岁</span></div>'+
+      '<div class="bar"><i style="width:'+cl(G.pet.love)+'%"></i></div>'+
+      '<div style="font-size:10.5px;color:#8a99a8;margin-top:2px">好感 '+G.pet.love+'/100 · 饱食 '+G.pet.hunger+'/100</div></div>';
+  }
+  var met=G.npcs.filter(function(n){return n.met;});
+  if(!met.length&&!G.spouse){
+    h+='<div class="person" style="color:#8a99a8">还没有认识什么人。工作、学习、健身、副业、社交都可能遇见TA。</div>';
+  }
+  if(G.children.length){
+    h+='<h3 style="margin-top:8px">孩子（'+G.children.length+'）</h3>';
+    for(var k=0;k<G.children.length;k++){
+      var c=G.children[k];
+      h+='<div class="person"><div class="nm"><b>👶 '+c.name+'</b><span>'+(c.schoolChosen?'已上学':'学龄前')+' · '+c.age+'岁</span></div></div>';
+    }
+  }
+  for(var i=0;i<met.length;i++){
+    var n=met[i];
+    var rel=n.lover?'恋人':(G.spouse&&G.spouse.name===n.name?'配偶':'朋友');
+    h+='<div class="person"><div class="nm"><b>'+n.name+'</b><span>'+n.title+' · '+rel+'</span></div>'+
+      '<div class="bar"><i style="width:'+cl(n.aff)+'%"></i></div>'+
+      '<div style="font-size:10.5px;color:#8a99a8;margin-top:2px">好感 '+n.aff+'/100'+(n.aff>=60&&!n.lover&&!G.spouse?' · 可以表白了':'')+'</div></div>';
+  }
+  document.getElementById('peoplePanel').innerHTML=h;
+}
+function render(){
+  drawTop();drawNav();drawActs();drawPeople();drawLog();
+}
+
+/* ================= 帮助/重开 ================= */
+function showHelp(){
+  openModal('【玩法说明】',
+    '<div class="desc">· 底部切换 <b>7 个场景</b>：家 / 公司 / 街区 / 房产理财 / 医院 / 老家 / 旅行</div>'+
+    '<div class="desc">· 「街区」里一次逛完图书馆、健身房、咖啡馆、便利店、商场，不用来回切</div>'+
+    '<div class="desc">· 在家可以<b>领养宠物</b>：喂食、陪玩会成长进化；还能<b>绝育/配种</b>（配种3个月后添丁换红包）</div>'+
+    '<div class="desc">· 街区可切换<b>白天/夜晚</b>：晨跑、逛商场 vs 夜市、江边夜景、酒吧，事件也不同</div>'+
+    '<div class="desc">· 结婚又养宠物，配偶会有专属的「一起养宠物」剧情</div>'+
+    '<div class="desc">· 每个场景都有随四季变化的<b>环境描写</b>，抬头看看</div>'+
+    '<div class="desc">· 每旬（10天）选一个主行动，时间自动推进</div>'+
+    '<div class="desc">· 每月发工资（底薪+绩效）、交房租、扣生活费，还会触发随机事件</div>'+
+    '<div class="desc">· <b>职场很残酷</b>：月绩效&lt;10 会被警告，连续两月直接辞退！心情&lt;30 绩效减半，心情&lt;15 还会出错</div>'+
+    '<div class="desc">· 被辞退后没有收入但房租照交，要用「投简历」重新找工作（能力不够会降级）</div>'+
+    '<div class="desc">· 35岁后每年有概率被「优化」（有N+1赔偿）；金三银四可能接到猎头电话</div>'+
+    '<div class="desc">· 能力达门槛，年末考核可晋升；通胀会让生活费逐年上涨</div>'+
+    '<div class="desc">· 金三银四猎头来电可<b>跨行业跳槽</b>（升一级但有3个月试用期，绩效不过打回原形）</div>'+
+    '<div class="desc">· 工作/学习/健身/副业/社交都可能遇见心动的人，好感60表白、90求婚（婚礼2万）</div>'+
+    '<div class="desc">· 结婚后可能怀孕生子，孩子6岁要选学区房/择校费/普通校；育儿每月多开销</div>'+
+    '<div class="desc">· 父母会老去，要寄钱、回家过年；行业有寒冬、35岁还可能被优化</div>'+
+    '<div class="desc">· 30年后结算人生，共9种结局——想解锁哪个，看你这三十年怎么活</div>'+
+    '<button class="main-btn" onclick="closeModal()">知道了</button>');
+}
+function showGoal(){
+  openModal('【人生目标】',
+    '<div class="desc">在滨江市活下来，然后活得好：</div>'+
+    '<div class="desc">1️⃣ 短期：保住工作（绩效！），别让健康和心情崩盘</div>'+
+    '<div class="desc">2️⃣ 中期：考证学习升职加薪、副业攒钱，或者干脆跳槽</div>'+
+    '<div class="desc">3️⃣ 长期：买房、成家、赡养父母，30年后结算人生</div>'+
+    '<button class="main-btn" onclick="closeModal()">加油</button>');
+}
+function doRestart(){
+  if(!window.confirm('确定重新开始吗？当前进度将丢失。'))return;
+  newGame();render();startGameNaming();
+}
+
+/* ================= 存档 ================= */
+function autoSave(){
+  try{localStorage.setItem('binjiang_save',JSON.stringify(G));}catch(e){}
+}
+
+/* ================= 启动 ================= */
+newGame();
+render();
+startGameNaming();
+</script>
+</body>
+</html>

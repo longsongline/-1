@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#1a2332">
+<meta name="color-scheme" content="light">
+<title>滨江市 · 壮阔人生 (豪华深度版)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{color-scheme:light;height:100%;-webkit-text-size-adjust:100%;}
+body{font-family:"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+  color:#202c39;background:#e9eef5;line-height:1.55;font-size:14px;
+  height:100%;overflow:hidden;position:relative;}
+body.s-spring{background:#eef6fc;}
+body.s-summer{background:#edf8f3;}
+body.s-autumn{background:#faf2e8;}
+body.s-winter{background:#ebf0f7;}
+
+/* 天气/季节粒子画布 */
+#seasonFx{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
+#seasonFx span{position:absolute;top:-30px;animation:fxFall linear infinite;opacity:.7;}
+@keyframes fxFall{to{transform:translateY(110vh) rotate(360deg);}}
+
+.wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;
+  padding:6px;height:100vh;height:100dvh;display:flex;flex-direction:column;
+  gap:6px;overflow:hidden;}
+
+/* 顶栏 */
+.topbar{background:#fff;border:1px solid #c9d7e5;border-radius:12px;
+  padding:8px 12px;display:flex;flex-wrap:wrap;gap:6px;
+  align-items:center;justify-content:space-between;flex-shrink:0;
+  box-shadow:0 2px 10px rgba(30,55,90,.07);}
+.brand-box{display:flex;align-items:center;gap:6px;}
+.topbar h1{font-size:16px;font-weight:700;letter-spacing:1px;color:#1e5b99;}
+.topbar h1 small{font-size:10.5px;color:#7e91a5;letter-spacing:0;font-weight:normal;}
+.chips{display:flex;flex-wrap:wrap;gap:4px;align-items:center;}
+.chip{background:#f0f4f9;border:1px solid #c9d7e5;border-radius:20px;
+  padding:2px 9px;font-size:11.5px;color:#4f6274;white-space:nowrap;display:inline-flex;align-items:center;gap:3px;}
+.chip b{color:#1e5b99;font-weight:700;font-size:12.5px;}
+.chip.warn{background:#fdeeee;border-color:#e09c9c;color:#a82828;}
+.chip.gold{background:#fdf8eb;border-color:#e8cb80;color:#9b6b10;}
+.chip.clickable{cursor:pointer;user-select:none;transition:transform .15s;}
+.chip.clickable:active{transform:scale(.95);}
+
+/* 主体布局 */
+.main{flex:1;min-height:0;display:flex;gap:6px;overflow:hidden;}
+.side{flex:0 0 260px;min-height:0;display:flex;flex-direction:column;gap:6px;overflow:hidden;}
+.content{flex:1;min-height:0;display:flex;overflow:hidden;}
+
+.panel{background:#fff;border:1px solid #c9d7e5;border-radius:12px;
+  padding:10px 12px;box-shadow:0 2px 8px rgba(30,55,90,.06);
+  display:flex;flex-direction:column;min-height:0;width:100%;}
+.panel h3{font-size:12.5px;font-weight:700;letter-spacing:1px;color:#1e5b99;
+  border-bottom:1px dashed #d6e2ee;padding-bottom:5px;margin-bottom:7px;
+  flex-shrink:0;display:flex;justify-content:space-between;align-items:center;}
+.panel h3 em{font-style:normal;font-size:10.5px;color:#8596a8;letter-spacing:0;font-weight:normal;}
+
+.scene-mood{font-size:11px;color:#7e91a5;margin:-3px 0 8px;line-height:1.5;flex-shrink:0;font-style:italic;}
+
+/* 日志区 */
+.log-panel{flex:1;min-height:0;overflow:hidden;}
+.log-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;font-size:12px;line-height:1.65;color:#425263;}
+.log-body p{padding:2.5px 0;border-bottom:1px dotted #e6edf4;word-break:break-word;}
+.log-body p:last-child{border-bottom:none;}
+.log-body .dt{color:#8c9eb0;font-size:10.5px;margin-right:5px;}
+.log-body .gd{color:#238652;}
+.log-body .bd{color:#c53428;}
+.log-body .gd2{color:#1e5b99;}
+.log-body .gold{color:#b37d14;}
+.log-body .pink{color:#c24b7a;}
+
+/* 资产快速预览面板 */
+.asset-panel{flex:0 0 auto;max-height:110px;overflow-y:auto;}
+.asset-grid{display:flex;flex-wrap:wrap;gap:4px;font-size:11px;}
+.asset-tag{background:#f0f5fa;border:1px solid #d0deec;border-radius:6px;padding:2px 6px;color:#395066;}
+
+/* 交互行动列表 */
+.acts-wrapper{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;gap:6px;}
+.acts{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:6px;align-content:start;}
+.act{display:flex;gap:7px;align-items:flex-start;
+  background:#f8fbfd;border:1px solid #c9d7e5;border-radius:10px;
+  padding:8px 10px;text-align:left;cursor:pointer;font-family:inherit;
+  font-size:13px;color:#202c39;transition:all .15s;-webkit-appearance:none;}
+.act:hover{border-color:#3892d8;background:#eef6fc;}
+.act:active{transform:scale(.97);}
+.act.off{opacity:.4;pointer-events:none;}
+.act .ic{font-size:17px;line-height:1.1;flex-shrink:0;}
+.act .bd2{display:flex;flex-direction:column;gap:1.5px;flex:1;min-width:0;}
+.act .t1{font-size:12.5px;font-weight:600;letter-spacing:.5px;}
+.act .t2{font-size:10px;color:#7e91a5;line-height:1.3;}
+.act .t3{font-size:9.5px;color:#1e5b99;margin-top:1px;}
+
+/* 产业与店铺独立卡片 */
+.biz-card{border:1px solid #c9d7e5;border-radius:10px;padding:9px 11px;background:#fbfdfe;margin-bottom:6px;}
+.biz-head{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;color:#1e5b99;}
+.biz-desc{font-size:11px;color:#6b8094;margin:4px 0 6px;}
+.biz-acts{display:flex;gap:5px;flex-wrap:wrap;}
+.biz-acts button{font-family:inherit;font-size:11.5px;padding:4px 9px;border-radius:7px;border:1px solid #c9d7e5;background:#f0f5fa;color:#35495e;cursor:pointer;}
+.biz-acts button:active{background:#1e5b99;color:#fff;}
+
+/* 人际卡片 */
+.person{background:#f8fbfd;border:1px solid #c9d7e5;border-radius:10px;padding:8px 10px;margin-bottom:6px;font-size:12px;}
+.person .nm{display:flex;justify-content:space-between;margin-bottom:3px;}
+.person .nm b{color:#1e5b99;font-weight:600;}
+.person .nm span{color:#8294a6;font-size:11px;}
+.bar{height:6px;background:#e5edf5;border-radius:4px;overflow:hidden;}
+.bar i{display:block;height:100%;border-radius:4px;transition:width .3s;}
+
+/* 底部导航 */
+.nav{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;flex-shrink:0;
+  background:#fff;border:1px solid #c9d7e5;border-radius:12px;
+  padding:5px 6px;box-shadow:0 2px 8px rgba(30,55,90,.06);}
+.nav button{flex:1 1 auto;min-width:54px;font-family:inherit;font-size:12px;
+  font-weight:500;padding:7px 4px;border-radius:8px;cursor:pointer;
+  background:#f1f5fa;border:1px solid #c9d7e5;color:#475a6c;
+  -webkit-appearance:none;transition:all .15s;}
+.nav button:active{transform:scale(.96);}
+.nav button.on{background:#1e5b99;color:#fff;border-color:#1e5b99;}
+.nav button.end{background:#238652;color:#fff;border-color:#238652;}
+.nav button.util{background:#e7edf5;color:#3a4e61;}
+
+/* 模态弹窗与剧情 */
+.mask{position:fixed;inset:0;background:rgba(20,32,48,.55);z-index:90;
+  display:flex;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(2px);}
+.modal{background:#fff;border:1px solid #c9d7e5;border-radius:16px;
+  padding:18px 20px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;
+  box-shadow:0 18px 45px rgba(15,30,50,.3);}
+.modal h2{font-size:16px;color:#1e5b99;letter-spacing:1px;margin-bottom:10px;font-weight:700;text-align:center;}
+.modal .desc{font-size:13px;color:#425263;line-height:1.8;margin-bottom:10px;}
+.story-panel{background:linear-gradient(160deg,#f9fcff,#edf4fa);border:1px solid #cbdbee;border-radius:12px;padding:14px;margin-bottom:10px;}
+.story-title{font-size:14.5px;color:#1e5b99;font-weight:700;letter-spacing:1px;text-align:center;margin-bottom:8px;border-bottom:1px dashed #c8d9eb;padding-bottom:6px;}
+.story-text{font-size:13px;color:#354758;line-height:1.9;}
+.story-text p{margin-bottom:7px;}
+.story-text .em{color:#c24b7a;font-weight:600;}
+.story-choices{display:flex;flex-direction:column;gap:7px;margin-top:12px;}
+.story-choice{display:block;width:100%;font-family:inherit;font-size:13px;padding:11px 14px;text-align:left;
+  background:#f8fbfd;border:1px solid #c9d7e5;border-radius:9px;cursor:pointer;color:#202c39;
+  transition:all .15s;-webkit-appearance:none;}
+.story-choice:hover{border-color:#3892d8;background:#eef6fc;}
+.story-choice:active{background:#dbeaf8;}
+.main-btn{display:block;width:100%;font-family:inherit;font-size:13.5px;font-weight:600;letter-spacing:1px;
+  padding:10px 14px;cursor:pointer;background:#1e5b99;color:#fff;border:none;border-radius:9px;text-align:center;}
+.main-btn:active{background:#174777;}
+.qty-input{width:100%;padding:9px;border:1px solid #c9d7e5;border-radius:8px;font-family:inherit;font-size:16px;text-align:center;background:#f8fbfd;}
+
+/* 存档槽位UI */
+.save-slot{border:1px solid #c9d7e5;border-radius:9px;padding:9px;margin-bottom:7px;background:#f9fbfd;
+  display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:12px;flex-wrap:wrap;}
+.save-slot.auto{background:#f0f7fd;border-color:#a8c7e6;}
+.save-slot button{font-family:inherit;font-size:11.5px;padding:4px 10px;border-radius:6px;border:1px solid #c9d7e5;background:#fff;cursor:pointer;}
+.save-slot button:active{background:#1e5b99;color:#fff;}
+
+/* 吐司 */
+#toastRoot{position:fixed;left:50%;bottom:75px;transform:translateX(-50%);z-index:99;pointer-events:none;}
+#toastRoot div{background:rgba(25,38,55,.94);color:#fff;font-size:12.5px;padding:8px 18px;border-radius:20px;
+  opacity:0;transition:opacity .2s;margin-top:4px;box-shadow:0 4px 12px rgba(0,0,0,.15);white-space:nowrap;}
+#toastRoot div.show{opacity:1;}
+#toastRoot div:not(.show){display:none;}
+
+/* ================= 移动端适配 ================= */
+@media (max-width:760px){
+  .wrap{padding:4px;gap:4px;padding-bottom:calc(4px + env(safe-area-inset-bottom));}
+  .topbar{padding:6px 8px;gap:4px 5px;}
+  .topbar h1{font-size:13px;}
+  .topbar h1 small{display:none;}
+  .chips{flex:1 1 100%;gap:3px;}
+  .chip{font-size:10px;padding:1px 6px;line-height:1.45;}
+  .chip b{font-size:11px;}
+  .main{flex-direction:column;gap:4px;}
+  .content{order:1;flex:1;min-height:0;}
+  .side{order:2;flex:0 0 24vh;max-height:24vh;gap:4px;}
+  .asset-panel{max-height:75px;}
+  .panel{padding:7px 9px;}
+  .panel h3{font-size:11px;margin-bottom:4px;padding-bottom:3px;}
+  .acts{grid-template-columns:repeat(2,1fr);gap:4px;}
+  .act{padding:6px 7px;gap:5px;border-radius:8px;}
+  .act .ic{font-size:15px;}
+  .act .t1{font-size:11.5px;}
+  .act .t2{font-size:9px;}
+  .nav{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:4px;-webkit-overflow-scrolling:touch;}
+  .nav button{flex:0 0 auto;min-width:0;padding:6px 8px;font-size:11px;}
+  .modal{max-width:94vw;padding:14px;border-radius:12px;}
+  #toastRoot{bottom:calc(76px + env(safe-area-inset-bottom));}
+}
+</style>
+</head>
+<body>
+<div id="seasonFx"></div>
+<div class="wrap">
+  <!-- 顶栏数据 -->
+  <div class="topbar">
+    <div class="brand-box">
+      <h1>滨江市 · 壮阔人生 <small>都市三十年深度模拟</small></h1>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <!-- 主体工作区 -->
+  <div class="main">
+    <!-- 左侧/下部侧边栏：资产概览 + 日志 -->
+    <div class="side">
+      <div class="panel asset-panel">
+        <h3>资产配置 <em>收租与副业</em></h3>
+        <div class="asset-grid" id="assetGrid"></div>
+      </div>
+      <div class="panel log-panel">
+        <h3>生活日志 <em id="cDate"></em></h3>
+        <div class="log-body" id="logBody"></div>
+      </div>
+    </div>
+
+    <!-- 右侧内容主区 -->
+    <div class="content">
+      <div class="panel">
+        <h3 id="actHead"></h3>
+        <div class="scene-mood" id="sceneMood"></div>
+        <div class="acts-wrapper" id="actsWrapper">
+          <div class="acts" id="actGrid"></div>
+          <div id="bizContainer"></div>
+          <div id="peoplePanel" style="margin-top:6px;overflow-y:auto;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部导航 -->
+  <div class="nav" id="nav"></div>
+</div>
+
+<div id="modalRoot"></div>
+<div id="toastRoot"></div>
+
+<script>
+/* ================= 全局工具库 ================= */
+function ri(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
+function pk(a){return a[Math.floor(Math.random()*a.length)];}
+function cl(v,a,b){if(a===undefined)a=0;if(b===undefined)b=100;return Math.max(a,Math.min(b,v));}
+function num(n){return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+var XUN_NAME=['上旬','中旬','下旬'];
+var SEASON={1:'winter',2:'winter',3:'spring',4:'spring',5:'spring',6:'summer',7:'summer',8:'summer',9:'autumn',10:'autumn',11:'autumn',12:'winter'};
+var MAX_ACTIONS_PER_XUN=8; // 每旬最大核心行动次数
+
+/* ================= 异步剧情队列 (StoryQueue Engine) =================
+   解决多事件连续触发时的弹窗吞噬 Bug，确保每一条重磅剧情按序呈现 */
+var StoryQueue = [];
+var _storyProcessing = false;
+function pushStory(fn){
+  StoryQueue.push(fn);
+  setTimeout(processStoryQueue, 40);
+}
+function processStoryQueue(){
+  if(_storyProcessing) return;
+  if(!StoryQueue.length) return;
+  if(G && G.over){ StoryQueue = []; return; }
+  var mr = document.getElementById('modalRoot');
+  if(mr && mr.innerHTML.trim() !== '') return; // 当前已有弹窗，等待关闭
+  _storyProcessing = true;
+  var fn = StoryQueue.shift();
+  try{ fn(); }catch(e){}
+  _storyProcessing = false;
+  if(StoryQueue.length) setTimeout(processStoryQueue, 60);
+}
+
+/* ================= 现代都市 BGM 音效引擎 ================= */
+var musicOn = false;
+var audioCtx = null;
+var bgmInterval = null;
+function toggleMusic(){
+  musicOn = !musicOn;
+  if(musicOn){
+    startCityBGM();
+    toast('🎵 都市电台音乐已开启');
+  } else {
+    stopCityBGM();
+    toast('🔇 音乐已关闭');
+  }
+  render();
+}
+function startCityBGM(){
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    playCityChords();
+    if(!bgmInterval) bgmInterval = setInterval(playCityChords, 4800);
+  }catch(e){}
+}
+function stopCityBGM(){
+  if(bgmInterval){ clearInterval(bgmInterval); bgmInterval = null; }
+}
+function playCityChords(){
+  if(!musicOn || !audioCtx) return;
+  var chords = [
+    [261.63, 329.63, 392.00, 493.88], // Cmaj7
+    [220.00, 261.63, 329.63, 392.00], // Am7
+    [174.61, 220.00, 261.63, 329.63], // Fmaj7
+    [196.00, 246.94, 293.66, 349.23]  // G7
+  ];
+  var c = pk(chords);
+  for(var i=0;i<c.length;i++){
+    playTone(c[i], 2.2, 0.035, i*0.08);
+  }
+}
+function playTone(freq, dur, gainVal, delay){
+  if(!audioCtx) return;
+  setTimeout(function(){
+    try{
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(gainVal, audioCtx.currentTime + 0.3);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + dur);
+    }catch(e){}
+  }, delay*1000);
+}
+
+/* ================= 季节粒子特效 ================= */
+function updateSeasonFx(season){
+  var c = document.getElementById('seasonFx'); if(!c) return; c.innerHTML = '';
+  var symbols = {spring:'🌸', summer:'🍃', autumn:'🍂', winter:'❄️'};
+  var sym = symbols[season] || '✨';
+  var frag = document.createDocumentFragment();
+  for(var i=0;i<16;i++){
+    var s = document.createElement('span');
+    s.textContent = sym;
+    s.style.left = (Math.random()*100) + '%';
+    s.style.animationDuration = (8 + Math.random()*8) + 's';
+    s.style.animationDelay = (-Math.random()*10) + 's';
+    s.style.fontSize = (10 + Math.random()*10) + 'px';
+    frag.appendChild(s);
+  }
+  c.appendChild(frag);
+}
+
+/* ================= 基础数据表 ================= */
+var JOBS=[
+  {name:'实习生',   salary:4500,  need:0},
+  {name:'正式员工', salary:7500,  need:45},
+  {name:'主管',     salary:11500, need:70},
+  {name:'高级经理', salary:17000, need:95},
+  {name:'业务总监', salary:26000, need:120},
+  {name:'合伙人/VP',salary:42000, need:150}
+];
+var INDUSTRIES=[
+  {name:'互联网', mult:1.15, desc:'薪酬高压力大，35岁优化风险高'},
+  {name:'金融证券', mult:1.35, desc:'奖金丰厚受行情牛熊周期影响'},
+  {name:'先进制造', mult:0.95, desc:'业务扎实平稳，越老越吃香'},
+  {name:'教育文化', mult:0.90, desc:'作息规律，但易受宏观调控'},
+  {name:'国企/公用', mult:0.85, desc:'福利极佳，几乎无失业风险'}
+];
+
+/* 房产阶梯配置（租金与抗通胀资产） */
+var REAL_ESTATES = [
+  {id:'apt', name:'单身青年公寓', price:120000, rent:900, desc:'城中村附近的LOFT公寓，告别合租'},
+  {id:'suburb', name:'郊区两居室', price:320000, rent:2200, desc:'地铁沿线刚需自住，空间宽敞'},
+  {id:'district', name:'核心区学区房', price:650000, rent:4200, desc:'对口省重点中小学，孩子直升'},
+  {id:'flat', name:'滨江高层大平层', price:1200000, rent:7800, desc:'俯瞰滨江夜景，尊贵顶奢生活'}
+];
+
+/* 产业与店铺投资（现代长工/仆从自动化挂机系统） */
+var BIZ_TYPES = [
+  {id:'cafe', name:'精品加盟咖啡店', cost:50000, incomeMin:1500, incomeMax:3200, staffWage:800, staffName:'职业咖啡师', desc:'楼下拐角的网红店，白领下午茶必点'},
+  {id:'express', name:'社区智能驿站', cost:35000, incomeMin:1000, incomeMax:2400, staffWage:600, staffName:'理货站长', desc:'覆盖周边2000户快递代收发，流水稳健'},
+  {id:'mcn', name:'自媒体内容工作室', cost:90000, incomeMin:2500, incomeMax:6500, staffWage:1400, staffName:'主笔与剪辑师', desc:'孵化垂类探店与职场IP，收益波动大'},
+  {id:'gym_club', name:'24H自助健身俱乐部', cost:75000, incomeMin:2000, incomeMax:4500, staffWage:1000, staffName:'巡店私教', desc:'智能门禁器械包月，纯被动现金流'}
+];
+
+/* 5位核心深度NPC（专属小说级多阶段剧情） */
+var NPC_DEFS=[
+  {id:'lin', name:'林晓', title:'业务搭档', via:'work',
+   s30:{title:'加班夜的关东煮',
+        text:'深夜十一点半，办公室只剩你们两盏工位灯亮着。<br><br>林晓揉了揉通红的眼睛，把一份改了六版的需求文档保存，忽然从桌底抽出一盒还冒着热气的关东煮推到你面前。<br><br>「吃了再写吧。方案是公司的，胃是自己的。」<br><br>窗外是滨江市灯火不熄的天际线，你们并肩坐着分吃一份热汤，她侧脸的碎发被夜风吹动。',
+        choices:[{text:'「谢谢你，这份方案有你一半功劳。」',aff:8,ability:1},{text:'「这么晚还不走，是不是想多看我一会儿？」',aff:12,mood:5}]},
+   s60:{title:'茶水间的真心话',
+        text:'公司年中大洗牌，林晓被部门总监无理打压，她一个人躲在顶楼安全通道发呆。<br><br>你推开门走上去，她慌忙擦掉眼角的泪水：「我没哭，只是风太大了。」<br><br>你靠在墙边，轻声说：「如果有一天你想辞职单干，我第一个跟你走。」<br><br>她愣愣地看着你，忽然笑了：「傻瓜，单干喝西北风啊？不过……有你这句话，我今天真不委屈了。」',
+        choices:[{text:'紧紧握住她的手给她依靠',aff:14,mood:6},{text:'和她一起分析局势，帮她写复盘邮件',aff:10,ability:3}]},
+   s90:{title:'滨江大桥的告白',
+        text:'初冬的江风刮得人脸生疼。林晓约你站在滨江大桥中段，望着对岸闪烁的巨幅广告牌。<br><br>她忽然从大衣口袋里摸出一把绑着红绳的黄铜钥匙，郑重地放在你手心：<br><br>「我退掉了跟合租室友的房子。滨江很大，我漂了五年，直到遇见你，我才觉得这座城市有了归属感。」<br><br>「房产证写谁的名字不重要，往后推开门能看见你，才重要。」',
+        choices:[{text:'「林晓，往后的人生，请多关照。」',aff:15,mood:15},{text:'「走，我们现在就去挑结婚戒指！」',aff:18,mood:20}]},
+   preg:{title:'深夜方案旁的孕检单',
+         text:'林晓把一份体检报告悄悄夹在你的笔记本里。你翻开一看，赫然是「早孕阳性」的印章。<br><br>她从背后轻轻环住你的脖子，下巴搭在你肩上小声笑：「看来……我们家要迎来一位新项目成员了。往后你负责编码和做饭，我负责产检和当指挥官，成交吗？」'},
+   jealous:'林晓看着你微信上闪烁的陌生社交头像，淡淡地说：「最近项目没见你这么上心，跟别人倒是聊得挺热络？」'},
+
+  {id:'su', name:'苏芮', title:'独立咖啡师', via:'social',
+   s30:{title:'特调拿铁的秘密',
+        text:'连绵的梅雨季，你浑身湿透冲进楼下的咖啡小馆。<br><br>苏芮正低头擦拭磨豆机，看到你狼狈的样子，忍不住噗嗤一笑，利落地给你端来一杯印着小猫拉花的热拿铁。<br><br>「加了少许肉桂和生姜，专门驱寒的，不收你钱。」她手撑着吧台眨眨眼，「但如果觉得好喝，今晚闭店后得留下来帮我试新品豆子。」',
+        choices:[{text:'「你的每一杯咖啡，我都愿意喝一辈子。」',aff:12,mood:6},{text:'「太暖心了，我帮你擦桌子抵扣！」',aff:8,health:4}]},
+   s60:{title:'雨夜闭店后的长谈',
+        text:'深夜咖啡馆打烊，雨水打在落地窗上滴答作响。留声机放着舒缓的爵士乐，苏芮倒了两杯浅烘手冲，在壁炉旁盘腿坐下。<br><br>「其实我父母一直逼我回县城考编相亲，说在这开店是不务正业。」她低着头搅动杯勺，「可我喜欢滨江，喜欢看着每个疲惫的人在我这里喝到一杯温热的咖啡。你会觉得我很任性吗？」',
+        choices:[{text:'「做自己热爱的事，比什么都耀眼。」',aff:14,mood:8},{text:'「不管你开到哪，我都是你的终身常客。」',aff:16,mood:10}]},
+   s90:{title:'特调戒指的拉花',
+        text:'情人节的午后，店里客人散尽。苏芮为你递上一杯燕麦澳白，拉花中央赫然是一枚精致的铂金对戒。<br><br>她脸颊泛红，咬着嘴唇望向你：「店里的招牌我想重新装修了，想把招牌换成我们俩的名字。你愿意……成为这家店的终身男主人吗？」',
+        choices:[{text:'毫不犹豫戴上戒指，将她拥入怀中',aff:18,mood:20},{text:'「傻瓜，求婚这种事该由我先说！」',aff:16,mood:18}]},
+   preg:{title:'咖啡馆里的无咖啡因特调',
+         text:'走进店里，苏芮把你平时的浓缩咖啡换成了一杯温热的鲜榨苹果牛奶，眉眼弯弯地递过来：<br><br>「老板娘特批：鉴于肚子里多了一个小房客，往后十个月，我们全家实行全面低因健康生活！」'},
+   jealous:'苏芮一边冲咖啡一边轻声哼道：「昨晚看你朋友圈给隔壁健身私教点赞挺积极嘛，今天的豆子偏酸，很适合你。」'},
+
+  {id:'chen', name:'陈默', title:'运动康复教练', via:'gym',
+   s30:{title:'力竭时的守护',
+        text:'在深蹲架前挑战大重量，双腿发抖差点被杠铃压垮的一瞬间，一双有力厚实的大手稳稳架住了杠铃。<br><br>陈默把你拉到休息椅上，递过来一瓶电解质水，神情既严肃又心疼：「动作变形了还硬顶，腰不要了？以后练大重量，必须等我在旁边。」<br><br>他的心跳隔着背心剧烈起伏，显然是刚才从隔壁器械区飞奔过来的。',
+        choices:[{text:'「有你在旁边，我才敢放手冲重量。」',aff:12,health:5},{text:'「遵命陈教练，以后都听你的指导。」',aff:8,mood:5}]},
+   s60:{title:'深夜江风里的心结',
+        text:'周末夜跑五公里后，陈默带你坐在江边的台阶上吹风。<br><br>「以前我是省田径队的，后来韧带重伤退役，刚来滨江做私教时穷得连地下室都租不起，天天吃水煮蛋。」他望着江水轻叹，「很多人觉得我头脑简单，只有你每次都认真听我聊康复理论。」',
+        choices:[{text:'「过去的伤疤，都是你现在的勋章。」',aff:14,mood:8},{text:'「你的专业和善良，懂的人自然懂。」',aff:12,mood:6}]},
+   s90:{title:'私教区地面的单膝跪地',
+        text:'深夜空无一人的力量训练区，陈默把杠铃片拼成了一个大大的爱心形状。<br><br>这个平日里高大硬朗的男人此时手心全是汗，单膝跪地从口袋掏出丝绒盒子：「我不会说什么华丽的词。但我有力气、有担当，往后三十年，家里的重活归我，你的健康和平安，我也包揽一辈子！」',
+        choices:[{text:'「大块头，快起来给我戴上！」',aff:18,mood:20},{text:'「一言为定，三十年都不许反悔。」',aff:16,mood:16}]},
+   preg:{title:'婴儿车与定制推车计划',
+         text:'陈默连夜在平板上画满了《孕期肌肉骨骼保护与婴儿推车承重测试方案》，拉着你的手兴奋得像个二百斤的孩子：<br><br>「老婆，婴儿房的地垫我已经铺好了加厚抗震的！以后宝宝出生，我天天背着跑步！」'},
+   jealous:'陈默一边深蹲一边闷声闷气地说：「听说你最近常去那个咖啡馆坐半天？喝咖啡对骨密度可没好处。」'},
+
+  {id:'xu', name:'许念', title:'文史考公党', via:'study',
+   s30:{title:'自习室递来的便利贴',
+        text:'你在图书馆为职业考证刷题到头昏脑涨，不小心趴在书桌上睡着了。<br><br>醒来时发现肩上披着一件薄开衫，手边多了一张娟秀字迹的浅黄色便利贴：<br><br>『第128页那道综合案例题，公式参数代错了。解法我写在草稿纸反面了，加油。—— 隔壁桌 许念』<br><br>抬起头，那个戴金丝眼镜的清秀姑娘正从书本边缘悄悄望向你，对视的一瞬慌忙低头看书。',
+        choices:[{text:'递过去一张感谢便利贴并约她喝奶茶',aff:12,ability:2},{text:'认真研读她的解题思路并向她请教',aff:10,ability:4}]},
+   s60:{title:'闭馆前的暴雨伞',
+        text:'闭馆广播伴着《回家》的萨克斯旋律响起，窗外暴雨倾盆。许念手里只有一把小折叠伞。<br><br>「我们顺路，一起撑吧。」她轻声说。<br><br>雨水打湿了两人的半边肩膀，她悄悄把伞往你那边倾斜了大半：「其实今天上岸面试名单公示了，我考进了市文旅局……但我最高兴的，是以后下班还能约你一起看书。」',
+        choices:[{text:'一把揽过她的肩膀，把伞遮全她',aff:14,mood:10},{text:'「恭喜许科长！今天必须我请客庆祝！」',aff:12,mood:8}]},
+   s90:{title:'翻烂法典里的结婚承诺',
+        text:'在老图书馆的红木书桌前，许念将一本厚厚的《民法典》推到你面前，书签刚好夹在婚姻家庭编那一页。<br><br>她深吸一口气，推了推眼镜，眼神却无比清澈决然：<br><br>「我研究过所有的法条与契约，世界上最坚固又最脆弱的契约莫过于婚姻。如果是和你签这份相伴终生的契约，我甘愿承担一辈子的违约责任。」',
+        choices:[{text:'在法典旁郑重签下自己的名字并拥抱她',aff:18,mood:20},{text:'「这本法典，就是我们的定情信物。」',aff:16,mood:16}]},
+   preg:{title:'胎教全唐诗与育儿假规划',
+         text:'许念把刚买的《儿童发展心理学》和《唐诗宋词》码在床头，摸着微微隆起的小腹微笑：<br><br>「机关产假和育儿假政策我都研究透了，从下个月起，我们开启每日半小时古诗文轻声胎教。」'},
+   jealous:'许念扶了扶镜框，语气冷淡：「根据概率学统计，你最近三天向我汇报日常的频率下降了42%，是有更高效的交流对象了吗？」'},
+
+  {id:'peng', name:'大鹏', title:'便利店连锁老板', via:'side',
+   s30:{title:'深夜关东煮的折扣',
+        text:'跑同城急送单到凌晨一点，电瓶车电量耗尽，你又冷又饿拐进街角便利店。<br><br>大鹏正戴着围裙清点货物，看到你冻得发紫的嘴唇，立刻舀了满满一大碗热气腾腾的关东煮和肉包子递过来：<br><br>「吃吧，临期报损的，不要钱。在这座城市讨生活都不容易，先把热汤喝光再赶路。」',
+        choices:[{text:'坚持付钱并向他由衷道谢',aff:10,mood:6},{text:'坐下跟他聊起今晚接单的辛酸趣事',aff:14,mood:8}]},
+   s60:{title:'盘店合伙的诚意',
+        text:'深夜便利店门口的塑料凳上，大鹏点了一根烟递给你一罐冰红茶。<br><br>「我准备盘下隔壁写字楼地下的第二家分店，缺个信得过的合伙人。」他认真看着你，「你踏实、有韧劲，下班后过来帮忙管账，我分你两成干股。我们一起在这座城市扎下根来！」',
+        choices:[{text:'「大鹏哥看得起我，这事我干了！」',aff:15,money:2000},{text:'「一起合伙搞钱，兄弟齐心！」',aff:14,ability:3}]},
+   s90:{title:'收银台上的存折',
+        text:'在刚盘下的新店收银台前，大鹏把两本厚厚的银行存折和一枚黄金对戒重重拍在桌上。<br><br>这个平时粗犷豪爽的汉子眼角泛着泪花：「我没读过多少书，不懂什么浪漫情话。但这两家便利店、三十万存款，全写你的名字！往后只要有我一口干的，绝不让你喝稀的！」',
+        choices:[{text:'大笑答应，紧紧抱住这个实诚的汉子',aff:18,mood:20},{text:'「好，我们携手把小店做成大连锁！」',aff:16,mood:18}]},
+   preg:{title:'全店零食大改造',
+         text:'大鹏大笔一挥，把店里最好的货架全换成了有机坚果、孕妇奶粉和低糖鲜奶：<br><br>「全店通告！老板娘怀孕期间，所有营养品无限量供给！我大鹏要有后了！」'},
+   jealous:'大鹏叼着烟瞪眼道：「今天路过公司，看见有个小白脸跟你一路有说有笑的，谁啊？改天哥带人去会会他？」'}
+];
+
+/* ================= 游戏主状态机 (State G) ================= */
+var G;
+function newGame(){
+  G={
+    year:1,month:1,xun:0,over:false,totalXun:0,page:'home',phase:'day',
+    actionsLeft:MAX_ACTIONS_PER_XUN, // 每旬剩余精力点
+    money:12000,rent:1600,house:null,houseList:[],
+    level:0,perf:0,perfYear:0,warned:0,unemployed:false,
+    indName:'互联网',indMult:1.15,onProbation:0,salaryPenalty:1,
+    children:[],pregnant:false,
+    fund:0,ins:false,fixed:0,pet:null,
+    me:{name:'小滨',age:24,health:85,mood:75,ability:35},
+    parents:{health:85,alive:true},parentsLive:false,
+    spouse:null,npcs:[],flags:{},logs:[],
+    businesses:[], // 自营门店列表 [{id, type, name, level, staffCount, autowork}]
+    mysteryQuest:0, // 主线：深夜助学金与恩人线 (0~5)
+    lastIntimacyDay:0 // 上次与配偶温存时间，用于吃醋机制
+  };
+  addLog('🏙️ 你拖着行李箱走出滨江高铁站，租下了城中村单间，入职了一家互联网大厂。','');
+  addLog('💼 职位：实习生（月薪4500元）。房租1600元/月。三十年风云，就此启程。','gd2');
+  addLog('💡 规则提示：每旬拥有8点精力值，可自由组合工作、副业、社交与店铺打理；可随时点击「结束本旬」结算！','gold');
+  updateSeasonFx('winter');
+}
+
+/* ================= 日志系统 ================= */
+function addLog(msg,cls){
+  if(!cls)cls='';
+  var d=G.year+'年'+G.month+'月'+XUN_NAME[G.xun];
+  G.logs.push({d:d,m:msg,c:cls});
+  if(G.logs.length>450)G.logs.shift();
+}
+function drawLog(){
+  var h='';
+  for(var i=G.logs.length-1;i>=0;i--){
+    var l=G.logs[i];
+    h+='<p><span class="dt">['+l.d+']</span><span class="'+l.c+'">'+l.m+'</span></p>';
+  }
+  var lb=document.getElementById('logBody');
+  if(lb){lb.innerHTML=h;lb.scrollTop=0;}
+}
+function toast(msg){
+  var r=document.getElementById('toastRoot');if(!r)return;
+  var t=document.createElement('div');t.textContent=msg;t.className='show';
+  r.appendChild(t);
+  setTimeout(function(){t.className='';},1800);
+  setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t);},2100);
+}
+
+/* ================= 模态弹窗系统 ================= */
+var modalOpen=false;
+function openModal(title,html){
+  modalOpen=true;
+  document.getElementById('modalRoot').innerHTML=
+    '<div class="mask"><div class="modal"><h2>'+title+'</h2>'+html+'</div></div>';
+}
+function closeModal(){
+  modalOpen=false;
+  document.getElementById('modalRoot').innerHTML='';
+  render();
+  setTimeout(processStoryQueue, 40); // 弹窗关闭后，若队列中还有后续剧情立即弹出
+}
+
+/* ================= 开局起名 ================= */
+function startGameNaming(){
+  var html='<div class="desc">你孤身一人踏入繁华浩大的滨江市。</div>'+
+    '<div class="desc">看着穿流的地铁人群、林立的摩天大厦与逼仄合租屋，你暗下决心要在这座城市扎根立业。</div>'+
+    '<div class="desc">请给自己确立一个代号或名字：</div>'+
+    '<input type="text" id="playerNameInput" class="qty-input" maxlength="6" value="小滨">'+
+    '<button class="main-btn" style="margin-top:10px" onclick="confirmPlayerName()">🚀 开启滨江奋斗史</button>';
+  openModal('【滨江市 · 初来乍到】',html);
+  setTimeout(function(){
+    var inp=document.getElementById('playerNameInput');
+    if(inp){inp.focus();inp.select();}
+  },50);
+}
+function confirmPlayerName(){
+  var inp=document.getElementById('playerNameInput');
+  var nm=inp?inp.value.trim():'';
+  if(!nm){toast('请输入名字');return;}
+  G.me.name=nm.substring(0,6);
+  closeModal();render();autoSave();
+}
+
+/* ================= 场景页面 ================= */
+var PAGES={
+  home:{icon:'🏠',title:'温馨之家',sub:'出租屋/自购豪宅 · 休整、宠物互动、家庭生活'},
+  company:{icon:'💼',title:'职场奋战',sub:'大厂工位 · 绩效考核、加班晋升、跳槽裁员'},
+  business:{icon:'🏬',title:'产业与门店',sub:'投资开店 · 雇佣店长兼职、被动现金流挂机'},
+  street:{icon:'🏙️',title:'城市街区',sub:'咖啡馆·自习室·健身房·夜市·便利店'},
+  wealth:{icon:'🏦',title:'房产与金融',sub:'买房收租、理财基金、存款利息、大平层'},
+  hospital:{icon:'🏥',title:'医疗康养',sub:'体检、看病就医、孕产关怀'},
+  hometown:{icon:'🚄',title:'故乡与恩人',sub:'探亲汇款、旧物寻根、神秘资助主线'}
+};
+var PAGE_ALIAS={library:'street',gym:'street',cafe:'street',store:'street',mall:'street',estate:'wealth',finance:'wealth'};
+function go(p){G.page=p;render();}
+
+/* ================= 资产与店铺挂机结算 ================= */
+function drawAssetPanel(){
+  var h='';
+  // 房产
+  if(G.houseList && G.houseList.length){
+    for(var i=0;i<G.houseList.length;i++){
+      var ho = G.houseList[i];
+      h+='<span class="asset-tag">🏠 '+ho.name+' (月租+'+ho.rent+')</span>';
+    }
+  } else {
+    h+='<span class="asset-tag" style="color:#8596a8;">当前租房中 ('+G.rent+'元/月)</span>';
+  }
+  // 门店
+  if(G.businesses && G.businesses.length){
+    for(var j=0;j<G.businesses.length;j++){
+      var b = G.businesses[j];
+      h+='<span class="asset-tag" style="border-color:#b4d6ee;color:#1e5b99;">🏬 '+b.name+' (员工'+b.staffCount+'人)</span>';
+    }
+  } else {
+    h+='<span class="asset-tag" style="color:#8596a8;">暂无投资门店</span>';
+  }
+  // 金融
+  if(G.fixed>0) h+='<span class="asset-tag">🏦 定存'+num(G.fixed)+'</span>';
+  if(G.fund>0) h+='<span class="asset-tag">📊 基金'+num(G.fund)+'</span>';
+  document.getElementById('assetGrid').innerHTML=h;
+}
+
+/* ================= 行为行动库 ================= */
+var ACTS={
+  /* —— 家 —— */
+  rest:{ic:'🎮',t1:'影音放松',t2:'心情+15 健康+3 · 消耗150元',costMoney:150,costAct:1,page:'home',run:function(){
+    G.me.mood=cl(G.me.mood+15);G.me.health=cl(G.me.health+3);
+    addLog('🎮 你窝在沙发上刷了一整晚热播剧，整个人满血复活。心情+15。','gd');
+    useEnergy(1);}},
+  cookHome:{ic:'🍳',t1:'精心下厨',t2:'心情+10 健康+4 · 免精力 节省外卖200',costMoney:0,costAct:0,page:'home',run:function(){
+    G.me.mood=cl(G.me.mood+10);G.me.health=cl(G.me.health+4);G.money+=200;
+    addLog('🍳 你去菜市场买了新鲜食材做了一顿热腾腾的饭菜，省下外卖钱200元。','gd');
+    render();}},
+  cleanHome:{ic:'🧹',t1:'大扫除',t2:'心情+6 · 消耗1精力',costMoney:0,costAct:1,page:'home',run:function(){
+    G.me.mood=cl(G.me.mood+6);addLog('🧹 屋里窗明几净，收拾整齐后心情也变得明朗。','gd');useEnergy(1);}},
+  adoptPet:{ic:'🐾',t1:'领养宠物',t2:'花费800元 · 从此家里多个伴',costMoney:800,costAct:1,page:'home',can:function(){return !G.pet&&G.money>=800;},run:function(){openAdopt();}},
+  interactPet:{ic:'🎾',t1:'逗宠物玩',t2:'心情+10 健康+2 · 消耗1精力',costMoney:0,costAct:1,page:'home',can:function(){return !!G.pet;},run:function(){
+    G.me.mood=cl(G.me.mood+10);G.me.health=cl(G.me.health+2);
+    G.pet.love=cl(G.pet.love+8);G.pet.exp=(G.pet.exp||0)+12;
+    addLog('🎾 你陪'+G.pet.name+'玩球，它兴奋地扑进你怀里撒娇打滚。','gd');useEnergy(1);}},
+
+  /* —— 公司 —— */
+  workHard:{ic:'💼',t1:'专注工作',t2:'绩效+9 能力+1 · 精力-2 健康-3 心情-2',costMoney:0,costAct:2,page:'company',can:function(){return !G.unemployed;},run:function(){
+    var gain=(G.me.mood<30)?4:9;
+    G.perf+=gain;G.perfYear+=gain;G.me.health=cl(G.me.health-3);G.me.mood=cl(G.me.mood-2);G.me.ability=cl(G.me.ability+1,0,250);
+    if(G.me.mood<30)addLog('😮‍💨 状态低落效率打折，绩效+'+gain+'。','bd');
+    else addLog('💼 你高效完成了本旬的核心交付，主管频频点头。绩效+'+gain+'。','gd2');
+    if(Math.random()<0.25){G.money+=600;addLog('🌙 项目上线稳定，获得部门特别攻坚奖金+600元。','gd2');}
+    tryMeet('work');useEnergy(2);}},
+  overtimeAct:{ic:'🌙',t1:'主动通宵加班',t2:'绩效+15 加班费+900 · 精力-3 健康-7 心情-4',costMoney:0,costAct:3,page:'company',can:function(){return !G.unemployed;},run:function(){
+    G.perf+=15;G.perfYear+=15;G.money+=900;G.me.health=cl(G.me.health-7);G.me.mood=cl(G.me.mood-4);
+    addLog('🌙 你主动通宵改BUG冲进度，绩效+15，拿到加班费+900元。','gd2');
+    if(Math.random()<0.2){G.me.health=cl(G.me.health-5);addLog('😵 连续熬夜让你胸闷心慌，要注意身体！','bd');}
+    useEnergy(3);}},
+  slackOff:{ic:'☕',t1:'工位摸鱼',t2:'绩效+2 心情+8 · 精力-1',costMoney:0,costAct:1,page:'company',can:function(){return !G.unemployed;},run:function(){
+    G.perf+=2;G.me.mood=cl(G.me.mood+8);
+    addLog('☕ 你戴着耳机听播客、逛论坛摸鱼，身心放松，绩效+2。','gd');
+    if(Math.random()<0.12){G.perf=Math.max(0,G.perf-4);G.warned=1;addLog('👀 摸鱼被总监抓了个正着，绩效-4，受到私信警告！','bd');}
+    useEnergy(1);}},
+  reportWork:{ic:'📈',t1:'高层汇报展示',t2:'绩效+8 心情-2 · 精力-1',costMoney:0,costAct:1,page:'company',can:function(){return !G.unemployed;},run:function(){
+    G.perf+=8;G.perfYear+=8;G.me.mood=cl(G.me.mood-2);
+    addLog('📈 你准备了详实的图表在全员周会上做公开复盘，大获好评。绩效+8。','gd2');
+    useEnergy(1);}},
+
+  /* —— 街区与社交 —— */
+  socialCafe:{ic:'☕',t1:'咖啡馆社交',t2:'好感+10 心情+8 · 精力-2 花费300元',costMoney:300,costAct:2,page:'street',run:function(){
+    G.me.mood=cl(G.me.mood+8);
+    var tgt=pickSocialTarget();
+    if(tgt){tgt.aff=cl(tgt.aff+10);addLog('☕ 你和'+tgt.name+'在咖啡馆度过了一个愉快的下午，好感+10。','gd');npcBeat(tgt);}
+    else{addLog('☕ 你在独立咖啡馆静心品尝手冲，心情+8。','gd');tryMeet('social');}
+    useEnergy(2);}},
+  libStudy:{ic:'📚',t1:'图书馆自习刷题',t2:'能力+6 心情-2 · 精力-2 免费',costMoney:0,costAct:2,page:'street',run:function(){
+    G.me.ability=cl(G.me.ability+6,0,250);G.me.mood=cl(G.me.mood-2);
+    addLog('📚 你在自习室研读专业前沿专著与考证习题，能力+6。','gd');
+    tryMeet('study');useEnergy(2);}},
+  gymTrain:{ic:'🏋️',t1:'力量健身训练',t2:'健康+12 心情+5 · 精力-2 花费120元',costMoney:120,costAct:2,page:'street',run:function(){
+    G.me.health=cl(G.me.health+12);G.me.mood=cl(G.me.mood+5);
+    addLog('🏋️ 你完成了一套大重量深蹲与推胸训练，出汗极爽，健康+12。','gd');
+    tryMeet('gym');useEnergy(2);}},
+  sideJob:{ic:'🛵',t1:'同城跑腿/副业接单',t2:'收入丰厚 · 精力-2 健康-5 心情-3',costMoney:0,costAct:2,page:'street',can:function(){return !G.unemployed;},run:function(){
+    var baseIncome = 600 + G.me.ability*14 + ri(100,500);
+    if(G.spouse) baseIncome = Math.round(baseIncome*1.2);
+    G.money+=baseIncome;G.me.health=cl(G.me.health-5);G.me.mood=cl(G.me.mood-3);
+    addLog('🛵 你下班后跑同城急送与私活代写，收入+'+num(baseIncome)+'元。','gd2');
+    tryMeet('side');useEnergy(2);}},
+  nightFood:{ic:'🍢',t1:'夜市烟火宵夜',t2:'心情+12 健康-3 · 精力-1 花费90元',costMoney:90,costAct:1,page:'street',ph:'night',run:function(){
+    G.me.mood=cl(G.me.mood+12);G.me.health=cl(G.me.health-3);
+    addLog('🍢 烤脑花、生蚝配冰啤酒，烟火气抚慰了一天的疲惫。心情+12。','gd');useEnergy(1);}},
+  barChill:{ic:'🍸',t1:'精酿酒吧浅酌',t2:'心情+15 · 精力-1 花费240元',costMoney:240,costAct:1,page:'street',ph:'night',run:function(){
+    G.me.mood=cl(G.me.mood+15);G.me.health=cl(G.me.health-4);
+    addLog('🍸 在爵士乐酒吧与老友谈天说地，微醺适度，心情+15。','gd');useEnergy(1);}},
+  morningJog:{ic:'🏃',t1:'滨江绿道晨跑',t2:'健康+8 心情+6 · 精力-1 免费',costMoney:0,costAct:1,page:'street',ph:'day',run:function(){
+    G.me.health=cl(G.me.health+8);G.me.mood=cl(G.me.mood+6);
+    addLog('🏃 清晨江畔微风拂面，晨跑五公里神清气爽，健康+8 心情+6。','gd');useEnergy(1);}},
+
+  /* —— 医疗 —— */
+  doctorAct:{ic:'🏥',t1:'全科门诊调养',t2:'健康+30 · 免精力 花费'+(G&&G.ins?'800':'2200')+'元',costMoney:0,costAct:0,page:'hospital',run:function(){seeDoctor();}},
+  healthCheck:{ic:'🩺',t1:'三甲深度体检',t2:'健康+5 排除隐患 · 精力-1 花费600元',costMoney:600,costAct:1,page:'hospital',run:function(){
+    G.me.health=cl(G.me.health+5);G.me.mood=cl(G.me.mood+2);
+    addLog('🩺 全套心脑与内窥镜体检完毕，各项关键指标均在安全区间。-600元。','gd');useEnergy(1);}},
+
+  /* —— 理财 —— */
+  buyFundAct:{ic:'📊',t1:'定投指数基金',t2:'买入5000元 · 享受经济红利',costMoney:5000,costAct:0,page:'wealth',run:function(){
+    G.fund+=5000;addLog('📊 你追加定投了5,000元宽基指数基金。','gd');render();}},
+  sellFundAct:{ic:'💰',t1:'全部清仓赎回',t2:'取出所有基金与盈亏',costMoney:0,costAct:0,page:'wealth',can:function(){return G.fund>0;},run:function(){
+    var r=Math.round(G.fund*(0.85+Math.random()*0.45));
+    var win = r>=G.fund;
+    G.money+=r;
+    addLog('💰 你赎回了基金持仓，变现到手'+num(r)+'元（'+(win?'盈利+'+num(r-G.fund):'亏损-'+num(G.fund-r))+'元）。',win?'gd':'bd');
+    G.fund=0;render();}},
+  depositAct:{ic:'🏦',t1:'定期存单',t2:'存入20000元 · 年化利息2.8%',costMoney:20000,costAct:0,page:'wealth',run:function(){
+    G.fixed+=20000;addLog('🏦 你将20,000元存入国有银行三年定期，落袋为安。','gd');render();}},
+  buyInsAct:{ic:'🛡️',t1:'百万商业医疗险',t2:'花费3500元 · 终身就医4折保障',costMoney:3500,costAct:0,page:'wealth',can:function(){return !G.ins;},run:function(){
+    G.ins=true;addLog('🛡️ 你为自己配置了百万医疗与重疾保障险，以后就医打四折。-3500元。','gd2');render();}},
+
+  /* —— 旅行 —— */
+  tripLocal:{ic:'🚲',t1:'周边自驾近郊游',t2:'心情+15 健康+3 · 精力-2 花费900元',costMoney:900,costAct:2,page:'street',run:function(){
+    G.me.mood=cl(G.me.mood+15);G.me.health=cl(G.me.health+3);
+    addLog('🚲 周末去周边森林温泉营地自驾，洗净了满身班味。心情+15。','gd');useEnergy(2);}},
+  tripLong:{ic:'✈️',t1:'海岛带薪年假长途游',t2:'心情+25 健康+5 · 精力-3 花费6000元',costMoney:6000,costAct:3,page:'street',can:function(){return !G.unemployed;},run:function(){
+    G.me.mood=cl(G.me.mood+25);G.me.health=cl(G.me.health+5);
+    addLog('✈️ 申请了带薪年假飞往热带海岛，吹着晚风喝椰子，心旷神怡。心情+25。','gd2');useEnergy(3);}}
+};
+
+/* 消耗精力并检查更新 */
+function useEnergy(n){
+  G.actionsLeft = Math.max(0, G.actionsLeft - n);
+  render();autoSave();
+}
+
+/* ================= 产业投资开店与雇佣 ================= */
+function openInvestModal(){
+  var html='<p class="desc">在滨江市投资副业门店，雇佣专业店长运营，每旬躺赚现金流收益（类似长工/仆从系统）：</p>';
+  for(var i=0;i<BIZ_TYPES.length;i++){
+    var b=BIZ_TYPES[i];
+    var has = G.businesses.some(function(x){return x.type===b.id;});
+    html+='<div class="biz-card"><div class="biz-head"><span>'+b.name+'</span><span style="color:#1e5b99;">启动资 '+num(b.cost)+'元</span></div>'+
+      '<div class="biz-desc">'+b.desc+'<br>每旬收益估算：<b>'+b.incomeMin+'~'+b.incomeMax+'元</b>（员工底薪 '+b.staffWage+'元/旬）</div>'+
+      '<div class="biz-acts">';
+    if(has){
+      html+='<button disabled style="opacity:.5">已开设运营中</button>';
+    } else {
+      var ok = G.money >= b.cost;
+      html+='<button '+(ok?'onclick="doBuyBiz(\''+b.id+'\')"':'disabled style="opacity:.4"')+'>'+(ok?'筹建开业':'资金不足')+'</button>';
+    }
+    html+='</div></div>';
+  }
+  html+='<button class="main-btn" style="background:#8596a8;margin-top:10px;" onclick="closeModal()">返回</button>';
+  openModal('🏬 投资创业与开设门店',html);
+}
+function doBuyBiz(typeId){
+  var def = BIZ_TYPES.find(function(x){return x.id===typeId;});
+  if(!def || G.money < def.cost){toast('资金不足');return;}
+  G.money -= def.cost;
+  G.businesses.push({
+    id: 'biz_' + Date.now(),
+    type: def.id,
+    name: def.name,
+    staffCount: 1,
+    staffName: def.staffName,
+    staffWage: def.staffWage,
+    incomeMin: def.incomeMin,
+    incomeMax: def.incomeMax
+  });
+  addLog('🏬 恭喜！你的新店「'+def.name+'」正式挂牌开业，并雇佣了1位'+def.staffName+'！（花费'+num(def.cost)+'元）','gd2');
+  closeModal();render();autoSave();
+}
+function manageBiz(idx){
+  var b = G.businesses[idx];if(!b)return;
+  var html='<p class="desc">当前门店：<b>'+b.name+'</b></p>'+
+    '<p class="desc">当前在岗员工：<b>'+b.staffCount+' 人（'+b.staffName+'）</b><br>每旬员工工资：'+num(b.staffCount*b.staffWage)+' 元<br>预估每旬流水：'+num(b.incomeMin*b.staffCount)+'~'+num(b.incomeMax*b.staffCount)+' 元</p>'+
+    '<div class="biz-acts" style="margin-top:10px;">'+
+    '<button onclick="addStaff('+idx+')">➕ 增聘员工（+1人，底薪'+b.staffWage+'）</button>'+
+    (b.staffCount>1?'<button onclick="reduceStaff('+idx+')">➖ 优化减员（-1人）</button>':'')+
+    '<button style="color:#c53428;" onclick="closeBiz('+idx+')">⚠️ 转让闭店（回血50%）</button>'+
+    '</div>'+
+    '<button class="main-btn" style="background:#8596a8;margin-top:12px;" onclick="closeModal()">返回</button>';
+  openModal('门店管理', html);
+}
+function addStaff(idx){
+  var b=G.businesses[idx];if(!b)return;
+  if(b.staffCount>=5){toast('该门店员工已达上限5人');return;}
+  b.staffCount++;
+  addLog('🏬 '+b.name+'扩招了1位'+b.staffName+'，产能提升。','gd');
+  closeModal();manageBiz(idx);render();autoSave();
+}
+function reduceStaff(idx){
+  var b=G.businesses[idx];if(!b)return;
+  if(b.staffCount<=1)return;
+  b.staffCount--;
+  addLog('🏬 '+b.name+'缩减了1位员工开支。','');
+  closeModal();manageBiz(idx);render();autoSave();
+}
+function closeBiz(idx){
+  var b=G.businesses[idx];if(!b)return;
+  var def = BIZ_TYPES.find(function(x){return x.id===b.type;})||{cost:40000};
+  var refund = Math.round(def.cost * 0.5);
+  G.money += refund;
+  G.businesses.splice(idx,1);
+  addLog('🏬 你转让盘出了门店「'+b.name+'」，设备及店面残值回款+'+num(refund)+'元。','bd');
+  closeModal();render();autoSave();
+}
+
+/* ================= 房产买卖与收租 ================= */
+function openEstateModal(){
+  var html='<p class="desc">购置滨江市优质资产，可选择自住免房租，也可多套出租坐收租金：</p>';
+  for(var i=0;i<REAL_ESTATES.length;i++){
+    var re=REAL_ESTATES[i];
+    var ownedCount = G.houseList.filter(function(x){return x.id===re.id;}).length;
+    var ok = G.money >= re.price;
+    html+='<div class="biz-card"><div class="biz-head"><span>'+re.name+'</span><span style="color:#1e5b99;">全款 '+num(re.price)+'元</span></div>'+
+      '<div class="biz-desc">'+re.desc+' · 出租租金估算：<b>'+re.rent+'元/月</b>（已持有：'+ownedCount+' 套）</div>'+
+      '<div class="biz-acts">'+
+      '<button '+(ok?'onclick="doBuyHouse(\''+re.id+'\')"':'disabled style="opacity:.4"')+'>'+(ok?'全款购置':'资金不足')+'</button>'+
+      (ownedCount>0?'<button style="color:#c53428;" onclick="doSellHouse(\''+re.id+'\')">按9折转售套现</button>':'')+
+      '</div></div>';
+  }
+  html+='<button class="main-btn" style="background:#8596a8;margin-top:10px;" onclick="closeModal()">返回</button>';
+  openModal('🏠 滨江市房产置业中心', html);
+}
+function doBuyHouse(id){
+  var def = REAL_ESTATES.find(function(x){return x.id===id;});
+  if(!def || G.money < def.price){toast('资金不足');return;}
+  G.money -= def.price;
+  G.houseList.push({id:def.id, name:def.name, rent:def.rent});
+  G.house = true; // 标志已是有房一族
+  addLog('🏠 恭喜！你拿下了「'+def.name+'」的房产证！（花费'+num(def.price)+'元）','gd2');
+  closeModal();render();autoSave();
+}
+function doSellHouse(id){
+  var idx = G.houseList.findIndex(function(x){return x.id===id;});
+  if(idx<0)return;
+  var def = REAL_ESTATES.find(function(x){return x.id===id;});
+  var back = Math.round(def.price * 0.9);
+  G.money += back;
+  G.houseList.splice(idx,1);
+  if(G.houseList.length===0) G.house = false;
+  addLog('💸 你转售了1套「'+def.name+'」，套现回笼现金+'+num(back)+'元。','');
+  closeModal();render();autoSave();
+}
+
+/* ================= 寻父/恩人主线（比肩桃花村主线） ================= */
+var MYSTERY_STAGES = [
+  {stage:1, title:'老旧行李箱的汇款单',
+   text:'收拾老家带出来的斑驳皮箱时，一张泛黄发脆的旧汇款单飘落出来。<br><br>单据上显示：在你考上大学那年，一位署名「滨江老厂友」的陌生人，匿名向你汇出了足足两万元巨款，附言写着：<i>『雏鹰当展翅，滨江见。』</i><br><br>正是这笔钱，救了当年因学费险些辍学的你。如今你已在滨江工作，这位当年暗中托举你的神秘恩人，究竟身在何方？',
+   choices:[{text:'「饮水思源，我一定要找到这位恩人！」',next:2}]},
+  {stage:2, title:'棉纺老厂区的寻访',
+   text:'趁着周末，你循着汇款单上的老地址来到了滨江市江北的老棉纺机械厂。<br><br>昔日喧嚣的厂房早已改建为文创产业园，几位在银杏树下下棋的退休老工友眯起眼打量着汇款单上的老章印：<br><br>「这章子……是当年老厂长顾卫国的专属批条章啊！老顾当年乐善好施，但十年前厂子重组后，听说他晚年境遇坎坷，早搬到城南老胡同了。」',
+   choices:[{text:'记下城南老街的地址，继续寻访',next:3}]},
+  {stage:3, title:'老胡同里的真相',
+   text:'城南槐树胡同的深处，一位白发苍苍的老人在院子里专心修剪盆栽。<br><br>当你双手递上那张泛黄的汇款单，老人扶了扶老花镜，浑浊的眼眶瞬间湿润了：<br><br>「孩子……你真出息了，在滨江大厂立住脚了。你父亲当年在厂里为了抢救公家机器受了工伤落下残疾，是我这个当厂长的欠你们家的。这点学费，本就是我该弥补的啊！」',
+   choices:[{text:'「顾伯伯，您的大恩，我永生难忘。」',next:4}]},
+  {stage:4, title:'抉择时刻',
+   text:'顾老伯年事已高，膝下独生子创业失败欠下债务远走他乡，老人守着老宅孤苦无依，心脏也落下了慢性病。<br><br>望着眼前这位当年暗中照亮你整个人生轨迹的恩人，你握紧了拳头，走到了人生的重要十字路口。',
+   choices:[
+     {text:'🤝 为老人清偿三十万债务，接至家中奉养晚年',opt:'a'},
+     {text:'🎁 设立「卫国助学基金」，将这份爱心继续资助下一代贫困学子',opt:'b'},
+     {text:'🌱 定期送药探望，常伴老人左右',opt:'c'}
+   ]}
+];
+
+function triggerMysteryStage(stg){
+  var s = MYSTERY_STAGES[stg-1];if(!s)return;
+  var html='<div class="story-panel"><div class="story-title">📜 传奇支线 · '+s.title+'</div>'+
+    '<div class="story-text">';
+  var lines=s.text.split('<br><br>');
+  for(var i=0;i<lines.length;i++) html+='<p>'+lines[i]+'</p>';
+  html+='</div></div><div class="story-choices">';
+  for(var j=0;j<s.choices.length;j++){
+    var c=s.choices[j];
+    if(c.opt){
+      html+='<button class="story-choice" onclick="chooseMysteryResult(\''+c.opt+'\')">'+c.text+'</button>';
+    } else {
+      html+='<button class="story-choice" onclick="advanceMystery('+c.next+')">'+c.text+'</button>';
+    }
+  }
+  html+='</div>';
+  openModal('【滨江往事 · 恩人主线】',html);
+}
+function advanceMystery(nextStg){
+  G.mysteryQuest = nextStg;
+  closeModal();
+  addLog('📜 恩人主线已推进至第'+nextStg+'阶段。','gold');
+  render();autoSave();
+}
+function chooseMysteryResult(opt){
+  closeModal();
+  G.mysteryQuest = 5;
+  if(opt==='a'){
+    if(G.money>=300000){G.money-=300000;}else{G.money=0;}
+    G.me.mood=cl(G.me.mood+25);G.me.ability=cl(G.me.ability+10);
+    G.flags.mysteryHero=true;
+    addLog('🏆 你慷慨解囊为恩人清偿了债务，将老伯接来安享晚年。因果圆满，道心澄澈！（获得传奇结局前置）','gold');
+  } else if(opt==='b'){
+    G.money=Math.max(0,G.money-50000);G.flags.mysteryFund=true;
+    addLog('🏆 你联合滨江大学成立了「卫国青年助学基金」，让善良在这座城市生生不息！','gold');
+  } else {
+    G.flags.mysteryCare=true;
+    addLog('🌱 你常年为顾伯伯送药关照，如家人般陪伴老人走过温馨晚年。','gold');
+  }
+  render();autoSave();
+}
+
+/* ================= 情感与NPC互动 ================= */
+function pickSocialTarget(){
+  var c=G.npcs.filter(function(n){return n.met&&!n.lover&&n.aff<100;});
+  if(!c.length)return null;
+  c.sort(function(a,b){return a.aff-b.aff;});
+  return c[0];
+}
+function tryMeet(via){
+  if(G.spouse)return;
+  var pool=NPC_DEFS.filter(function(d){return d.via===via;});
+  for(var i=0;i<pool.length;i++){
+    var d=pool[i];
+    var known=G.npcs.some(function(n){return n.id===d.id;});
+    if(!known&&Math.random()<0.38){
+      G.npcs.push({id:d.id,name:d.name,title:d.title,aff:15,met:true,lover:false});
+      addLog('✨ 机缘巧合下，你结识了'+d.title+'「'+d.name+'」。','gd2');
+      pushStory(function(){
+        openModal('【心动初遇 · '+d.name+'】',
+          '<div class="desc">'+d.name+'（'+d.title+'）走进了你的生活。</div>'+
+          '<div class="desc">「你好啊，初次相识，请多关照。」</div>'+
+          '<button class="main-btn" onclick="closeModal()">🙂 很高兴认识你</button>');
+      });
+      return;
+    }
+  }
+}
+function npcBeat(n){
+  var d=NPC_DEFS.find(function(x){return x.id===n.id;});
+  if(!d)return;
+  var key=n.id;
+  if(n.aff>=30 && !G.flags['s30_'+key] && d.s30){
+    G.flags['s30_'+key]=1;
+    pushStory(function(){showNpcStoryDialog(n, d.s30);});
+    return;
+  }
+  if(n.aff>=60 && !G.flags['s60_'+key] && d.s60){
+    G.flags['s60_'+key]=1;
+    pushStory(function(){showNpcStoryDialog(n, d.s60);});
+    return;
+  }
+  if(n.aff>=90 && !n.lover && !G.spouse && !G.flags['s90_'+key] && d.s90){
+    G.flags['s90_'+key]=1;
+    pushStory(function(){showNpcStoryDialog(n, d.s90, true);});
+    return;
+  }
+}
+function showNpcStoryDialog(n, st, isProposal){
+  var html='<div class="story-panel"><div class="story-title">💕 '+n.name+' · '+st.title+'</div>'+
+    '<div class="story-text">'+st.text+'</div></div><div class="story-choices">';
+  if(isProposal){
+    html+='<button class="story-choice" onclick="acceptMarryProposal(\''+n.id+'\')">💍 紧紧拥抱TA：「我愿意！」（办婚礼2万元）</button>'+
+          '<button class="story-choice" onclick="rejectMarryProposal(\''+n.id+'\')">🕊️ 「我还想再专注于事业，再等等好吗？」</button>';
+  } else {
+    for(var i=0;i<st.choices.length;i++){
+      var c=st.choices[i];
+      html+='<button class="story-choice" onclick="chooseNpcOption(\''+n.id+'\','+i+')">'+c.text+'</button>';
+    }
+  }
+  html+='</div>';
+  openModal('【情感交响 · '+n.name+'】', html);
+}
+function chooseNpcOption(npcId, optIdx){
+  var n=G.npcs.find(function(x){return x.id===npcId;});
+  var d=NPC_DEFS.find(function(x){return x.id===npcId;});
+  if(!n||!d)return;
+  var st = n.aff>=60?d.s60:d.s30;
+  if(st && st.choices[optIdx]){
+    var c=st.choices[optIdx];
+    n.aff=cl(n.aff+(c.aff||0));
+    if(c.mood) G.me.mood=cl(G.me.mood+c.mood);
+    if(c.ability) G.me.ability=cl(G.me.ability+c.ability);
+    if(c.health) G.me.health=cl(G.me.health+c.health);
+    addLog('💕 你与'+n.name+'的真诚选择加深了彼此的羁绊。（好感+'+(c.aff||0)+'）','pink');
+  }
+  closeModal();render();autoSave();
+}
+function acceptMarryProposal(npcId){
+  var n=G.npcs.find(function(x){return x.id===npcId;});if(!n)return;
+  if(G.money<20000){toast('存款不足20,000元，请先筹备婚礼开支');closeModal();return;}
+  G.money-=20000;
+  G.spouse={name:n.name,title:n.title,id:n.id};
+  n.lover=true;G.me.mood=cl(G.me.mood+20);
+  G.lastIntimacyDay=G.totalXun;
+  addLog('💍 礼炮齐鸣！你与'+n.name+'正式步入婚姻殿堂，从此在滨江有了真正的家！-20,000元。','gd2');
+  closeModal();render();autoSave();
+}
+function rejectMarryProposal(npcId){
+  var n=G.npcs.find(function(x){return x.id===npcId;});if(!n)return;
+  n.aff=cl(n.aff-15);
+  addLog('🕊️ 你婉拒了'+n.name+'的求婚，彼此需要更多时间审视未来。','');
+  closeModal();render();autoSave();
+}
+
+/* ================= 现代版吃醋与夫妻危机机制 ================= */
+function checkSpouseJealous(){
+  if(!G.spouse)return;
+  var gap = G.totalXun - (G.lastIntimacyDay||0);
+  if(gap>=9 && Math.random()<0.35 && !G.flags['jealous_'+G.totalXun]){
+    G.flags['jealous_'+G.totalXun]=true;
+    var d = NPC_DEFS.find(function(x){return x.id===G.spouse.id;})||{jealous:'你最近心里到底还有没有这个家？'};
+    pushStory(function(){
+      openModal('【夫妻小插曲 · '+G.spouse.name+'吃醋了】',
+        '<div class="desc">'+d.jealous+'</div>'+
+        '<div class="desc">TA抱着双臂背对着你，空气里满是酸味。</div>'+
+        '<button class="story-choice" onclick="sootheSpouse(true)">🌹 赶紧从身后抱住TA，放下手机认真温存道歉</button>'+
+        '<button class="story-choice" onclick="sootheSpouse(false)">😮‍💨 「我天天加班也是为了这个家，你能不能别无理取闹？」</button>');
+    });
+  }
+}
+function sootheSpouse(ok){
+  if(ok){
+    G.me.mood=cl(G.me.mood+6);
+    G.lastIntimacyDay=G.totalXun;
+    addLog('🌹 你温柔地哄好了'+G.spouse.name+'，两人的感情反而更坚固了。','pink');
+  } else {
+    G.me.mood=cl(G.me.mood-10);
+    addLog('💔 你们不欢而散冷战了三天，家里气氛降到冰点。（心情-10）','bd');
+  }
+  closeModal();render();autoSave();
+}
+
+/* ================= 宠物深度进化与绝育 ================= */
+function openAdopt(){
+  openModal('【领养宠物伙伴】',
+    '<div class="desc">空旷的出租屋里缺少一丝生机。去救助中心领一只小生灵吧：</div>'+
+    '<button class="story-choice" onclick="choosePet(\'猫\')">🐱 领养田园橘猫（粘人呼噜、治愈解压）</button>'+
+    '<button class="story-choice" onclick="choosePet(\'狗\')">🐶 领养边牧幼犬（活泼护主、忠诚陪伴）</button>'+
+    '<button class="story-choice" onclick="choosePet(\'鹦鹉\')">🦜 领养玄凤鹦鹉（聪明亲人、爱学说话）</button>'+
+    '<button class="story-choice" onclick="closeModal()">再考虑一下</button>');
+}
+function choosePet(kind){
+  if(G.money<800){toast('余额不足800元');closeModal();return;}
+  G.money-=800;
+  var names={猫:['芝麻糊','团子','咪咪','橘座'],狗:['可乐','豆包','旺财','奥利奥'],鹦鹉:['皮皮','欢欢','小翠']};
+  var nm=pk(names[kind]||['小不点']);
+  G.pet={kind:kind,name:nm,hunger:75,love:65,age:0,exp:0,stage:0,neutered:false,pregnant:false,pregMonths:0};
+  G.me.mood=cl(G.me.mood+12);
+  addLog('🐾 你领养了一只可爱的'+kind+'，取名「'+nm+'」，家里立刻有了欢声笑语！','gd2');
+  closeModal();render();autoSave();
+}
+
+/* ================= 医院与看病 ================= */
+function seeDoctor(){
+  var cost=G.ins?800:2200;
+  if(G.money<cost){toast('门诊住院押金需'+cost+'元，资金不足');return;}
+  G.money-=cost;G.me.health=cl(G.me.health+30);
+  addLog('🏥 你在三甲医院接受了系统的中西医调理与点滴，健康值+30。（花费'+cost+'元）','gd');
+  render();autoSave();
+}
+
+/* ================= 旬末时间推进 (Advance Xun) ================= */
+function endCurrentXun(){
+  if(G.over)return;
+  closeModal();
+  advanceXunTime();
+}
+function advanceXunTime(){
+  G.xun++;
+  G.totalXun++;
+  G.actionsLeft = MAX_ACTIONS_PER_XUN; // 恢复每旬精力
+
+  // 1. 产业门店自动化挂机运转 (每旬产生收益并扣除薪酬)
+  if(G.businesses && G.businesses.length){
+    for(var bi=0;bi<G.businesses.length;bi++){
+      var b=G.businesses[bi];
+      var turnover = ri(b.incomeMin, b.incomeMax) * b.staffCount;
+      var wageCost = b.staffWage * b.staffCount;
+      var netProfit = turnover - wageCost;
+      G.money += netProfit;
+      addLog('🏬 门店运营：'+b.name+' 本旬流水+'+num(turnover)+'元，支付工资-'+num(wageCost)+'元，净收益+'+num(netProfit)+'元。', netProfit>=0?'gd':'bd');
+    }
+  }
+
+  // 2. 检查夫妻吃醋
+  checkSpouseJealous();
+
+  // 3. 月末与年份推进
+  if(G.xun>2){
+    G.xun=0;
+    G.month++;
+    monthSettle();
+    if(G.month>12){
+      G.month=1;
+      G.year++;
+      yearSettle();
+    }
+  }
+
+  // 4. 自然损耗与被动状态
+  G.me.mood = cl(G.me.mood - 1);
+  checkBadState();
+  if(!G.over && G.year>30) triggerEndGame();
+
+  render();autoSave();
+}
+
+/* ================= 月末结算 ================= */
+function monthSettle(){
+  // 发薪或失业
+  if(!G.unemployed){
+    var base=salaryNow();
+    var perfBonus = G.perf * 25;
+    var totalPay = base + perfBonus;
+    G.money += totalPay;
+    addLog('💰 月末发薪（'+G.indName+'）：基本底薪'+num(base)+'+绩效奖金'+num(perfBonus)+' = 合计+'+num(totalPay)+'元。','gd2');
+
+    // 试用期机制
+    if(G.onProbation>0){
+      if(G.perf<8){
+        G.onProbation=0;G.level=Math.max(0,G.level-1);
+        addLog('⏳ 试用期考评未达标，你被下调回'+JOBS[G.level].name+'岗位。','bd');
+      } else {
+        G.onProbation--;
+        addLog('⏳ 跨行业试用期稳健通过一个月，剩余'+G.onProbation+'个月转正。','gd');
+      }
+    }
+
+    // 绩效考核与开除
+    if(G.perf<10){
+      if(G.warned>=1){
+        fireFromJob('连续两个月考核排名末尾淘汰');
+      } else {
+        G.warned=1;
+        addLog('⚠️ HR与总监找你进行了绩效警示约谈：本月产出过低，再垫底将进入裁员名单！','bd');
+      }
+    } else {
+      G.warned=0;
+    }
+  } else {
+    addLog('📉 失业待业中，本月无任何薪资进账，唯有支出在持续消耗。','bd');
+  }
+  G.perf=0;
+
+  // 房租与房产租金收益
+  if(G.houseList && G.houseList.length){
+    // 第一套自住免房租，其余套收租
+    var totalRentIncome = 0;
+    for(var hi=1;hi<G.houseList.length;hi++){
+      totalRentIncome += G.houseList[hi].rent;
+    }
+    if(totalRentIncome>0){
+      G.money += totalRentIncome;
+      addLog('🏠 房产收益：名下除自住房外，其余房屋出租产生租金收益 +'+num(totalRentIncome)+'元！','gd2');
+    } else {
+      addLog('🏠 自有住房自住中，免缴每月房租。','');
+    }
+  } else {
+    G.money -= G.rent;
+    addLog('🏠 扣除本月房租支出 -'+num(G.rent)+'元。','bd');
+  }
+
+  // 生活成本
+  var lc = 1100 + G.year*100 + G.children.length*800 + (G.parentsLive?1000:0);
+  G.money -= lc;
+  addLog('🍜 扣除水电、物业、生活伙食及杂费开销 -'+num(lc)+'元。','');
+
+  // 子女反哺（成年且步入社会的孩子每月汇钱）
+  if(G.children && G.children.length){
+    for(var ci=0;ci<G.children.length;ci++){
+      var ch = G.children[ci];
+      if(ch.age>=22 && ch.working){
+        G.money += 2000;
+        addLog('💌 '+ch.name+'工作转正发薪，贴心地向父母转账孝顺2000元。','gold');
+      }
+    }
+  }
+
+  // 宠物状态
+  if(G.pet){
+    G.pet.hunger = cl(G.pet.hunger - 20);
+    if(G.pet.hunger < 20){ G.me.mood = cl(G.me.mood - 6); addLog('😿 '+G.pet.name+'饿得喵喵叫，快添粮吧！','bd'); }
+    else if(G.pet.love>=65){ G.me.mood = cl(G.me.mood + 4); }
+  }
+
+  // 随机事件触发
+  if(Math.random()<0.5) triggerCityEvent();
+
+  // 恩人主线判定
+  if(G.mysteryQuest===0 && G.year>=2 && Math.random()<0.35){
+    G.mysteryQuest=1;
+    pushStory(function(){triggerMysteryStage(1);});
+  }
+}
+function fireFromJob(reason){
+  G.unemployed=true;G.warned=0;G.perf=0;
+  G.me.mood=cl(G.me.mood-18);
+  addLog('📦 由于'+reason+'，你收到了HR的辞退信。收拾工位交还工牌，心情跌入谷底。（心情-18）','bd');
+  addLog('⚠️ 失业状态下没有底薪，请尽快去街区「投递简历」寻找工作机会！','bd');
+}
+
+/* ================= 年度结算 ================= */
+function yearSettle(){
+  G.me.age++;
+  addLog('🎂 新的一年钟声敲响，你迎来了'+G.me.age+'岁生日。','gd2');
+
+  // 租金通胀
+  if(!G.house){
+    G.rent = Math.round(G.rent * 1.05);
+    addLog('📈 房东来电：因物价上涨，明年租金上调至 '+num(G.rent)+'元/月。','bd');
+  }
+
+  // 定期与理财利息
+  if(G.fixed>0){
+    var fxInterest = Math.round(G.fixed * 0.028);
+    G.money += fxInterest;
+    addLog('🏦 定期存款年化收益结算到账 +'+num(fxInterest)+'元！','gd');
+  }
+
+  // 年终奖
+  if(!G.unemployed){
+    var bonus = Math.round(salaryNow() * Math.min(2.5, G.perfYear/35));
+    if(bonus>0){ G.money += bonus; addLog('🧧 辛苦一年，公司年终奖+'+num(bonus)+'元！','gd2'); }
+    G.perfYear=0;
+  }
+
+  // 孩子长大与教育节点
+  if(G.children && G.children.length){
+    for(var k=0;k<G.children.length;k++){
+      var c=G.children[k];
+      c.age++;
+      if(c.age===6 && !c.schoolChosen){
+        c.schoolChosen=true;
+        pushStory((function(child){return function(){schoolChoiceDialog(child);};})(c));
+      } else if(c.age===15 && !c.highSchoolChosen){
+        c.highSchoolChosen=true;
+        pushStory((function(child){return function(){highSchoolDialog(child);};})(c));
+      } else if(c.age===18 && !c.collegeChosen){
+        c.collegeChosen=true;
+        pushStory((function(child){return function(){collegeDialog(child);};})(c));
+      } else if(c.age===22 && !c.marriageChosen){
+        c.marriageChosen=true;
+        c.working=true;
+        pushStory((function(child){return function(){childMarriageDialog(child);};})(c));
+      }
+    }
+  }
+
+  // 婚后生育
+  if(G.spouse && G.me.age>=25 && G.me.age<=43 && G.children.length<2 && Math.random()<0.4){
+    pushStory(function(){giveBirthEvent();});
+  }
+
+  // 父母养老与健康
+  if(G.parents.alive){
+    G.parents.health = cl(G.parents.health - ri(3,6), 0, 100);
+    if(G.parents.health<30){
+      pushStory(function(){parentEmergencyDialog();});
+    }
+  }
+
+  // 35岁职场优化危机
+  if(G.me.age>=35 && !G.unemployed && G.level<3 && Math.random()<0.2){
+    var comp = salaryNow() * 3;
+    G.money += comp;
+    fireFromJob('公司推行人员结构年轻化，年满35岁的你遭遇「优化」');
+    pushStory(function(){storyLayoffDialog(comp);});
+  }
+
+  // 每年金三银四猎头来电
+  if(!G.unemployed && G.level<JOBS.length-1 && G.me.ability>=JOBS[G.level+1].need && Math.random()<0.7){
+    pushStory(function(){headhunterDialog();});
+  }
+}
+
+/* ================= 孩子全周期教育与婚恋支线 ================= */
+function giveBirthEvent(){
+  var isTwin = Math.random()<0.15;
+  var bName1 = pk(['小满','豆豆','糖糖','乐乐','康康','安安','一一','果果','年年','团团']);
+  G.children.push({name:bName1, age:0, schoolChosen:false, highSchoolChosen:false, collegeChosen:false, marriageChosen:false, working:false});
+  if(isTwin){
+    var bName2 = pk(['小禾','圆圆','星星','满满','朵朵']);
+    G.children.push({name:bName2, age:0, schoolChosen:false, highSchoolChosen:false, collegeChosen:false, marriageChosen:false, working:false});
+    addLog('👶 天大喜讯！你与'+G.spouse.name+'生下了一对龙凤/双胞胎（'+bName1+'、'+bName2+'）！月子及医疗花费-8000元。','gd2');
+    G.money = Math.max(0, G.money-8000);
+  } else {
+    addLog('👶 呱呱坠地！你与'+G.spouse.name+'迎来了爱情结晶「'+bName1+'」！生产母婴花费-5000元。','gd2');
+    G.money = Math.max(0, G.money-5000);
+  }
+  // 配偶专属孕产反应
+  var d = NPC_DEFS.find(function(x){return x.id===G.spouse.id;});
+  if(d && d.preg){
+    openModal('【新生命的降临 · '+G.spouse.name+'】',
+      '<div class="story-panel"><div class="story-title">🍼 宝贝降生</div><div class="story-text">'+d.preg+'</div></div>'+
+      '<button class="main-btn" onclick="closeModal()">❤️ 紧紧相拥迎接未来</button>');
+  } else {
+    render();autoSave();
+  }
+}
+
+function schoolChoiceDialog(ch){
+  openModal('【教育起点 · '+ch.name+'的小学】',
+    '<div class="desc">'+ch.name+'满六岁该上小学了，起跑线关乎未来：</div>'+
+    '<button class="story-choice" onclick="chooseSchoolOpt(\''+ch.name+'\',\'district\')">🏫 购置省重点学区房（65万或已拥有学区房）</button>'+
+    '<button class="story-choice" onclick="chooseSchoolOpt(\''+ch.name+'\',\'fee\')">💰 托关系交择校赞助费（-35,000元）</button>'+
+    '<button class="story-choice" onclick="chooseSchoolOpt(\''+ch.name+'\',\'normal\')">🏘️ 划片入读家门口普通公立小学（免费）</button>');
+}
+function chooseSchoolOpt(cName, opt){
+  closeModal();
+  var hasDist = G.houseList.some(function(x){return x.id==='district';});
+  if(opt==='district'){
+    if(!hasDist){
+      if(G.money>=650000){
+        G.money-=650000;
+        G.houseList.push({id:'district',name:'核心区学区房',rent:4200});
+        addLog('🏫 你咬牙全款拿下学区房，'+cName+'顺利入读第一梯队公办名校！','gd2');
+      } else {
+        toast('存款不足65万，自动转为交纳择校费');
+        chooseSchoolOpt(cName,'fee');return;
+      }
+    } else {
+      addLog('🏫 名下已有对口学区房，'+cName+'免择校费直升重点小学！','gd2');
+    }
+  } else if(opt==='fee'){
+    G.money = Math.max(0, G.money-35000);
+    addLog('💰 交纳35,000元跨区赞助择校费，'+cName+'入读优质示范实验小学。','gd');
+  } else {
+    addLog('🏘️ '+cName+'入读普通对口公立小学，快乐童年一样灿烂。','');
+  }
+  render();autoSave();
+}
+
+function highSchoolDialog(ch){
+  openModal('【中考分流 · '+ch.name+'的十五岁】',
+    '<div class="desc">'+ch.name+'中考成绩出炉，站在了普高与职高的分水岭上：</div>'+
+    '<button class="story-choice" onclick="chooseHighSchoolOpt(\''+ch.name+'\',\'vip\')">📚 报名省重点特级名师冲刺实验班（-40,000元）</button>'+
+    '<button class="story-choice" onclick="chooseHighSchoolOpt(\''+ch.name+'\',\'normal\')">🏫 顺其自然入读普通高中重点班（-5,000元）</button>'+
+    '<button class="story-choice" onclick="chooseHighSchoolOpt(\''+ch.name+'\',\'art\')">🎨 尊重特长，学习数字传媒与设计艺术生路线（-25,000元）</button>');
+}
+function chooseHighSchoolOpt(cName, opt){
+  closeModal();
+  if(opt==='vip'){
+    G.money = Math.max(0, G.money-40000);
+    addLog('📚 4万元名师冲刺班成效显著，'+cName+'模拟考稳居大榜前列！','gd2');
+  } else if(opt==='art'){
+    G.money = Math.max(0, G.money-25000);
+    addLog('🎨 '+cName+'在美术艺考集训中展现过人天赋，作品入选市级大奖。','gd');
+  } else {
+    G.money = Math.max(0, G.money-5000);
+    addLog('🏫 '+cName+'在普通高中稳步前行，心态健康自立。','');
+  }
+  render();autoSave();
+}
+
+function collegeDialog(ch){
+  openModal('【十八岁的抉择 · '+ch.name+'的高考】',
+    '<div class="desc">'+ch.name+'高考放榜，拿到了厚厚的高校招录指南：</div>'+
+    '<button class="story-choice" onclick="chooseCollegeOpt(\''+ch.name+'\',\'abroad\')">✈️ 申请英美顶尖大学全额自费留学（-300,000元）</button>'+
+    '<button class="story-choice" onclick="chooseCollegeOpt(\''+ch.name+'\',\'top985\')">🏛️ 考入国内知名985高校王牌专业（学费及生活费正常）</button>'+
+    '<button class="story-choice" onclick="chooseCollegeOpt(\''+ch.name+'\',\'startup\')">💡 孩子与同学合伙在大学孵化器开启AI创业</button>');
+}
+function chooseCollegeOpt(cName, opt){
+  closeModal();
+  if(opt==='abroad'){
+    if(G.money>=300000){
+      G.money-=300000;
+      addLog('✈️ 你资助30万送'+cName+'奔赴世界顶尖名校求学，机场挥手那一刻满是欣慰！','gd2');
+    } else {
+      toast('存款不足30万，自动转为入读985');
+      chooseCollegeOpt(cName,'top985');return;
+    }
+  } else if(opt==='startup'){
+    G.money = Math.max(0, G.money-20000);
+    addLog('💡 你资助2万元天使金，'+cName+'在大学科技园创立团队，年轻有为！','gd');
+  } else {
+    addLog('🏛️ 喜报传来！'+cName+'收到985重点名校录取通知书，摆宴庆祝！','gd2');
+  }
+  render();autoSave();
+}
+
+function childMarriageDialog(ch){
+  openModal('【成家立业 · '+ch.name+'带对象回家】',
+    '<div class="desc">'+ch.name+'今年二十二岁大学毕业转正了。这天周末，TA略显紧张地领回一位意中人：</div>'+
+    '<div class="desc">「爸/妈，这是我交往两年的伴侣，我们想定下来。」</div>'+
+    '<button class="story-choice" onclick="chooseChildMarryOpt(\''+ch.name+'\',\'bless\')">🥂 欣然接纳，拿出10万元为新人添置小家基金</button>'+
+    '<button class="story-choice" onclick="chooseChildMarryOpt(\''+ch.name+'\',\'reject\')">💔 觉得对方不够成熟稳重，坚决反对这桩婚事</button>');
+}
+function chooseChildMarryOpt(cName, opt){
+  closeModal();
+  if(opt==='bless'){
+    G.money = Math.max(0, G.money-100000);
+    G.me.mood = cl(G.me.mood+15);
+    addLog('🥂 你开明豁达地为'+cName+'操办了体面婚礼，两家人其乐融融相聚！（生活费+2000每月孝敬）','gd2');
+  } else {
+    G.me.mood = cl(G.me.mood-12);
+    addLog('💔 '+cName+'一气之下与伴侣远赴南方城市创业，虽不再常回家，但逢年过节仍寄来礼品汇款。','bd');
+  }
+  render();autoSave();
+}
+
+/* ================= 猎头跳槽与35岁大危机 ================= */
+function headhunterDialog(){
+  var nextJob = JOBS[G.level+1];
+  var newInd = pk(INDUSTRIES.filter(function(x){return x.name!==G.indName;}));
+  openModal('【猎头来电 · 金三银四】',
+    '<div class="desc">一位资深行业猎头加了你微信：「您的行业影响力很强，知名企业诚意直聘'+nextJob.name+'岗位！」</div>'+
+    '<div class="desc">目标行业：<b>'+newInd.name+'</b>（薪酬倍率 '+newInd.mult+'倍，'+newInd.desc+'）<br>晋升月薪：'+num(Math.round(nextJob.salary*newInd.mult))+'元/月（有3个月试用期考察）</div>'+
+    '<button class="story-choice" onclick="confirmJumpShip(\''+newInd.name+'\','+newInd.mult+')">🚀 接受跳槽 Offer（升职为'+nextJob.name+'）</button>'+
+    '<button class="story-choice" onclick="closeModal()">😌 现团队很稳定，婉言谢绝</button>');
+}
+function confirmJumpShip(indName, mult){
+  G.level++;
+  G.indName = indName;
+  G.indMult = mult;
+  G.onProbation = 3;
+  G.perf = 0; G.perfYear = 0;
+  G.me.mood = cl(G.me.mood+10);
+  addLog('🚀 你正式跳槽转入'+indName+'行业，职位晋升为「'+JOBS[G.level].name+'」，开启3个月试用期考验！','gd2');
+  closeModal();render();autoSave();
+}
+function storyLayoffDialog(comp){
+  openModal('【三十五岁 · 寒冬洗礼】',
+    '<div class="desc">裁员名单上冰冷地印着你的工号。HR推过来一张协商解约单，补偿款已到账+'+num(comp)+'元。</div>'+
+    '<div class="desc">走出闸机的那一刻，滨江市的寒风刺骨，你将何去何从？</div>'+
+    '<button class="story-choice" onclick="layoffChoice(\'store\')">🏬 不当打工人了！利用赔偿款投资自营门店当老板</button>'+
+    '<button class="story-choice" onclick="layoffChoice(\'study\')">📚 沉淀半年，自习考公考编或考取高级架构师资格</button>'+
+    '<button class="story-choice" onclick="layoffChoice(\'drop\')">🏢 降薪降级投简历，先谋一份安稳小公司工作</button>');
+}
+function layoffChoice(type){
+  closeModal();
+  if(type==='store'){
+    openInvestModal();
+  } else if(type==='study'){
+    G.me.ability = cl(G.me.ability+15);
+    G.me.mood = cl(G.me.mood+5);
+    addLog('📚 闭关沉淀苦读半年，专业能力大幅跃升+15！','gd');
+  } else {
+    G.level = Math.max(0, G.level-1);
+    G.unemployed = false;
+    addLog('🏢 你迅速调整心态入职了一家成长型中小企业，出任'+JOBS[G.level].name+'，稳健续航。','gd');
+  }
+  render();autoSave();
+}
+function parentEmergencyDialog(){
+  G.parents.health = 65;
+  openModal('【深夜来电 · 父母大病】',
+    '<div class="desc">老家邻居凌晨打来紧急电话，老父亲/母亲突发急性心脑血管病住院抢救：</div>'+
+    '<button class="story-choice" onclick="parentMedOpt(\'pay\')">💳 垫付手术费与特效药（-18,000元，健康恢复）</button>'+
+    '<button class="story-choice" onclick="parentMedOpt(\'bring\')">🏠 接来滨江大医院治疗并就近同住（-12,000元，月支出+1000）</button>');
+}
+function parentMedOpt(opt){
+  closeModal();
+  if(opt==='pay'){
+    G.money = Math.max(0, G.money-18000);
+    addLog('💳 连夜汇去18,000元手术费，父母化险为夷顺利出院！','gd2');
+  } else {
+    G.money = Math.max(0, G.money-12000);
+    G.parentsLive = true;
+    addLog('🏠 你把父母接到滨江同住悉心照料，虽然每月多1000元支出，但一家团圆安心踏实。','gd2');
+  }
+  render();autoSave();
+}
+
+/* ================= 城市随机大事件 (比肩原版丰富度) ================= */
+var CITY_EVENTS = [
+  function(){G.perfYear+=8;G.me.health=cl(G.me.health-5);addLog('🌙 项目大促核心系统连续平稳运行，技术部全员通报表彰，绩效+8。','gd2');},
+  function(){G.perf=Math.max(0,G.perf-5);G.me.mood=cl(G.me.mood-3);addLog('🚇 滨江暴雨早高峰地铁信号故障滞留，全勤奖泡汤，绩效-5。','bd');},
+  function(){G.money+=ri(300,1000);addLog('🧧 之前随手发在小红书的租房踩坑避雷笔记爆火，收到平台创作收益分成！','gd');},
+  function(){G.money-=1200;addLog('📱 笔记本在咖啡馆打翻了美式咖啡，送修键盘和主板 -1200元。','bd');},
+  function(){G.money-=ri(800,1500);addLog('💌 大学铁哥们来滨江举行婚礼，包了一个吉利的大红包送上祝福。','');},
+  function(){G.money+=ri(400,900);addLog('📦 在闲鱼转手了落灰的旧微单相机与镜头，顺利回血。','gd');},
+  function(){
+    if(G.indName==='互联网'||G.indName==='金融'){
+      G.salaryPenalty=0.75;addLog('❄️ 资本市场收紧，行业推行降本增效，今年薪资打75折。','bd');
+    } else {
+      addLog('🏭 实体制造业订单量持续逆势上扬，公司年终奖预期看涨！','gd');
+    }
+  },
+  function(){
+    var m = ri(3000,8000);
+    G.money += m;
+    addLog('🚀 参与的团队核心专利获得国家科技进步奖及公司期权变现分红 +'+num(m)+'元！','gd2');
+  }
+];
+function triggerCityEvent(){
+  var ev = pk(CITY_EVENTS);
+  if(ev) ev();
+}
+
+/* ================= 失败与坏结局判定 ================= */
+function checkBadState(){
+  if(G.over)return;
+  if(G.me.health<10){
+    G.over=true;
+    showEnd('身体崩坏 · 提前退场','长年通宵透支无度，你倒在了工位上。<br>躺在急救病房里，看着输液管一点点滴下，你终于明白：<b>健康才是前面的1，其余所有数字都是后面的0。</b><br><br><b>—— 结局 · 身体透支崩盘 ——</b>');
+    return;
+  }
+  if(G.money<-30000){
+    G.over=true;
+    showEnd('债务风暴 · 狼狈退场','高杠杆、网贷与信用卡窟窿彻底崩盘。<br>失信名单催收不断，你只能在深夜打包行囊，黯然离开了这座曾经让你热血沸腾的城市。<br><br><b>—— 结局 · 破产负债退场 ——</b>');
+    return;
+  }
+  if(G.me.mood<8){
+    G.me.mood=35;G.money-=2500;
+    addLog('🧠 情绪长期重度焦虑崩溃，前往心理专科接受疏导与调理（-2500元）。','bd');
+  }
+}
+
+/* ================= 终局大结算 (三十年人生) ================= */
+function triggerEndGame(){
+  G.over=true;
+  var spouseDesc = G.spouse ? ('身边有携手一生的伴侣「'+G.spouse.name+'」。<br>') : '身旁是自由自在的一个人。<br>';
+  var bizCount = G.businesses.length;
+  var houseCount = G.houseList.length;
+
+  if(G.flags.mysteryHero && G.money>=1500000){
+    showEnd('滨江商业巨擘 · 德艺双馨',
+      '三十年弹指一挥间。你不仅从出租屋起步积累了'+num(G.money)+'元庞大资产，名下拥有'+houseCount+'套房产与'+bizCount+'处产业；<br>更难能可贵的是，你当年知恩图报，为老厂长遮风挡雨，创办的助学慈善照亮了成百上千学子的未来。<br>'+spouseDesc+
+      '<br><b>—— 终极巅峰结局 · 滨江商界巨擘 ——</b>');
+  } else if(G.money>=1200000 || houseCount>=3){
+    showEnd('资产阶级新贵 · 财务自由',
+      '三十年风霜雨雪，你在滨江坐拥多套优质房产与商业资产，存款达'+num(G.money)+'元，每月租金与被动收益已足以让你彻底远离班味。<br>'+spouseDesc+
+      '<br><b>—— 结局一 · 财务自由胜者 ——</b>');
+  } else if(G.level>=5){
+    showEnd('行业教父 · 职场天花板',
+      '你一路从实习生杀到了业务副总裁/合伙人，登上了滨江第一高楼的云端办公室。<br>'+spouseDesc+
+      '<br><b>—— 结局二 · 顶峰领袖 ——</b>');
+  } else if(G.house && G.spouse && G.children.length>0){
+    showEnd('烟火人间 · 阖家圆满',
+      '房子、家庭、孩子，以及无数个并肩做饭、围炉夜话的黄昏。你在滨江生了根、发了芽，过完了踏实而幸福的三十年。<br>'+
+      '<br><b>—— 结局三 · 阖家圆满 ——</b>');
+  } else if(bizCount>=2){
+    showEnd('实业先锋 · 商业街大老板',
+      '你不做打工人，把副业小店做成了多条商业街的知名连锁，手下数十名店长员工，实现了实业家的抱负。<br>'+
+      '<br><b>—— 结局四 · 连锁实业家 ——</b>');
+  } else {
+    showEnd('平凡英雄 · 奋斗足迹',
+      '三十年里，你也许没有大富大贵，但你在这座残酷又充满希望的现代化都市里拼尽了全力，踏实正直地活成了自己的英雄。<br>'+
+      '<br><b>—— 结局五 · 坚韧前行者 ——</b>');
+  }
+}
+function showEnd(title,text){
+  G.over=true;
+  document.getElementById('modalRoot').innerHTML=
+    '<div class="mask"><div class="modal"><div class="story-panel">'+
+    '<div class="story-title" style="font-size:16px;">'+title+'</div><div class="story-text">'+text+'</div>'+
+    '</div><button class="main-btn" onclick="doRestart()">🔄 重新体验新的人生周目</button></div></div>';
+}
+
+/* ================= 顶栏与核心渲染 ================= */
+function salaryNow(){return Math.round(JOBS[G.level].salary*G.indMult*(G.salaryPenalty||1));}
+
+function drawTop(){
+  var jobChip = G.unemployed ? '💼 <b>待业求职中</b>' : '💼 <b>'+JOBS[G.level].name+'</b> ('+num(salaryNow())+'元/月)';
+  var musicText = musicOn ? '🎵 音乐开' : '🔇 音乐关';
+  var chips=[
+    '💰 存款 <b>'+num(G.money)+'</b>元',
+    jobChip,
+    '⚡ 精力 <b>'+G.actionsLeft+'</b>/'+MAX_ACTIONS_PER_XUN,
+    '🧠 能力 <b>'+G.me.ability+'</b>',
+    '❤️ 健康 <b>'+G.me.health+'</b>',
+    '😊 心情 <b>'+G.me.mood+'</b>',
+    '🎂 '+G.me.age+'岁',
+    G.spouse ? ('💍 配偶:<b>'+G.spouse.name+'</b>') : '',
+    G.children.length ? ('👶 孩子×'+G.children.length) : '',
+    G.pet ? ('🐾 '+G.pet.name) : '',
+    G.houseList.length ? ('🏠 房产×'+G.houseList.length) : ('🏠 租房'+num(G.rent)),
+    G.businesses.length ? ('🏬 门店×'+G.businesses.length) : '',
+    G.mysteryQuest>0 ? ('📜 恩人主线:<b>'+G.mysteryQuest+'/5</b>') : ''
+  ];
+  chips = chips.filter(function(x){return x;});
+  var h='';
+  for(var i=0;i<chips.length;i++){
+    var cls='chip';
+    if(chips[i].indexOf('健康')>=0 && G.me.health<40) cls='chip warn';
+    if(chips[i].indexOf('心情')>=0 && G.me.mood<30) cls='chip warn';
+    if(chips[i].indexOf('待业')>=0) cls='chip warn';
+    if(chips[i].indexOf('恩人')>=0) cls='chip gold';
+    h+='<span class="'+cls+'">'+chips[i]+'</span>';
+  }
+  h+='<span class="chip clickable" onclick="toggleMusic()">'+musicText+'</span>';
+  document.getElementById('chips').innerHTML=h;
+  document.getElementById('cDate').textContent='第'+G.year+'年 '+G.month+'月 '+XUN_NAME[G.xun];
+  document.body.className='s-'+SEASON[G.month];
+}
+
+function drawNav(){
+  var h='';
+  for(var k in PAGES){
+    h+='<button class="'+(G.page===k?'on':'')+'" onclick="go(\''+k+'\')">'+PAGES[k].icon+' '+PAGES[k].title+'</button>';
+  }
+  h+='<button class="end" onclick="endCurrentXun()">⏳ 结束本旬</button>';
+  h+='<button class="util" onclick="openSaveModal()">💾 存档</button>';
+  h+='<button class="util" onclick="showHelp()">❓ 帮助</button>';
+  h+='<button class="util" onclick="doRestart()">🔄 重开</button>';
+  document.getElementById('nav').innerHTML=h;
+}
+
+function drawActs(){
+  var pg=PAGES[G.page]||PAGES.home;
+  var phSuf=(G.page==='street')?(' · '+(G.phase==='day'?'☀️ 白天':'🌙 夜晚')):'';
+  document.getElementById('actHead').innerHTML=pg.icon+' '+pg.title+' <em>'+pg.sub+phSuf+'</em>';
+  var sm=document.getElementById('sceneMood');if(sm)sm.textContent=SCENE_SEASON[G.page]?(SCENE_SEASON[G.page][SEASON[G.month]]||''):'';
+
+  var h='';
+  // 街区白天夜晚切换
+  if(G.page==='street'){
+    h+='<button class="act" onclick="setPhase(\'day\')"><span class="ic">☀️</span><span class="bd2"><span class="t1">白天行程</span><span class="t2">晨跑、自习、逛街</span></span></button>';
+    h+='<button class="act" onclick="setPhase(\'night\')"><span class="ic">🌙</span><span class="bd2"><span class="t1">夜晚夜生活</span><span class="t2">夜市宵夜、酒吧浅酌</span></span></button>';
+  }
+
+  // 渲染当前页行动
+  for(var k in ACTS){
+    var a=ACTS[k];
+    if(a.page!==G.page && PAGE_ALIAS[a.page]!==G.page)continue;
+    if(a.can && !a.can())continue;
+    if(a.ph && a.ph!==G.phase)continue;
+    var disabled = (a.costMoney && G.money<a.costMoney) || (a.costAct && G.actionsLeft<a.costAct);
+    var costTxt = (a.costAct>0?('精力-'+a.costAct):'免精力') + (a.costMoney>0?(' · '+a.costMoney+'元'):'');
+    h+='<button class="act'+(disabled?' off':'')+'" onclick="doAct(\''+k+'\')">'+
+      '<span class="ic">'+a.ic+'</span><span class="bd2"><span class="t1">'+a.t1+'</span><span class="t2">'+a.t2+'</span><span class="t3">'+costTxt+'</span></span></button>';
+  }
+
+  // 特殊页面辅助操作
+  if(G.page==='business'){
+    h+='<button class="act" onclick="openInvestModal()"><span class="ic">➕</span><span class="bd2"><span class="t1">投资筹建新门店</span><span class="t2">开设咖啡店、驿站、工作室</span></span></button>';
+  }
+  if(G.page==='wealth'){
+    h+='<button class="act" onclick="openEstateModal()"><span class="ic">🏙️</span><span class="bd2"><span class="t1">滨江房产置业中心</span><span class="t2">购置住宅、学区房、大平层</span></span></button>';
+  }
+  if(G.unemployed){
+    h+='<button class="act" onclick="findJob()"><span class="ic">📨</span><span class="bd2"><span class="t1">海投简历求职</span><span class="t2">消耗1精力 · 能力决定薪资</span></span></button>';
+  }
+  document.getElementById('actGrid').innerHTML=h;
+
+  // 渲染已拥有店铺管理卡片
+  var bizHtml='';
+  if(G.page==='business' && G.businesses && G.businesses.length){
+    bizHtml+='<h3 style="margin-top:10px;font-size:12.5px;color:#1e5b99;border-bottom:1px dashed #c9d7e5;padding-bottom:4px;">自营门店管理（共'+G.businesses.length+'家）</h3>';
+    for(var bi=0;bi<G.businesses.length;bi++){
+      var b=G.businesses[bi];
+      bizHtml+='<div class="biz-card"><div class="biz-head"><span>🏬 '+b.name+'</span><span style="font-size:11px;color:#238652;">在营</span></div>'+
+        '<div class="biz-desc">配置员工：'+b.staffCount+' 人（'+b.staffName+'）· 每旬流水净估算：<b>+'+num((b.incomeMin-b.staffWage)*b.staffCount)+'~+'+num((b.incomeMax-b.staffWage)*b.staffCount)+'元</b></div>'+
+        '<div class="biz-acts"><button onclick="manageBiz('+bi+')">⚙️ 调整员工与营运</button></div></div>';
+    }
+  }
+  document.getElementById('bizContainer').innerHTML=bizHtml;
+}
+
+function doAct(k){
+  if(G.over||modalOpen)return;
+  var a=ACTS[k];if(!a)return;
+  if(a.costMoney && G.money<a.costMoney){toast('资金不足（需'+num(a.costMoney)+'元）');return;}
+  if(a.costAct && G.actionsLeft<a.costAct){toast('本旬精力不足，请点击底部「结束本旬」休整！');return;}
+  if(a.costMoney) G.money -= a.costMoney;
+  a.run();
+}
+function findJob(){
+  if(!G.unemployed||modalOpen)return;
+  if(G.actionsLeft<1){toast('精力不足，请先结束本旬');return;}
+  G.me.mood=cl(G.me.mood-4);
+  useEnergy(1);
+  var need=JOBS[G.level].need;
+  if(G.me.ability>=need){
+    G.unemployed=false;G.warned=0;
+    addLog('📨 恭喜！面试通关斩获录用，复职为'+JOBS[G.level].name+'（月薪'+num(JOBS[G.level].salary)+'元）。','gd2');
+  } else if(G.level>0 && G.me.ability>=JOBS[G.level-1].need){
+    G.level--;G.unemployed=false;G.warned=0;
+    addLog('📨 几轮技术面后，你接受了降职一级复工，就任'+JOBS[G.level].name+'（月薪'+num(JOBS[G.level].salary)+'元）。','gd2');
+  } else {
+    G.level=0;G.unemployed=false;G.warned=0;
+    addLog('📨 投出几十份简历，最终选择先从一线基础岗位重新磨砺起步。','bd');
+  }
+  render();autoSave();
+}
+
+function drawPeople(){
+  var h='<h3 style="margin-top:4px">人际网络</h3>';
+  if(G.spouse){
+    h+='<div class="person"><div class="nm"><b>💍 配偶 · '+G.spouse.name+'</b><span>'+G.spouse.title+'</span></div><div class="bar"><i style="width:100%;background:#e15b8a;"></i></div></div>';
+  }
+  if(G.pet){
+    var pic=G.pet.kind==='猫'?'🐱':(G.pet.kind==='狗'?'🐶':'🦜');
+    h+='<div class="person"><div class="nm"><b>'+pic+' '+G.pet.name+'</b><span>'+G.pet.kind+' · 好感'+G.pet.love+'</span></div><div class="bar"><i style="width:'+cl(G.pet.love)+'%;background:#e15b8a;"></i></div></div>';
+  }
+  var met = G.npcs.filter(function(n){return n.met;});
+  for(var i=0;i<met.length;i++){
+    var n=met[i];
+    var rel = (G.spouse && G.spouse.name===n.name)?'伴侣':(n.lover?'热恋':'知己');
+    h+='<div class="person"><div class="nm"><b>'+n.name+'</b><span>'+n.title+' · '+rel+'</span></div><div class="bar"><i style="width:'+cl(n.aff)+'%;background:#2f6fb0;"></i></div><div style="font-size:10px;color:#8596a8;margin-top:2px;">羁绊好感度 '+n.aff+'/100</div></div>';
+  }
+  document.getElementById('peoplePanel').innerHTML=h;
+}
+
+function render(){
+  drawTop();
+  drawAssetPanel();
+  drawNav();
+  drawActs();
+  drawPeople();
+  drawLog();
+}
+
+/* ================= 完备工业级存档系统 (比肩桃花村) =================
+   支持 1个自动档 + 6个手动独立档 + 大容量超万字分批剪贴板导出与导入 */
+function autoSave(){
+  try{localStorage.setItem('binjiang_autosave',JSON.stringify(G));}catch(e){}
+}
+function openSaveModal(){
+  var raw0 = localStorage.getItem('binjiang_autosave');
+  var info0 = '空存档';
+  if(raw0){try{var d0=JSON.parse(raw0);info0='第'+d0.year+'年'+d0.month+'月'+XUN_NAME[d0.xun]+' · 存款'+num(d0.money)+'元';}catch(e){info0='损坏';}}
+
+  var html='<p class="desc">多槽位数据备份与迁移（避免浏览器清理缓存丢失心血）：</p>'+
+    '<div class="save-slot auto"><div><b>🔄 自动存档：</b>'+info0+'</div><button onclick="loadSaveSlot(\'auto\')">读取自动档</button></div>';
+
+  for(var i=1;i<=6;i++){
+    var raw = localStorage.getItem('binjiang_save_'+i);
+    var info = '空存档位';
+    if(raw){try{var d=JSON.parse(raw);info='第'+d.year+'年'+d.month+'月'+XUN_NAME[d.xun]+' · 存款'+num(d.money)+'元';}catch(e){info='损坏';}}
+    html+='<div class="save-slot"><div><b>槽位 '+i+'：</b>'+info+'</div><div>'+
+      '<button onclick="saveToSlot('+i+')">覆盖存档</button> '+
+      '<button onclick="loadSaveSlot('+i+')">读取此档</button></div></div>';
+  }
+
+  html+='<div style="margin-top:12px;border-top:1px dashed #c9d7e5;padding-top:10px;">'+
+    '<p class="desc" style="font-size:11.5px;color:#6b8094;">💡 支持跨设备备份导出，数据码可复制至微信/备忘录永久保存：</p>'+
+    '<div style="display:flex;gap:6px;">'+
+    '<button class="main-btn" style="flex:1;padding:8px;" onclick="exportSaveCode()">📤 导出数据码</button>'+
+    '<button class="main-btn" style="flex:1;padding:8px;background:#238652;" onclick="importSaveCodeModal()">📥 导入数据码</button>'+
+    '</div></div>'+
+    '<button class="main-btn" style="background:#8596a8;margin-top:10px;" onclick="closeModal()">返回</button>';
+  openModal('💾 档案管理中心', html);
+}
+function saveToSlot(i){
+  try{
+    localStorage.setItem('binjiang_save_'+i, JSON.stringify(G));
+    toast('已成功存入槽位 '+i);
+  }catch(e){toast('存档失败');}
+  openSaveModal();
+}
+function loadSaveSlot(slot){
+  var key = slot==='auto' ? 'binjiang_autosave' : ('binjiang_save_'+slot);
+  var raw = localStorage.getItem(key);
+  if(!raw){toast('该槽位为空');return;}
+  try{
+    var d = JSON.parse(raw);
+    G = d;
+    // 补齐字段防御
+    if(!G.businesses) G.businesses=[];
+    if(!G.houseList) G.houseList=[];
+    if(G.actionsLeft===undefined) G.actionsLeft=MAX_ACTIONS_PER_XUN;
+    closeModal();render();toast('读档成功！');
+  }catch(e){toast('读档解析失败');}
+}
+
+/* 导出数据码（支持突破超长限制分批） */
+var _exportChunks = [];
+var _exportChunkIdx = 0;
+function exportSaveCode(){
+  var str = JSON.stringify(G);
+  var chunkSize = 8000;
+  _exportChunks = [];
+  for(var i=0;i<str.length;i+=chunkSize){
+    _exportChunks.push(str.substring(i, i+chunkSize));
+  }
+  _exportChunkIdx = 0;
+  renderExportView();
+}
+function renderExportView(){
+  var total = _exportChunks.length;
+  var cur = _exportChunkIdx + 1;
+  var code = _exportChunks[_exportChunkIdx];
+  var html='<p class="desc">数据码总长 <b>'+JSON.stringify(G).length+'</b> 字符，共分 <b>'+total+'</b> 批复制：</p>'+
+    '<p class="desc">当前批次：<b>第 '+cur+' / '+total+' 批</b></p>'+
+    '<textarea id="expTxt" class="qty-input" style="height:120px;font-size:11px;font-family:monospace;text-align:left;word-break:break-all;">'+code+'</textarea>'+
+    '<div style="display:flex;gap:6px;margin-top:8px;">'+
+    '<button class="main-btn" onclick="copyExpCode()">📋 复制当前批次</button>'+
+    (total>1&&cur<total?'<button class="main-btn" style="background:#238652;" onclick="nextExpBatch()">下一批 ➔</button>':'')+
+    '</div>'+
+    '<button class="main-btn" style="background:#8596a8;margin-top:10px;" onclick="openSaveModal()">返回</button>';
+  openModal('📤 导出存档码', html);
+}
+function copyExpCode(){
+  var t = document.getElementById('expTxt');
+  if(!t)return;
+  t.select();
+  try{
+    navigator.clipboard.writeText(t.value);
+    toast('当前批次已复制到剪贴板！');
+  }catch(e){
+    document.execCommand('copy');
+    toast('已复制到剪贴板！');
+  }
+}
+function nextExpBatch(){
+  if(_exportChunkIdx < _exportChunks.length-1){
+    _exportChunkIdx++;
+    renderExportView();
+  }
+}
+function importSaveCodeModal(){
+  var html='<p class="desc">请将之前导出的数据码粘贴至下方文本框中（分批导出的需按顺序完整拼接）：</p>'+
+    '<textarea id="impTxt" class="qty-input" style="height:130px;font-size:11px;font-family:monospace;text-align:left;" placeholder="在此粘贴 JSON 存档数据..."></textarea>'+
+    '<button class="main-btn" style="margin-top:10px;" onclick="doImportSave()">✅ 校验并导入存档</button>'+
+    '<button class="main-btn" style="background:#8596a8;margin-top:8px;" onclick="openSaveModal()">取消</button>';
+  openModal('📥 导入数据码', html);
+}
+function doImportSave(){
+  var inp = document.getElementById('impTxt');
+  if(!inp||!inp.value.trim()){toast('请粘贴数据码');return;}
+  try{
+    var d = JSON.parse(inp.value.trim());
+    G = d;
+    closeModal();render();toast('数据成功恢复！');
+  }catch(e){toast('数据码格式损坏，请核对是否完整复制');}
+}
+
+/* ================= 帮助与玩法目标 ================= */
+function showHelp(){
+  openModal('【滨江市 · 豪华玩法指南】',
+    '<div class="desc">· <b>精力机制</b>：每旬拥有8点精力值，可自由组合工作、自习、社交、副业接单，按需随时点击底部「结束本旬」进行结算！</div>'+
+    '<div class="desc">· <b>产业投资挂机</b>：可在「产业与门店」投资开设加盟咖啡馆、社区快递驿站、自媒体工作室，雇佣专业店长运营，每旬自动产生被动净收益！</div>'+
+    '<div class="desc">· <b>房产置业投资</b>：在「房产与金融」购置单身公寓、学区房或滨江大平层，除首套自住免房租外，其余均可挂网收租，抵御三十年物价通胀！</div>'+
+    '<div class="desc">· <b>深度情感小说线</b>：5位核心情缘NPC拥有30/60/90专属章节、求婚誓言、婚后同居、怀孕期专属反应与吃醋修罗场！</div>'+
+    '<div class="desc">· <b>孩子全代际传承</b>：从幼儿起名、到6岁重点学区房/赞助择校、15岁中考重点班、18岁自费留学/985大学、22岁带对象见父母成家，孩子成年后每月汇钱孝顺！</div>'+
+    '<div class="desc">· <b>三十年恩人主线</b>：探寻考上大学时匿名资助两万元的神秘恩人顾老伯，五阶段寻访揭开父辈往事，解救恩人晚年，触发史诗巨擘结局！</div>'+
+    '<div class="desc">· <b>技术级容灾</b>：内置 StoryQueue 剧情队列防止弹窗重叠丢失，配备6槽位存档与万字大容量导出工具！</div>'+
+    '<button class="main-btn" onclick="closeModal()">收到，开启奋斗</button>');
+}
+function doRestart(){
+  if(!window.confirm('确定要重新开启新的人生周目吗？当前未保存进度将重置。'))return;
+  newGame();render();startGameNaming();
+}
+
+/* ================= 防 F12 与源码轻量保护 ================= */
+(function() {
+  // 1. 禁用右键菜单
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    if(typeof toast === 'function') toast('🔒 系统已开启防查看保护，右键菜单已禁用');
+    return false;
+  });
+
+  // 2. 禁用 F12、Ctrl+Shift+I/J/C、Ctrl+U 查看源码、Ctrl+S
+  document.addEventListener('keydown', function(e) {
+    // F12
+    if (e.keyCode === 123 || e.key === 'F12') {
+      e.preventDefault();
+      e.stopPropagation();
+      if(typeof toast === 'function') toast('🔒 开发者控制台已锁定');
+      return false;
+    }
+    // Ctrl/Cmd + Shift + I / J / C
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67 || e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) {
+      e.preventDefault();
+      e.stopPropagation();
+      if(typeof toast === 'function') toast('🔒 审查元素功能已锁定');
+      return false;
+    }
+    // Ctrl/Cmd + U (查看源代码)
+    if ((e.ctrlKey || e.metaKey) && (e.keyCode === 85 || e.key === 'u' || e.key === 'U')) {
+      e.preventDefault();
+      e.stopPropagation();
+      if(typeof toast === 'function') toast('🔒 网页源码查看已锁定');
+      return false;
+    }
+    // Ctrl/Cmd + S (保存网页)
+    if ((e.ctrlKey || e.metaKey) && (e.keyCode === 83 || e.key === 's' || e.key === 'S')) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+  });
+
+  // 3. 动态控制台检测与警示
+  var devtoolsOpened = false;
+  var threshold = 160;
+  setInterval(function() {
+    if (window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold) {
+      if (!devtoolsOpened) {
+        devtoolsOpened = true;
+        try { console.clear(); } catch(err) {}
+        console.log('%c⚠️ 安全警告：请关闭开发者工具以保障游戏剧情与本地存档完整性。', 'color:#c53428;font-size:16px;font-weight:bold;');
+      }
+    } else {
+      devtoolsOpened = false;
+    }
+  }, 1200);
+})();
+
+/* ================= 启动 ================= */
+newGame();
+render();
+startGameNaming();
+</script>
+</body>
+</html>
