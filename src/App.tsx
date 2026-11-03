@@ -24,13 +24,22 @@ import {
   Users,
   Feather,
   BookOpen,
-  Crown
+  Crown,
+  Download,
+  Copy,
+  Check,
+  Terminal,
+  Play,
+  Monitor,
+  Cpu,
+  FolderGit2
 } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'play_gaomen' | 'overview' | 'play_xiuxian' | 'market' | 'sandbox'>('play_gaomen');
+  const [activeTab, setActiveTab] = useState<'showcase' | 'play_gaomen' | 'play_xiuxian' | 'overview' | 'market' | 'sandbox'>('showcase');
   const [deviceFrame, setDeviceFrame] = useState<'desktop' | 'mobile'>('desktop');
   const [keyRefresh, setKeyRefresh] = useState(0);
+  const [copied, setCopied] = useState(false);
 
   const gaomenUrl = '/gaomen.html';
   const xiuxianUrl = '/xiuxian_female.html';
@@ -46,6 +55,24 @@ export default function App() {
     document.body.removeChild(a);
   };
 
+  const copyGitCommand = () => {
+    navigator.clipboard.writeText('git clone https://github.com/<your-username>/zero-dependency-web-games.git');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2200);
+  };
+
+  const downloadAllGames = () => {
+    const games = [
+      { url: gaomenUrl, name: '古代世家_高门主母掌家录.html' },
+      { url: xiuxianUrl, name: '云霄仙府_修真经营录.html' },
+      { url: binjiangDeluxeUrl, name: '滨江市_打工人生豪华版.html' },
+      { url: tianyuanUrl, name: '桃花村_田园经营录.html' }
+    ];
+    games.forEach((g, i) => {
+      setTimeout(() => downloadFile(g.url, g.name), i * 350);
+    });
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-white">
       {/* 顶部主导航栏 */}
@@ -59,14 +86,14 @@ export default function App() {
           <div>
             <div className="flex items-center gap-2">
               <h1 className="font-bold text-base lg:text-lg tracking-tight text-white flex items-center gap-2">
-                古代世家 · 高门主母掌家录
+                东方叙事与模拟经营 · 原生单文件游戏矩阵
               </h1>
               <span className="text-xs px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 font-semibold flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5" /> 超头部女性向新题材 · 原生单文件模版
+                <Sparkles className="w-3.5 h-3.5" /> Zero-Dependency Web Games
               </span>
             </div>
             <p className="text-xs text-slate-400">
-              定远侯府中馈掌家、公中账房查贪、老夫人寿安堂晨省侍疾、夫君书房解忧、妾室立规矩、世家联姻望子成龙
+              纯原生单文件架构 · 零外部网络依赖 · 双击即玩 · 内置 Web Audio 和弦合成 · 双端响应式排版
             </p>
           </div>
         </div>
@@ -74,21 +101,43 @@ export default function App() {
         {/* 导航标签栏 */}
         <div className="flex items-center gap-1.5 bg-slate-950/70 p-1 rounded-xl border border-slate-800">
           <button
+            onClick={() => setActiveTab('showcase')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === 'showcase'
+                ? 'bg-gradient-to-r from-indigo-600 to-rose-600 text-white shadow-lg shadow-indigo-600/20 font-bold'
+                : 'text-indigo-300 hover:text-white hover:bg-slate-900'
+            }`}
+          >
+            <FolderGit2 className="w-3.5 h-3.5" />
+            🏠 项目矩阵展示页
+          </button>
+          <button
             onClick={() => setActiveTab('play_gaomen')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
               activeTab === 'play_gaomen'
-                ? 'bg-gradient-to-r from-rose-700 to-amber-700 text-white shadow-lg shadow-rose-700/20'
+                ? 'bg-gradient-to-r from-rose-700 to-amber-700 text-white shadow-lg shadow-rose-700/20 font-bold'
                 : 'text-rose-400 hover:text-rose-200 hover:bg-slate-900'
             }`}
           >
             <Crown className="w-3.5 h-3.5" />
-            🪭 《高门主母掌家录》模版
+            🪭 《高门主母》试玩
+          </button>
+          <button
+            onClick={() => setActiveTab('play_xiuxian')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === 'play_xiuxian'
+                ? 'bg-gradient-to-r from-amber-600 to-rose-600 text-white shadow-lg shadow-amber-600/20 font-bold'
+                : 'text-amber-400 hover:text-amber-200 hover:bg-slate-900'
+            }`}
+          >
+            <Flame className="w-3.5 h-3.5" />
+            🌸 《修真经营录》试玩
           </button>
           <button
             onClick={() => setActiveTab('overview')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
               activeTab === 'overview'
-                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20 font-bold'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
             }`}
           >
@@ -96,32 +145,21 @@ export default function App() {
             三大作精细化横评
           </button>
           <button
-            onClick={() => setActiveTab('play_xiuxian')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
-              activeTab === 'play_xiuxian'
-                ? 'bg-gradient-to-r from-rose-600 to-amber-600 text-white shadow-lg shadow-rose-600/20'
-                : 'text-amber-400 hover:text-amber-200 hover:bg-slate-900'
-            }`}
-          >
-            <Heart className="w-3.5 h-3.5" />
-            🌸 《修真经营录》
-          </button>
-          <button
             onClick={() => setActiveTab('market')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
               activeTab === 'market'
-                ? 'bg-gradient-to-r from-amber-600 to-rose-600 text-white shadow-lg shadow-amber-600/20'
+                ? 'bg-gradient-to-r from-amber-600 to-rose-600 text-white shadow-lg shadow-amber-600/20 font-bold'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
             }`}
           >
             <TrendingUp className="w-3.5 h-3.5" />
-            潜力题材商业市场洞察
+            商业市场洞察
           </button>
           <button
             onClick={() => setActiveTab('sandbox')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
               activeTab === 'sandbox'
-                ? 'bg-cyan-600 text-white shadow'
+                ? 'bg-cyan-600 text-white shadow font-bold'
                 : 'text-cyan-400 hover:text-cyan-200 hover:bg-slate-900'
             }`}
           >
@@ -133,10 +171,397 @@ export default function App() {
 
       {/* 主面板内容 */}
       <main className="flex-1 p-4 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
-        {/* ================= 0. 高门主母掌家录模版试玩与下载 ================= */}
+        {/* ================= 0. 项目展示主页 (Showcase Hub) ================= */}
+        {activeTab === 'showcase' && (
+          <div className="space-y-10">
+            {/* 顶栏 Hero 区域 */}
+            <div className="relative rounded-3xl border border-slate-800 bg-gradient-to-br from-slate-900 via-rose-950/25 to-slate-900 p-8 lg:p-12 overflow-hidden shadow-2xl">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-rose-600/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="relative z-10 space-y-6 max-w-4xl">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" /> Git 极简分发 · 零构建项目集
+                  </span>
+                  <span className="text-xs px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5" /> 纯原生无依赖 · 离线开箱即玩
+                  </span>
+                  <span className="text-xs px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 font-bold flex items-center gap-1.5">
+                    <Cpu className="w-3.5 h-3.5" /> Web Audio 实时音效合成
+                  </span>
+                </div>
+
+                <div className="space-y-3">
+                  <h2 className="text-3xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+                    东方叙事与模拟经营 <br />
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-rose-400 via-amber-300 to-indigo-300">
+                      纯原生单文件独立游戏矩阵
+                    </span>
+                  </h2>
+                  <p className="text-sm lg:text-base text-slate-300 leading-relaxed max-w-3xl">
+                    汇聚<strong>高门世家主母掌家</strong>、<strong>修真长生逆天改命</strong>、<strong>江南古典田园耕读</strong>与<strong>现代都市打工逆袭</strong>四大核心题材。每个游戏皆为 100% 独立的单文件 HTML，内嵌高精度矢量 SVG、纯代码合成 Web Audio 宫廷古筝音效、双端自适应防遮挡排版与防反调试保护机制。
+                  </p>
+                </div>
+
+                {/* 快捷操作条 */}
+                <div className="flex flex-wrap items-center gap-3 pt-2">
+                  <button
+                    onClick={() => setActiveTab('play_gaomen')}
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-rose-700 to-amber-700 hover:from-rose-600 hover:to-amber-600 text-white text-xs font-bold flex items-center gap-2 shadow-xl shadow-rose-700/30 transition transform hover:-translate-y-0.5"
+                  >
+                    <Play className="w-4 h-4 fill-white" />
+                    试玩超头部新作《高门主母》
+                  </button>
+                  <button
+                    onClick={downloadAllGames}
+                    className="px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 text-xs font-bold flex items-center gap-2 transition"
+                  >
+                    <Download className="w-4 h-4 text-amber-400" />
+                    一键打包下载全部 4 款单文件 HTML
+                  </button>
+                  <button
+                    onClick={copyGitCommand}
+                    className="px-4 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-mono flex items-center gap-2 transition"
+                  >
+                    {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-slate-400" />}
+                    <span>{copied ? '已复制 Git 克隆命令！' : 'git clone 仓库命令'}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* 四大核心单文件作品展示阵列 */}
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+                <div>
+                  <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                    <Crown className="w-5 h-5 text-rose-400" />
+                    四大核心原生单文件游戏矩阵
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-1">每个文件均为独立可运行的游戏全集，无构建步骤，开箱即玩</p>
+                </div>
+                <button
+                  onClick={() => setActiveTab('sandbox')}
+                  className="text-xs text-indigo-400 hover:text-indigo-300 flex items-center gap-1 font-semibold"
+                >
+                  打开四屏同台对决沙盒 <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* 1. 高门主母掌家录 */}
+                <div className="rounded-2xl border border-rose-500/40 bg-gradient-to-b from-slate-900/95 via-rose-950/20 to-slate-900/90 p-6 flex flex-col justify-between space-y-4 hover:border-rose-400/60 transition shadow-xl group">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-10 h-10 rounded-xl bg-rose-900/40 border border-rose-500/40 flex items-center justify-center text-rose-300">
+                          <Crown className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-bold text-lg text-white group-hover:text-rose-300 transition">
+                              古代世家 · 高门主母掌家录
+                            </h4>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold">
+                              新爆款
+                            </span>
+                          </div>
+                          <span className="text-xs text-slate-400 font-mono">public/gaomen.html (72 KB)</span>
+                        </div>
+                      </div>
+                      <span className="text-xs px-2.5 py-1 rounded-md bg-rose-950/60 text-rose-300 border border-rose-800 font-medium">
+                        女性向中馈
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      承命入主定远侯府，执掌六大权力中枢：晨起正堂发落例银、寿安堂晨昏定省侍疾、外书房与锦衣卫统领夫君深情对弈解忧、敲打得宠林妾室、突查账房庄田抓贪腐没收私房、为世家儿郎聘大儒择名门亲事、严查后院暗药悬案。
+                    </p>
+
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">六大中馈中枢</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">双端自适应分屏</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">Web Audio 宫廷古筝</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">防 F12 安全锁</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-3">
+                    <button
+                      onClick={() => setActiveTab('play_gaomen')}
+                      className="px-4 py-2 rounded-lg bg-rose-700 hover:bg-rose-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-rose-700/30 transition"
+                    >
+                      <Play className="w-3.5 h-3.5 fill-white" /> 在线试玩
+                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => downloadFile(gaomenUrl, '古代世家_高门主母掌家录.html')}
+                        className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1 transition"
+                      >
+                        <Download className="w-3.5 h-3.5 text-rose-400" /> 下载 HTML
+                      </button>
+                      <a
+                        href={gaomenUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-400 hover:text-white text-xs flex items-center gap-1 transition"
+                      >
+                        全屏 ↗
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. 修真经营录 */}
+                <div className="rounded-2xl border border-amber-500/40 bg-gradient-to-b from-slate-900/95 via-amber-950/20 to-slate-900/90 p-6 flex flex-col justify-between space-y-4 hover:border-amber-400/60 transition shadow-xl group">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-10 h-10 rounded-xl bg-amber-900/40 border border-amber-500/40 flex items-center justify-center text-amber-300">
+                          <Flame className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-bold text-lg text-white group-hover:text-amber-300 transition">
+                              云霄仙府 · 修真经营录
+                            </h4>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">
+                              逆天大作
+                            </span>
+                          </div>
+                          <span className="text-xs text-slate-400 font-mono">public/xiuxian_female.html (90 KB)</span>
+                        </div>
+                      </div>
+                      <span className="text-xs px-2.5 py-1 rounded-md bg-amber-950/60 text-amber-300 border border-amber-800 font-medium">
+                        东方修仙
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      女修逆天证道主轴：九大境界阶梯破境渡劫，寿元倒计时紧迫心流；结识八大倾心蓝颜（清冷剑尊大师兄、药王谷温润医仙、魔道少主等）；开辟灵田烹调灵膳治愈母亲寒毒；诞育代际仙嗣开蒙受业，承袭上古仙帝遗泽。
+                    </p>
+
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">九大境界破境</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">八位蓝颜羁绊</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">代际仙嗣开蒙</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">九重天雷特效</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-3">
+                    <button
+                      onClick={() => setActiveTab('play_xiuxian')}
+                      className="px-4 py-2 rounded-lg bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-700/30 transition"
+                    >
+                      <Play className="w-3.5 h-3.5 fill-white" /> 在线试玩
+                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => downloadFile(xiuxianUrl, '云霄仙府_修真经营录.html')}
+                        className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1 transition"
+                      >
+                        <Download className="w-3.5 h-3.5 text-amber-400" /> 下载 HTML
+                      </button>
+                      <a
+                        href={xiuxianUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-400 hover:text-white text-xs flex items-center gap-1 transition"
+                      >
+                        全屏 ↗
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. 桃花村田园经营录 */}
+                <div className="rounded-2xl border border-emerald-500/40 bg-gradient-to-b from-slate-900/95 via-emerald-950/20 to-slate-900/90 p-6 flex flex-col justify-between space-y-4 hover:border-emerald-400/60 transition shadow-xl group">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-10 h-10 rounded-xl bg-emerald-900/40 border border-emerald-500/40 flex items-center justify-center text-emerald-300">
+                          <Trees className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-lg text-white group-hover:text-emerald-300 transition">
+                            桃花村 · 古代田园经营录
+                          </h4>
+                          <span className="text-xs text-slate-400 font-mono">public/assets/aistudio/tianyuan... (105 KB)</span>
+                        </div>
+                      </div>
+                      <span className="text-xs px-2.5 py-1 rounded-md bg-emerald-950/60 text-emerald-300 border border-emerald-800 font-medium">
+                        古典田园
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      返璞归真的古典田园叙事：春耕夏耘秋收冬藏，直面旱涝霜雪天象；侍奉体弱旧疾老母，打理五亩祖传良田；集市买卖特产杂货，成家立业养育幼子，辅导功课科举中第，享尽三代承欢膝下之福。
+                    </p>
+
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">四时节气流转</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">五亩良田精耕</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">慈母侍疾温情</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">儿女科举仕途</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-3">
+                    <span className="text-xs text-slate-400">田园治愈系开山之作</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => downloadFile(tianyuanUrl, '桃花村_田园经营录.html')}
+                        className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1 transition"
+                      >
+                        <Download className="w-3.5 h-3.5 text-emerald-400" /> 下载 HTML
+                      </button>
+                      <a
+                        href={tianyuanUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-400 hover:text-white text-xs flex items-center gap-1 transition"
+                      >
+                        全屏 ↗
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. 滨江市打工人生 */}
+                <div className="rounded-2xl border border-indigo-500/40 bg-gradient-to-b from-slate-900/95 via-indigo-950/20 to-slate-900/90 p-6 flex flex-col justify-between space-y-4 hover:border-indigo-400/60 transition shadow-xl group">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-10 h-10 rounded-xl bg-indigo-900/40 border border-indigo-500/40 flex items-center justify-center text-indigo-300">
+                          <Briefcase className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-lg text-white group-hover:text-indigo-300 transition">
+                            滨江市 · 打工人生 (豪华版)
+                          </h4>
+                          <span className="text-xs text-slate-400 font-mono">public/binjiang.html (101 KB)</span>
+                        </div>
+                      </div>
+                      <span className="text-xs px-2.5 py-1 rounded-md bg-indigo-950/60 text-indigo-300 border border-indigo-800 font-medium">
+                        现代都市
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      现代都市奋斗与阶层跃迁真实摹写：从身无分文合租房起步，涉足兼职外卖、大厂程序员至创办实业集团；利用股市低吸高抛、期权期货对冲抗通胀；克服 35 岁失业焦虑，逆袭成为坐拥江景大平层与过亿身家的商界巨子。
+                    </p>
+
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">职场晋升梯队</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">股票房产实业</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">现实通胀对抗</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">身家过亿逆袭</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-3">
+                    <span className="text-xs text-slate-400">现实题材模拟巅峰</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => downloadFile(binjiangDeluxeUrl, '滨江市_打工人生豪华版.html')}
+                        className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1 transition"
+                      >
+                        <Download className="w-3.5 h-3.5 text-indigo-400" /> 下载 HTML
+                      </button>
+                      <a
+                        href={binjiangDeluxeUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-400 hover:text-white text-xs flex items-center gap-1 transition"
+                      >
+                        全屏 ↗
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 技术亮点与工程架构 */}
+            <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 lg:p-8 space-y-6">
+              <div className="border-b border-slate-800 pb-3 flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                    <Cpu className="w-5 h-5 text-indigo-400" />
+                    纯原生单文件（Zero-Dependency HTML）架构核心亮点
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-0.5">为什么选择这种极简却极具生命力的高可靠性交付形态？</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 space-y-2">
+                  <div className="text-rose-400 text-sm font-bold flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4" /> 零外部 CDN 依赖
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    完全剔除外部字体库与图片链接，即使在完全断网的局域网或内网，任意浏览器均可 100% 离线顺畅运行。
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 space-y-2">
+                  <div className="text-amber-400 text-sm font-bold flex items-center gap-1.5">
+                    <Cpu className="w-4 h-4" /> Web Audio 纯代码合成
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    无需任何 mp3/ogg 外部资源，利用浏览器内置 AudioContext 振荡器算法，纯数学实时合成古筝与和弦清音。
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 space-y-2">
+                  <div className="text-emerald-400 text-sm font-bold flex items-center gap-1.5">
+                    <Smartphone className="w-4 h-4" /> 响应式双端防遮挡
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    PC 宽屏双栏大观，手机端自动开启分屏切换；采用现代无衬线高清晰抗发虚中文字族，小字亦清澈锐利。
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-slate-800 bg-slate-950 p-4 space-y-2">
+                  <div className="text-indigo-400 text-sm font-bold flex items-center gap-1.5">
+                    <Scroll className="w-4 h-4" /> 防反调试与神识存档
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    内置右键防护与 DevTools 反调试钩子；通过 LocalStorage 封装自动印记与多卷宗存档，刷新数据永不丢失。
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Git 使用与一键上传指南 */}
+            <div className="rounded-2xl border border-indigo-500/30 bg-gradient-to-r from-slate-900 via-indigo-950/20 to-slate-900 p-6 lg:p-8 space-y-4 shadow-xl">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Terminal className="w-5 h-5 text-indigo-400" />
+                  <h3 className="text-base font-bold text-white">Git 仓库上传与免安装部署步骤</h3>
+                </div>
+                <span className="text-xs text-slate-400">已自动为您生成标准 README.md</span>
+              </div>
+
+              <div className="bg-slate-950 rounded-xl p-4 border border-slate-800 font-mono text-xs text-slate-300 space-y-2 overflow-x-auto">
+                <div className="text-slate-500"># 1. 提交至本地 Git 仓库</div>
+                <div className="text-indigo-300">git add .</div>
+                <div className="text-indigo-300">git commit -m "feat: 发布四大东方叙事与模拟经营原生单文件游戏矩阵"</div>
+                <div className="text-slate-500 mt-2"># 2. 关联并推送到您的 GitHub / Gitee 仓库</div>
+                <div className="text-amber-300">git remote add origin https://github.com/&lt;您的用户名&gt;/&lt;仓库名称&gt;.git</div>
+                <div className="text-amber-300">git branch -M main</div>
+                <div className="text-amber-300">git push -u origin main</div>
+                <div className="text-slate-500 mt-2"># 3. 开启 GitHub Pages 后，即可免安装直接全网公网试玩！</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ================= 1. 高门主母掌家录模版试玩与下载 ================= */}
         {activeTab === 'play_gaomen' && (
           <div className="space-y-6">
-            {/* 作品卡片 */}
             <div className="rounded-2xl border border-rose-500/30 bg-gradient-to-r from-slate-900 via-rose-950/20 to-slate-900 p-6 lg:p-8">
               <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 <div className="space-y-3 max-w-3xl">
@@ -154,13 +579,13 @@ export default function App() {
 
                 <div className="flex flex-wrap gap-3">
                   <button
-                    onClick={() => downloadFile('/gaomen.html', '古代世家_高门主母掌家录.html')}
+                    onClick={() => downloadFile(gaomenUrl, '古代世家_高门主母掌家录.html')}
                     className="px-5 py-3 rounded-xl bg-gradient-to-r from-rose-700 to-amber-700 hover:from-rose-600 hover:to-amber-600 text-white text-xs font-bold flex items-center gap-2 shadow-lg shadow-rose-700/30 transition transform hover:-translate-y-0.5"
                   >
                     📥 一键下载《高门主母掌家录》HTML
                   </button>
                   <a
-                    href="/gaomen.html"
+                    href={gaomenUrl}
                     target="_blank"
                     rel="noreferrer"
                     className="px-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition"
@@ -217,7 +642,90 @@ export default function App() {
           </div>
         )}
 
-        {/* ================= 1. 三大作精细化横评 ================= */}
+        {/* ================= 2. 修真经营录试玩 ================= */}
+        {activeTab === 'play_xiuxian' && (
+          <div className="space-y-6">
+            <div className="rounded-2xl border border-amber-500/40 bg-gradient-to-r from-slate-900 via-amber-950/20 to-slate-900 p-6 lg:p-8">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                <div className="space-y-3 max-w-3xl">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold">
+                      🌸 东方仙途 · 逆天长生修仙经营大作
+                    </span>
+                    <span className="text-xs text-slate-400 font-mono">public/xiuxian_female.html (90 KB)</span>
+                  </div>
+                  <h2 className="text-2xl font-black text-amber-200">《云霄仙府 · 修真经营录》</h2>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    专为女性向东方修仙打造的纯原生单文件文字模拟大作：<strong>九大修真境界阶梯（练气至渡劫）、寿元紧迫大限倒计时逼迫破境；八位倾心蓝颜深度小说级剧情羁绊；药园仙田培育天灵地宝调配药膳治愈母亲寒毒；代际仙嗣开蒙根骨测验、结丹开辟多夫羁绊与九重天雷动效。</strong>
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={() => downloadFile(xiuxianUrl, '云霄仙府_修真经营录.html')}
+                    className="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-700 to-rose-700 hover:from-amber-600 hover:to-rose-600 text-white text-xs font-bold flex items-center gap-2 shadow-lg shadow-amber-700/30 transition transform hover:-translate-y-0.5"
+                  >
+                    📥 一键下载《修真经营录》HTML
+                  </button>
+                  <a
+                    href={xiuxianUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition"
+                  >
+                    新窗口全屏畅玩 <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* 真机试玩视口 */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-400 font-medium">视口切换：</span>
+                  <button
+                    onClick={() => setDeviceFrame('desktop')}
+                    className={`px-2.5 py-1 text-xs rounded-md transition ${deviceFrame==='desktop'?'bg-amber-600 text-white font-semibold':'text-slate-400 hover:text-slate-200'}`}
+                  >
+                    全屏大视口
+                  </button>
+                  <button
+                    onClick={() => setDeviceFrame('mobile')}
+                    className={`px-2.5 py-1 text-xs rounded-md flex items-center gap-1 transition ${deviceFrame==='mobile'?'bg-amber-600 text-white font-semibold':'text-slate-400 hover:text-slate-200'}`}
+                  >
+                    <Smartphone className="w-3.5 h-3.5" /> 手机竖屏框
+                  </button>
+                </div>
+                <button
+                  onClick={() => setKeyRefresh(prev => prev + 1)}
+                  className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 flex items-center gap-1 transition"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" /> 重新引灵入道
+                </button>
+              </div>
+
+              <div className="bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center p-2 min-h-[660px]">
+                <div
+                  className={`transition-all duration-300 overflow-hidden rounded-lg shadow-2xl ${
+                    deviceFrame === 'mobile'
+                      ? 'w-[375px] h-[680px] border-4 border-slate-700'
+                      : 'w-full h-[650px]'
+                  }`}
+                >
+                  <iframe
+                    key={`xx-${keyRefresh}`}
+                    src={xiuxianUrl}
+                    title="修真经营录"
+                    className="w-full h-full border-0 bg-white"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ================= 3. 三大作精细化横评 ================= */}
         {activeTab === 'overview' && (
           <div className="space-y-8">
             <div className="rounded-2xl border border-slate-800 bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-slate-950 p-6 lg:p-8 space-y-4">
@@ -348,98 +856,31 @@ export default function App() {
                         <strong>古典避世归隐与温情守护：</strong>回乡守孝耕耘祖传薄田，直面严冬冻馁与至亲旧疾，以四季耕作为舟，渡过动荡人间的柴米油盐。
                       </td>
                       <td className="py-3.5 px-4 leading-relaxed text-amber-200/90 bg-amber-500/5">
-                        <strong>逆天改命与大道长生世情：</strong>背负身世谜团与寿元大限，在尔虞我诈的修仙界建立自给洞府，以情入道、以战立威、守护至亲飞升天界。
+                        <strong>向死而生的长生执念与深情守候：</strong>天道无情，阳寿有尽。在寿元大限的生死倒计时逼迫下逆天改命，与八大蓝颜携手护佑病弱生母、绵延仙嗣宗族。
                       </td>
                     </tr>
-
                     <tr className="hover:bg-slate-800/30">
-                      <td className="py-3.5 px-4 font-semibold text-slate-200">2. 死亡威胁与倒计时机制</td>
+                      <td className="py-3.5 px-4 font-semibold text-slate-200">2. 资源经济模型</td>
                       <td className="py-3.5 px-4 leading-relaxed">
-                        <strong>月度现金流断裂与健康归零：</strong>房租逾期被驱逐、健康/情绪击穿导致过度疲劳猝死；35岁遭遇裁员断崖，失业即陷入财务危机。
+                        <strong>现代金融复利滚雪球：</strong>体力换取初始薪资，现金投入理财基金、A股博弈与期货杠杆，后置实业连锁分红与不动产租金沉淀。
                       </td>
                       <td className="py-3.5 px-4 leading-relaxed">
-                        <strong>严冬冻饿饥荒与母亲沉疴：</strong>冬季无柴火导致全家冻毙、粮食见底引发饿殍事件；母亲病重未能及时买药将含恨离世。
+                        <strong>四时农桑自给自足：</strong>春种秋收、粮食仓储、集市赶集买卖。受限于土地面积与自然灾害，属于线性的温饱积累模型。
                       </td>
                       <td className="py-3.5 px-4 leading-relaxed text-amber-200/90 bg-amber-500/5">
-                        <strong>天道寿元大限与九天雷劫：</strong>练气仅百岁大限，大限将至前必须凝练灵气冲关渡劫；渡劫失败受雷罚重创损寿，道心不稳将招致走火入魔。
+                        <strong>灵气寿元双螺旋递增：</strong>灵石驱动洞府聚灵阵，灵田药膳滋养体魄，境界突破实现寿元与灵气产出几何级暴涨，形成跨维度的数值跃迁。
                       </td>
                     </tr>
-
                     <tr className="hover:bg-slate-800/30">
-                      <td className="py-3.5 px-4 font-semibold text-slate-200">3. 经济循环与离线/挂机</td>
+                      <td className="py-3.5 px-4 font-semibold text-slate-200">3. 情感与社交深度</td>
                       <td className="py-3.5 px-4 leading-relaxed">
-                        <strong>现代连锁门店与店长分红：</strong>从便利店、咖啡馆到物流驿站、MCN机构，耗重金投建并雇佣职业店长，实现按月被动现金流入。
+                        <strong>功能性都市人脉：</strong>包租婆、职场导师、房产中介、行业伙伴。核心提供加薪、内推、低息贷款与投资通道。
                       </td>
                       <td className="py-3.5 px-4 leading-relaxed">
-                        <strong>五亩田地与长工仆从劳作：</strong>开垦肥沃农田，种植麦稻桑麻；雇佣忠厚长工代为播种收割，蓄养家禽产蛋剪毛，运往县城换取铜钱。
+                        <strong>乡土宗族与单线婚恋：</strong>隔壁翠花、村塾夫子、行脚商。结婚生子延续香火，孝奉病母，情感基调朴实温润。
                       </td>
                       <td className="py-3.5 px-4 leading-relaxed text-amber-200/90 bg-amber-500/5">
-                        <strong>洞府灵脉矿山与机关傀儡：</strong>培植洗髓草、凝霜花等天地灵药；投建聚灵阵、灵石矿脉与炼丹阁，炼制机关傀儡杂役实现自动化采掘反哺。
-                      </td>
-                    </tr>
-
-                    <tr className="hover:bg-slate-800/30">
-                      <td className="py-3.5 px-4 font-semibold text-slate-200">4. 情感交互与社交网络</td>
-                      <td className="py-3.5 px-4 leading-relaxed">
-                        <strong>现代相亲角与现实婚姻考量：</strong>接触外企白领、教师、富二代等多位伴侣，需满足彩礼、车房资产硬性门槛，婚后共同分担家庭支出。
-                      </td>
-                      <td className="py-3.5 px-4 leading-relaxed">
-                        <strong>古代市井邻里与媒妁聘娶：</strong>偶遇青梅竹马、豆腐西施、富家千金，三媒六聘举办传统婚礼，伴侣协助操持家务与农桑织布。
-                      </td>
-                      <td className="py-3.5 px-4 leading-relaxed text-amber-200/90 bg-amber-500/5">
-                        <strong>八大蓝颜深情与后宫多夫制：</strong>清冷师尊、忠犬影卫、邪魅魔尊、巨富少主等8位高颜值男主，具备独立24段小说级剧情；金丹后解锁后宫入幕特权。
-                      </td>
-                    </tr>
-
-                    <tr className="hover:bg-slate-800/30">
-                      <td className="py-3.5 px-4 font-semibold text-slate-200">5. 子女培育与代际传承</td>
-                      <td className="py-3.5 px-4 leading-relaxed">
-                        <strong>现代教育卷王与鸡娃路径：</strong>买学区房 ➔ 少年兴趣班 ➔ 中考分流 ➔ 高考冲刺名校或出国留学 ➔ 成家独立并按月汇款孝顺父母。
-                      </td>
-                      <td className="py-3.5 px-4 leading-relaxed">
-                        <strong>耕读传家与科举金榜题名：</strong>私塾蒙学 ➔ 乡试会试殿试 ➔ 状元及第出仕官居一品 ➔ 画像相看成家（偶有私奔事件），朝廷俸禄光宗耀祖。
-                      </td>
-                      <td className="py-3.5 px-4 leading-relaxed text-amber-200/90 bg-amber-500/5">
-                        <strong>修仙版中国式家长：</strong>周岁抓周定道心（木剑/丹经/算盘） ➔ 十岁开蒙测先天灵根（杂灵根至混沌道体） ➔ 选送万仙盟首座真传 ➔ 及笄仙婚反哺洞府。
-                      </td>
-                    </tr>
-
-                    <tr className="hover:bg-slate-800/30">
-                      <td className="py-3.5 px-4 font-semibold text-slate-200">6. 休闲副业与特色支线</td>
-                      <td className="py-3.5 px-4 leading-relaxed">
-                        <strong>都市财富博弈与市井机缘：</strong>彩票站即开型刮刮乐、二手跳蚤市场淘宝捡漏、商业竞标争夺战、夜市摆摊叫卖。
-                      </td>
-                      <td className="py-3.5 px-4 leading-relaxed">
-                        <strong>山野奇趣与草根娱乐：</strong>深山拉弓射鹿捕兔、河畔垂钓摸河蚌取珍珠、地下赌场摇骰押注、后山采摘野生草药。
-                      </td>
-                      <td className="py-3.5 px-4 leading-relaxed text-amber-200/90 bg-amber-500/5">
-                        <strong>修仙四大特色玩法：</strong>万宝楼原石坊赌石切玉（普通/老坑/至尊天龙灵髓暴利博弈）、仙门大比斗法天骄、上古仙魔秘境探索、玉髓药膳烹饪。
-                      </td>
-                    </tr>
-
-                    <tr className="hover:bg-slate-800/30">
-                      <td className="py-3.5 px-4 font-semibold text-slate-200">7. 核心剧情线与情感归宿</td>
-                      <td className="py-3.5 px-4 leading-relaxed">
-                        <strong>老家反哺与财务自由救赎：</strong>按月向农村老家寄钱盖洋楼、帮衬兄弟成家、结识贵人摆脱中产陷阱，最终荣归故里或跨入亿万资本之巅。
-                      </td>
-                      <td className="py-3.5 px-4 leading-relaxed">
-                        <strong>母亲旧疾与家传宝玉谜题：</strong>寻名医为咳血老母抓药祛病延寿、抵御山贼盗匪劫掠宗族、重振破败家声成为江南望族。
-                      </td>
-                      <td className="py-3.5 px-4 leading-relaxed text-amber-200/90 bg-amber-500/5">
-                        <strong>救母重塑仙骨与五阶寻父：</strong>洗髓草/凝霜花/千年何首乌三阶彻底拔除母亲九幽寒毒；凭半枚凤凰残玉探秘南域，救出被困仙帝生父，承袭至尊仙帝道统。
-                      </td>
-                    </tr>
-
-                    <tr className="hover:bg-slate-800/30">
-                      <td className="py-3.5 px-4 font-semibold text-slate-200">8. 视听交互与工程架构</td>
-                      <td className="py-3.5 px-4 leading-relaxed">
-                        Web Audio 原生合成都市 Lo-Fi 暖调背景音，响应式双栏移动适配，6槽位本地存档与长文本压缩导入导出，防 F12 审查。
-                      </td>
-                      <td className="py-3.5 px-4 leading-relaxed">
-                        外链经典民乐古琴音效，四季变换全屏粒子飘落（花瓣/绿叶/枫叶/雪花），StoryQueue 队列锁死逻辑卡死漏洞。
-                      </td>
-                      <td className="py-3.5 px-4 leading-relaxed text-amber-200/90 bg-amber-500/5">
-                        Web Audio 原生合成五声音阶古筝和弦，全屏灵花花瓣动态飘落，严格防 F12/反调试注入，万字长文本神识码分段导出，0 外部网络依赖。
+                        <strong>多位一体蓝颜群像网络：</strong>八位男主拥有完整的身世秘辛、心魔因果与交互链。结丹更可解锁开辟仙府多夫陪伴特权，情绪价值极致充盈。
                       </td>
                     </tr>
                   </tbody>
@@ -449,89 +890,7 @@ export default function App() {
           </div>
         )}
 
-        {/* ================= 2. 修真经营录试玩与下载 ================= */}
-        {activeTab === 'play_xiuxian' && (
-          <div className="space-y-6">
-            <div className="rounded-2xl border border-amber-500/30 bg-gradient-to-r from-slate-900 via-amber-950/20 to-slate-900 p-6 lg:p-8">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                <div className="space-y-3 max-w-3xl">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 font-semibold">
-                      东方仙侠长篇经营新作 · 对标桃花村体量
-                    </span>
-                    <span className="text-xs text-slate-400 font-mono">public/xiuxian_female.html (纯原生单文件)</span>
-                  </div>
-                  <h2 className="text-2xl font-black text-white">《云霄仙府 · 修真经营录》</h2>
-                  <p className="text-xs text-slate-300 leading-relaxed">
-                    以逆天长生与世情羁绊为内核：<strong>八大绝色蓝颜男主（清冷白衣师尊、忠犬重剑影卫、狂放邪魅魔尊、人间富贵花少主、温润药王大师兄等）、24段长篇小说情缘、结丹开启多夫后宫特权、灵田药膳照料病母、五阶段凤凰残玉寻父身世主线、仙嗣灵根望子成龙传承培养、万宝楼切石赌玉、仙门大比斗法、StoryQueue剧情队列、6槽位大容量导出与防 F12 安全锁</strong>。
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-3">
-                  <button
-                    onClick={() => downloadFile('/xiuxian_female.html', '云霄仙府_修真经营录.html')}
-                    className="px-5 py-3 rounded-xl bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white text-xs font-bold flex items-center gap-2 shadow-lg shadow-rose-600/30 transition transform hover:-translate-y-0.5"
-                  >
-                    📥 一键下载《修真经营录》HTML
-                  </button>
-                  <a
-                    href="/xiuxian_female.html"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition"
-                  >
-                    新窗口全屏畅玩 <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-slate-400 font-medium">视口切换：</span>
-                  <button
-                    onClick={() => setDeviceFrame('desktop')}
-                    className={`px-2.5 py-1 text-xs rounded-md transition ${deviceFrame==='desktop'?'bg-amber-600 text-white font-semibold':'text-slate-400 hover:text-slate-200'}`}
-                  >
-                    全屏大视口
-                  </button>
-                  <button
-                    onClick={() => setDeviceFrame('mobile')}
-                    className={`px-2.5 py-1 text-xs rounded-md flex items-center gap-1 transition ${deviceFrame==='mobile'?'bg-amber-600 text-white font-semibold':'text-slate-400 hover:text-slate-200'}`}
-                  >
-                    <Smartphone className="w-3.5 h-3.5" /> 手机竖屏框
-                  </button>
-                </div>
-                <button
-                  onClick={() => setKeyRefresh(prev => prev + 1)}
-                  className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 flex items-center gap-1 transition"
-                >
-                  <RotateCcw className="w-3.5 h-3.5" /> 重新引灵入道
-                </button>
-              </div>
-
-              <div className="bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center p-2 min-h-[660px]">
-                <div
-                  className={`transition-all duration-300 overflow-hidden rounded-lg shadow-2xl ${
-                    deviceFrame === 'mobile'
-                      ? 'w-[375px] h-[680px] border-4 border-slate-700'
-                      : 'w-full h-[650px]'
-                  }`}
-                >
-                  <iframe
-                    key={`xx-${keyRefresh}`}
-                    src={xiuxianUrl}
-                    title="修真经营录"
-                    className="w-full h-full border-0 bg-white"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ================= 3. 市场商业价值深度解析 ================= */}
+        {/* ================= 4. 市场商业价值深度解析 ================= */}
         {activeTab === 'market' && (
           <div className="space-y-6">
             <div className="rounded-2xl border border-amber-500/30 bg-gradient-to-b from-amber-950/40 via-slate-900/80 to-slate-950 p-6 lg:p-8 relative overflow-hidden shadow-2xl">
@@ -577,7 +936,7 @@ export default function App() {
           </div>
         )}
 
-        {/* ================= 4. 四屏实时对决沙盒 ================= */}
+        {/* ================= 5. 四屏实时对决沙盒 ================= */}
         {activeTab === 'sandbox' && (
           <div className="space-y-4">
             <div className="flex items-center justify-between bg-slate-900/80 p-3 rounded-xl border border-slate-800">
@@ -658,8 +1017,19 @@ export default function App() {
       </main>
 
       {/* 页脚 */}
-      <footer className="border-t border-slate-800/80 bg-slate-950/60 py-4 px-4 text-center text-xs text-slate-500">
-        四大独立单文件 HTML 模拟经营体系 · 纯原生 JavaScript/DOM 引擎驱动 · 零外部网络依赖
+      <footer className="border-t border-slate-800/80 bg-slate-950/60 py-5 px-4 text-center text-xs text-slate-400 space-y-2">
+        <div className="flex flex-wrap items-center justify-center gap-4 text-slate-300">
+          <span>🎮 纯原生单文件 HTML 模拟经营矩阵</span>
+          <span>•</span>
+          <span>⚡ 零外部网络依赖与 CDN 限制</span>
+          <span>•</span>
+          <span>🎼 Web Audio API 纯原生合成音效</span>
+          <span>•</span>
+          <span>📄 基于 MIT 协议开源</span>
+        </div>
+        <div className="text-slate-500">
+          可直接将 public 目录下 HTML 单文件拷贝至任何服务器或通过 GitHub Pages 全网免安装分发
+        </div>
       </footer>
     </div>
   );
