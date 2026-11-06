@@ -346,11 +346,15 @@ function updateFx(season){
 
 /* ================= 境界数据表 ================= */
 var REALMS = [
-  {name:'炼气期', maxExp:100, maxLife:100, basePower:15, title:'仙门小师妹', desc:'吐纳天地灵气，褪去凡胎肉身'},
-  {name:'筑基期', maxExp:300, maxLife:200, basePower:60, title:'内门翘楚', desc:'真气凝化为液，辟就长生道基'},
-  {name:'金丹期', maxExp:800, maxLife:400, basePower:200, title:'金丹真人', desc:'金丹一点吞入腹，可纳双修男侍'},
-  {name:'元婴期', maxExp:2200, maxLife:800, basePower:750, title:'一宗女尊', desc:'破丹成婴神游太虚，威震九洲三界'},
-  {name:'化神期', maxExp:6000, maxLife:1500, basePower:2600, title:'九天神女', desc:'掌控阴阳法则，半步天仙，飞升在即'}
+  {name:'炼气期', maxExp:450, maxLife:100, basePower:25, title:'仙门小师妹', desc:'吐纳天地初灵，褪去肉体凡胎', pillName:null},
+  {name:'筑基期', maxExp:1600, maxLife:200, basePower:85, title:'内门翘楚', desc:'真气凝化为液，辟就长生道基', pillName:'筑基丹'},
+  {name:'金丹期', maxExp:4800, maxLife:400, basePower:260, title:'金丹真人', desc:'金丹一点吞入腹，可纳双修男侍', pillName:'聚元金丹'},
+  {name:'元婴期', maxExp:15000, maxLife:800, basePower:850, title:'一宗女尊', desc:'破丹成婴神游太虚，威震九洲三界', pillName:'凝婴天丹'},
+  {name:'化神期', maxExp:42000, maxLife:1600, basePower:2800, title:'九天神女', desc:'掌控阴阳法则，半步天仙，寿元千载', pillName:'化神玄露'},
+  {name:'炼虚期', maxExp:110000, maxLife:3200, basePower:8500, title:'太虚真仙', desc:'虚实由心，通达上界虚空灵境', pillName:'太虚道果'},
+  {name:'合体期', maxExp:260000, maxLife:6500, basePower:24000, title:'万古巨擘', desc:'天人合一，法相万丈无量天劫', pillName:'合道仙丹'},
+  {name:'大乘期', maxExp:600000, maxLife:15000, basePower:65000, title:'三界至尊', desc:'横压九天十地，半步超脱真仙', pillName:'九转还魂丹'},
+  {name:'渡劫成仙', maxExp:1500000, maxLife:99999, basePower:180000, title:'不灭天仙', desc:'历经九九大天劫，白日飞升九重天阙', pillName:'混元飞升丹'}
 ];
 
 var ROOTS = [
@@ -362,7 +366,10 @@ var ROOTS = [
 var CROP_DEFS = {
   洗髓草: {mature:3, yieldMin:3, yieldMax:6, seedPrice:20, name:'洗髓草', icon:'🌱'},
   凝霜花: {mature:4, yieldMin:2, yieldMax:5, seedPrice:45, name:'凝霜花', icon:'❄️'},
-  千年何首乌: {mature:6, yieldMin:1, yieldMax:3, seedPrice:120, name:'千年何首乌', icon:'🌿'}
+  千年何首乌: {mature:6, yieldMin:1, yieldMax:3, seedPrice:120, name:'千年何首乌', icon:'🌿'},
+  九叶紫芝: {mature:5, yieldMin:2, yieldMax:4, seedPrice:95, name:'九叶紫芝', icon:'🍄'},
+  纯阳朱果: {mature:6, yieldMin:1, yieldMax:3, seedPrice:160, name:'纯阳朱果', icon:'🍒'},
+  七宝金莲: {mature:7, yieldMin:1, yieldMax:2, seedPrice:280, name:'七宝金莲', icon:'🪷'}
 };
 
 /* 7大场景四季诗意环境动态描写 */
@@ -545,8 +552,24 @@ function newGame(){
     children:[],
     plots:[{crop:null,growth:0,watered:false},{crop:null,growth:0,watered:false}],
     businesses:[],
-    store:{洗髓草:2,凝霜花:0,千年何首乌:0,聚气丹:2,辟谷丹:5,同心驻颜丹:0,下品飞剑:1,洗髓草种子:2,凝霜花种子:1,千年何首乌种子:0},
-    mysteryQuest:0,
+    pets:[
+      {id:'fox', name:'九尾雪狐 (白团儿)', type:'fox', affection:35, hunger:70, level:1, desc:'通体雪白如粉团，九尾初显，最喜蜷在你膝头呼噜打滚'},
+      {id:'bird', name:'赤金青鸾 (啾啾)', type:'bird', affection:25, hunger:65, level:1, desc:'上古神禽遗种，羽毛青翠泛赤金流光，鸣如玉磬'}
+    ],
+    alchemyExp:0,
+    alchemyLevel:1,
+    store:{洗髓草:3,凝霜花:1,千年何首乌:0,九叶紫芝:0,纯阳朱果:0,七宝金莲:0,晨露:6,地火精华:3,聚气丹:3,辟谷丹:5,筑基丹:1,聚元金丹:0,凝婴天丹:0,同心驻颜丹:0,下品飞剑:1,洗髓草种子:3,凝霜花种子:2,千年何首乌种子:0,九叶紫芝种子:1,纯阳朱果种子:0,七宝金莲种子:0},
+    // 本命法宝与神兵功法系统
+    equip:{
+      weapon:{name:'青钢流光剑', grade:'灵器', power:35, desc:'通体泛青蓝荧光，剑气如虹'},
+      armor:{name:'素锦护体仙衣', grade:'法衣', power:20, def:15, desc:'由灵蚕冰丝织就，避尘去垢减免雷伤'},
+      treasure:{name:'辟邪护心玉佩', grade:'异宝', power:15, desc:'温润暖玉，微弱抵御心魔侵扰'}
+    },
+    manuals:[
+      {id:'m1', name:'《青莲吐纳真经》', grade:'地阶', level:1, desc:'每旬冥想修为产出+30%，灵田生长速度加快'}
+    ],
+    equippedManual:'m1',
+    mysteryQuest:0, // 0:未开启, 1:残玉现世, 2:天机推演, 3:深渊寻踪, 4:斩断锁链, 5:仙帝归宗大圆满
     mom:{name:'娘亲',health:35,sick:true,dead:false,stage:0},
     flags:{},
     logs:[]
@@ -620,23 +643,35 @@ function drawResPanel(){
 /* ================= 行为行动库 ================= */
 var ACTS={
   /* —— 静修洞府 —— */
-  meditateAct:{ic:'🧘‍♀️',t1:'静室吐纳',t2:'消耗1精力 · 修为+18 心境+2',costAct:1,page:'cave',run:function(){
-    var gain = Math.round(18 * G.root.mult);
+  meditateAct:{ic:'🧘‍♀️',t1:'静室吐纳运转',t2:'消耗1精力 · 吸纳天地灵气淬炼真元',costAct:1,page:'cave',run:function(){
+    var baseGain = 12 + G.realm * 6;
+    if(G.equippedManual) baseGain = Math.round(baseGain * 1.3);
+    var gain = Math.round(baseGain * G.root.mult);
     G.exp += gain; G.mind = cl(G.mind + 2);
-    addLog('🧘‍♀️ 你在白玉蒲团上运转心法，周天圆满，修为+'+gain+' 心境+2。','pink');useEnergy(1);}},
-  careMotherAct:{ic:'🍵',t1:'煎药照料娘亲',t2:'免精力 · 治疗寒毒沉疴',costAct:0,page:'cave',can:function(){return !G.mom.dead;},run:function(){
+    addLog('🧘‍♀️ 你于白玉蒲团上运转玄功，周天圆满，经脉温热，真元修为+'+gain+' 心境+2。','pink');useEnergy(1);}},
+  cozyTeaAct:{ic:'🪔',t1:'洞府雅舍 · 烹茶焚香',t2:'消耗1精力 · 抚琴煮雪，洗涤道心，精力+1 心境+10',costAct:1,page:'cave',run:function(){
+    doCozyTeaCeremony();useEnergy(1);}},
+  careMotherAct:{ic:'🍵',t1:'照料孝敬娘亲',t2:'免精力 · 治愈陈疾、承欢膝下听闻往事',costAct:0,page:'cave',can:function(){return !G.mom.dead;},run:function(){
     careMotherBranch();}},
   breakthroughAct:{ic:'⚡',t1:'引雷渡劫破境',t2:'免精力 · 挑战天地法则晋升下一境界',costAct:0,page:'cave',run:function(){
     tryBreakthrough();}},
+  fatherQuestAct:{ic:'📜',t1:'寻父宿命录 · 仙帝归宗',t2:'免精力 · 查勘身世线索、九幽救父',costAct:0,page:'cave',run:function(){
+    openFatherQuestModal();}},
+  equipAct:{ic:'🗡️',t1:'本命法宝与功法',t2:'免精力 · 炼制装备飞剑仙衣、参悟上古心法',costAct:0,page:'cave',run:function(){
+    openEquipModal();}},
 
   /* —— 灵植农耕 —— */
-  clearPlotAct:{ic:'⛏️',t1:'挥杖开辟灵田',t2:'消耗2精力 · 耗灵石200 增辟1亩地',costAct:2,page:'farm',can:function(){return G.plots.length<5;},run:function(){
+  clearPlotAct:{ic:'⛏️',t1:'挥杖开辟灵田',t2:'消耗2精力 · 耗灵石200 增辟1亩地',costAct:2,page:'farm',can:function(){return G.plots.length<8;},run:function(){
     if(G.stones<200){toast('灵石不足200');return;}
     G.stones-=200;
     G.plots.push({crop:null,growth:0,watered:false});
     addLog('⛏️ 你催动土系法诀移山填石，成功开辟出第'+G.plots.length+'亩上品灵田！','gd2');useEnergy(2);}},
   cookFoodAct:{ic:'🍲',t1:'烹饪益气灵膳',t2:'免精力 · 补充全家灵气与气血',costAct:0,page:'farm',run:function(){
     cookMedFood();}},
+  alchemyAct:{ic:'🔥',t1:'神农鼎 · 古法炼丹',t2:'免精力 · 炼制聚气丹、筑基丹、长生驻颜丹',costAct:0,page:'farm',run:function(){
+    openAlchemyModal();}},
+  petSanctuaryAct:{ic:'🦊',t1:'后山萌宠 · 灵兽仙苑',t2:'免精力 · 抚摸白团儿与青鸾，喂食寻宝治愈心灵',costAct:0,page:'farm',run:function(){
+    openPetModal();}},
 
   /* —— 仙府大殿 —— */
   buildBizAct:{ic:'🏛️',t1:'投建仙府产业',t2:'免精力 · 建设矿脉药坊，弟子自动化挂机',costAct:0,page:'palace',run:function(){
@@ -651,9 +686,9 @@ var ACTS={
     gamblingStoneEvent();useEnergy(1);}},
 
   /* —— 三界秘境与大比 —— */
-  tournamentAct:{ic:'🏆',t1:'仙门大比斗法',t2:'消耗2精力 · 挑战天骄争夺天阶宝物',costAct:2,page:'adventure',run:function(){
+  tournamentAct:{ic:'🏆',t1:'仙门大比斗法',t2:'消耗2精力 · 挑战各派真传夺得宗门天骄之尊',costAct:2,page:'adventure',run:function(){
     tournamentEvent();useEnergy(2);}},
-  exploreRuinsAct:{ic:'⚔️',t1:'探秘上古仙魔秘境',t2:'消耗2精力 · 寻天阶机缘',costAct:2,page:'adventure',run:function(){
+  exploreRuinsAct:{ic:'⚔️',t1:'探秘上古仙魔秘境',t2:'消耗2精力 · 寻天阶本命古宝与上古绝学',costAct:2,page:'adventure',run:function(){
     exploreRuinsEvent();useEnergy(2);}}
 };
 
@@ -682,7 +717,7 @@ function careMotherBranch(){
       '<div class="story-choices">'+
       (((G.store.凝霜花||0)>=1 && G.stones>=300) ? '<button class="story-choice" onclick="cureMomStage(2)">❄️ 炼化凝霜天丹，驱散深层经脉寒毒</button>' : '<button class="story-choice" disabled style="opacity:.4">材料不足（需凝霜花×1 + 300灵石）</button>')+
       '<button class="story-choice" onclick="closeModal()">稍后再来</button></div>');
-  } else {
+  } else if(G.mom.stage === 2){
     openModal('【母亲旧疾 · 彻底根治】',
       '<div class="story-panel"><div class="story-title">🌿 九转还魂</div>'+
       '<div class="story-text"><p>寒毒逼入心脉最后一步！唯有【千年何首乌】能彻底焕发生机，重塑仙骨！</p>'+
@@ -690,8 +725,49 @@ function careMotherBranch(){
       '<div class="story-choices">'+
       (((G.store.千年何首乌||0)>=1 && G.stones>=1000) ? '<button class="story-choice" onclick="cureMomStage(3)">🌿 彻底拔除千年寒毒，重塑娘亲仙道金丹！</button>' : '<button class="story-choice" disabled style="opacity:.4">材料不足（需千年何首乌×1 + 1000灵石）</button>')+
       '<button class="story-choice" onclick="closeModal()">稍后再来</button></div>');
+  } else {
+    // 母亲彻底痊愈后的常态孝敬与天伦之乐（修复原本治愈后无限弹出九转还魂的Bug）
+    openModal('【孝敬娘亲 · 承欢膝下】',
+      '<div class="story-panel"><div class="story-title">🍵 仙府慈帏 · 岁月静好</div>'+
+      '<div class="story-text"><p>娘亲面色红润，容光焕发，正坐在暖玉窗前为你缝制新的防护披风。见你走近，娘亲欣慰地放下针线，为你倒上一盏清甜温热的养心茶：</p>'+
+      '<p>「我儿修行不易，快坐下歇歇。娘的身子多亏你悉心照料，金丹稳固得很，莫要再为娘担心了。」</p></div></div>'+
+      '<div class="story-choices">'+
+      '<button class="story-choice" onclick="doMomGreeting()">🍵 晨昏问安，陪伴娘亲闲话家常（道心+15，仙府气运大涨）</button>'+
+      '<button class="story-choice" onclick="doMomAskFather()">📜 询问当年父亲孤身引走魔族的真相与贴身信物（推进寻父线索）</button>'+
+      '<button class="story-choice" onclick="doMomLongevityGift()">🪷 奉送万年长生灵芝为娘亲延年益寿（获得【慈母福泽】加持）</button>'+
+      '<button class="story-choice" onclick="closeModal()">返回</button></div>');
   }
 }
+
+function doMomGreeting(){
+  closeModal();
+  G.mind = cl(G.mind + 15);
+  addLog('🍵 依偎在娘亲膝头品尝温热的莲子羹，听娘亲温声细语叮咛，浮躁的道心渐渐沉静如水。（道心+15）','pink');
+  render();autoSave();
+}
+
+function doMomAskFather(){
+  closeModal();
+  if(G.mysteryQuest === 0){
+    G.mysteryQuest = 1;
+    triggerFatherStage(1);
+  } else {
+    openFatherQuestModal();
+  }
+}
+
+function doMomLongevityGift(){
+  closeModal();
+  if((G.store['九叶紫芝']||0) >= 1){
+    G.store['九叶紫芝']--;
+    G.power += 30; G.mind = cl(G.mind + 20);
+    addLog('🪷 你将晶莹剔透的【九叶紫芝】献给娘亲。娘亲服下后寿元大增，仙光反哺整座洞府！（法力+30，道心+20）','gold');
+  } else {
+    toast('缺少【九叶紫芝】，快去灵田种植或坊市采买！');
+  }
+  render();autoSave();
+}
+
 function cureMomStage(stg){
   closeModal();
   if(stg === 1){
@@ -774,16 +850,43 @@ function doFightTournament(){
 /* 秘境历练 */
 function exploreRuinsEvent(){
   var r = Math.random();
-  if(r<0.4){
-    var st = ri(300, 800); G.stones += st;
-    addLog('⚔️ 探访上古修士洞府，在玉棺暗格中觅得储物袋，得灵石+'+st+'！','gd2');
-  } else if(r<0.7){
-    var g = Math.round(60 * G.root.mult);
-    G.exp += g; G.mind = cl(G.mind + 10);
-    addLog('⚔️ 在古修坐化石壁前参悟残碑剑诀，豁然开朗！修为+'+g+' 心境+10！','gd');
+  if(r < 0.28){
+    // 发现上古稀世本命法宝或护道仙衣
+    var artifacts = [
+      {name:'九天青莲斩神剑', grade:'通天灵宝', power:120, desc:'上古青帝本命飞剑，挥动间青莲剑气破灭虚空'},
+      {name:'定风辟雷天火珠', grade:'天阶极品', power:60, def:30, desc:'天生克制九霄雷劫，渡劫伤害减免30%'},
+      {name:'九尾天狐冰缕仙袍', grade:'天阶绝品', power:50, def:45, desc:'以九尾天狐本命毫毛与万年冰蚕丝缝制，万法不侵'},
+      {name:'太虚阴阳混元镜', grade:'古宝神物', power:90, def:20, desc:'照鉴三界虚妄，免疫一切幻境心魔'}
+    ];
+    var art = pk(artifacts);
+    if(art.def){
+      G.equip.armor = art;
+      addLog('⚔️ 秘境大奇遇！你在仙魔古殿核心封印处寻得【'+art.name+'】并融入本命护甲！（法力+'+art.power+' 防御+'+art.def+'）！','gold');
+    } else {
+      G.equip.weapon = art;
+      addLog('⚔️ 剑鸣九霄！你在古剑冢拔出上古名兵【'+art.name+'】并祭炼为本命飞剑！（法力暴涨+'+art.power+'）！','gold');
+    }
+  } else if(r < 0.52){
+    // 采集万年天材地宝
+    var rareHerbs = ['千年何首乌', '九叶紫芝', '纯阳朱果', '七宝金莲'];
+    var herb = pk(rareHerbs);
+    G.store[herb] = (G.store[herb]||0) + 2;
+    addLog('🌿 在仙雾缭绕的万年灵药谷采摘到两株未遭破坏的【'+herb+'】！可用于炼制无上金丹破境！（'+herb+'+2）','gd');
+  } else if(r < 0.75){
+    // 领悟高阶功法与心境修为
+    var expG = Math.round(90 * G.root.mult);
+    G.exp += expG; G.mind = cl(G.mind + 15);
+    // 联动寻父主线
+    if(G.mysteryQuest === 0){
+      G.mysteryQuest = 1;
+      addLog('📜 秘境石壁上赫然刻有一道纯阳仙尊留下的战神残印！你捡到了一块雕刻着凤凰的温润断玉！（寻父宿命录开启）','purple');
+    } else {
+      addLog('⚔️ 在古仙遗迹石碑前感悟上古剑道，参破无上剑意！修为+'+expG+' 心境+15！','gd2');
+    }
   } else {
-    G.health = cl(G.health - 20);
-    addLog('⚔️ 误触洞府上古护山禁制，被九天玄雷击中，负伤退避！（气血-20）','bd');
+    var hurt = Math.max(10, Math.round(30 - (G.equip&&G.equip.armor?G.equip.armor.def:0)));
+    G.health = cl(G.health - hurt);
+    addLog('⚔️ 遭遇秘境古阵禁制雷火，依靠法宝护体险险退避，受了些许皮外伤。（气血-'+hurt+'）','bd');
   }
 }
 
@@ -897,7 +1000,18 @@ function openPawnShop(){
     洗髓草: 35,
     凝霜花: 80,
     千年何首乌: 220,
+    九叶紫芝: 180,
+    纯阳朱果: 310,
+    七宝金莲: 550,
+    晨露: 25,
+    地火精华: 60,
     聚气丹: 50,
+    益气清心丹: 110,
+    洗髓伐脉金丹: 380,
+    凝霜护心膏: 260,
+    纯阳回命仙丹: 900,
+    驻颜雪肌丸: 750,
+    阴阳通玄合欢丹: 1200,
     同心驻颜丹: 800
   };
   var html='<p class="desc">万宝楼高价典当回购各种灵草与极品丹药：</p>';
@@ -969,21 +1083,38 @@ function doBuildBiz(typeId){
 function tryBreakthrough(){
   var curR = REALMS[G.realm];
   if(G.exp < curR.maxExp){
-    toast('灵力尚未圆满（当前 '+G.exp+' / '+curR.maxExp+'）');return;
+    toast('真元尚未圆满（当前 '+G.exp+' / '+curR.maxExp+'）');return;
   }
   var nextR = REALMS[G.realm + 1];
   if(!nextR){
-    toast('已达九洲绝顶之境！');return;
+    toast('恭喜已登临不灭天仙绝顶之境，傲视三界！');return;
   }
-  var rate = cl(G.mind + (G.health-50)/2);
+
+  var pillRequired = nextR.pillName;
+  var hasPill = pillRequired ? (G.store[pillRequired] && G.store[pillRequired] > 0) : true;
+  var baseRate = cl(G.mind * 0.7 + (G.health - 50) * 0.3);
+  if(!hasPill) baseRate = Math.round(baseRate * 0.5); // 缺丹药强行渡劫成功率腰斩
+  if(G.equip && G.equip.armor && G.equip.armor.def) baseRate = Math.min(95, baseRate + 10); // 护身法衣加持
+
   openModal('【飞升破境 · 逆天渡劫】',
-    '<div class="desc">紫霄雷云于洞府上方汇聚，天道考验即将降临：</div>'+
-    '<div class="desc">目标境界：<b>'+nextR.name+'（'+nextR.title+'）</b><br>道心稳固度：<b>'+G.mind+'%</b> | 渡劫成功率：<b style="color:#8a4358;">'+rate+'%</b></div>'+
-    '<button class="story-choice" onclick="confirmBreakthrough('+rate+')">⚡ 沐浴雷劫，引动天雷洗髓冲关！</button>'+
-    '<button class="story-choice" onclick="closeModal()">🧘 暂时压制修为，稳固根基改日再试</button>');
+    '<div class="story-panel"><div class="story-title">⚡ 紫霄神雷天劫降临</div>'+
+    '<div class="story-text">'+
+    '<p>九天玄穹之上，方圆万里的紫霄雷劫云团滚滚汇聚，威压震颤天地！</p>'+
+    '<p>目标境界：<b>【'+nextR.name+' · '+nextR.title+'】</b></p>'+
+    '<p>破境必备灵丹：<b>'+(pillRequired || '无')+'</b> '+(pillRequired ? (hasPill ? '<span style="color:#2a7538;font-weight:bold;">(已备齐×'+G.store[pillRequired]+')</span>' : '<span style="color:#b32f25;font-weight:bold;">(暂无此丹，强冲极度凶险！)</span>') : '')+'</p>'+
+    '<p>道心稳固度：<b>'+G.mind+'%</b> | 渡劫预估成功率：<b style="color:#8a4358;font-size:15px;">'+baseRate+'%</b></p>'+
+    '</div></div><div class="story-choices">'+
+    '<button class="story-choice" onclick="confirmBreakthrough('+baseRate+','+(hasPill?1:0)+')">⚡ 踏上问天台，硬撼九重雷劫冲关！</button>'+
+    '<button class="story-choice" onclick="closeModal()">🧘 暂且压制真元，待炼得灵丹再行渡劫</button></div>');
 }
-function confirmBreakthrough(rate){
+
+function confirmBreakthrough(rate, usedPill){
   closeModal();
+  var nextR = REALMS[G.realm + 1];
+  if(usedPill && nextR.pillName && G.store[nextR.pillName]){
+    G.store[nextR.pillName]--;
+  }
+
   var success = Math.random()*100 < rate;
   if(success){
     G.realm++;
@@ -992,16 +1123,17 @@ function confirmBreakthrough(rate){
     G.maxLife = newR.maxLife;
     G.power += newR.basePower;
     G.mind = cl(G.mind + 20);
-    addLog('🎉 九天仙光灌体！恭喜晋升【'+newR.name+' · '+newR.title+'】！寿元上限暴增至 '+G.maxLife+' 岁！','gd2');
+    addLog('🎉 九天仙霞垂落，金莲涌现！恭喜晋升【'+newR.name+' · '+newR.title+'】！寿元上限暴增至 '+G.maxLife+' 岁！法力跃升+'+newR.basePower+'！','gold');
     if(G.realm>=2 && !G.flags.canHarem){
       G.flags.canHarem = true;
-      addLog('👑 结丹大典礼成！晋升金丹真人，身份尊崇，解锁【开辟后宫·纳多位男侍道侣】特权！','purple');
+      addLog('👑 结丹大典成！你已晋升金丹真人，名动九洲，解锁【开辟后宫·迎纳多位绝色道侣】大权！','purple');
     }
   } else {
-    G.health = cl(G.health - 25);
-    G.mind = cl(G.mind - 12);
-    G.exp = Math.round(G.exp * 0.7);
-    addLog('⚡ 雷劫狂暴反噬！冲关功亏一篑，经脉气血受损（气血-25 心境-12）。','bd');
+    var dmg = Math.min(45, Math.max(20, Math.round(50 - (G.equip&&G.equip.armor?G.equip.armor.def:0))));
+    G.health = cl(G.health - dmg);
+    G.mind = cl(G.mind - 15);
+    G.exp = Math.round(G.exp * 0.65);
+    addLog('⚡ 天雷反噬！冲关功亏一篑，周身经脉被天雷撕裂负伤（气血-'+dmg+' 心境-15 修为耗损）。请调养后再试。','bd');
   }
   render();autoSave();
 }
@@ -1012,13 +1144,92 @@ function openDaoistModal(){
   for(var i=0;i<MALE_LEADS.length;i++){
     var m = MALE_LEADS[i];
     var isMarried = G.spouseList.some(function(x){return x.id===m.id;});
-    html+='<div class="biz-card"><div class="biz-head"><span>'+m.name+' ('+m.title+')</span>'+
-      (isMarried?'<span style="color:#c4426f;">已入道侣 (好感度'+(G.spouseList.find(function(x){return x.id===m.id;}).aff||80)+')</span>':'<button class="main-btn" style="width:auto;padding:3px 10px;font-size:11px;" onclick="interactLead(&apos;'+m.id+'&apos;)">互动结缘</button>')+
-      '</div><div class="biz-desc">'+m.role+'</div></div>';
+    var spObj = G.spouseList.find(function(x){return x.id===m.id;});
+    var affVal = spObj ? (spObj.aff||80) : ((G.flags&&G.flags['aff_'+m.id])||30);
+    html+='<div class="biz-card" style="margin-bottom:8px;"><div class="biz-head"><span>'+m.name+' ('+m.title+')</span>'+
+      (isMarried?'<span style="color:#c4426f;font-weight:bold;">💍 正式道侣 (情意 '+affVal+')</span>':'<span style="color:#8a4358;">结缘倾慕 (好感 '+affVal+')</span>')+
+      '</div><div class="biz-desc" style="margin-bottom:6px;">'+m.role+'</div>'+
+      '<div style="display:flex;gap:4px;flex-wrap:wrap;">'+
+      '<button class="main-btn" style="flex:1;min-width:60px;padding:3px 6px;font-size:11px;" onclick="interactLead(&apos;'+m.id+'&apos;)">📖 羁绊主线</button>'+
+      '<button class="main-btn" style="flex:1;min-width:60px;padding:3px 6px;font-size:11px;background:#c4426f;" onclick="openRomanticDate(&apos;'+m.id+'&apos;)">💕 踏月清谈</button>'+
+      '<button class="main-btn" style="flex:1;min-width:60px;padding:3px 6px;font-size:11px;background:#965b32;" onclick="openLoveLetter(&apos;'+m.id+'&apos;)">💌 飞剑情笺</button>'+
+      '<button class="main-btn" style="flex:1;min-width:60px;padding:3px 6px;font-size:11px;background:#5e3a7a;" onclick="giftLeadModal(&apos;'+m.id+'&apos;)">🎁 赠礼定情</button>'+
+      (!isMarried ? '<button class="main-btn" style="flex:1;min-width:70px;padding:3px 6px;font-size:11px;background:#b32f50;" onclick="tryMarryLead(&apos;'+m.id+'&apos;)">💍 结发大典</button>' : '')+
+      '</div></div>';
   }
   html+='<button class="main-btn" style="background:#a37f88;margin-top:8px;" onclick="closeModal()">返回</button>';
   openModal('💕 绝色蓝颜谱', html);
 }
+
+function giftLeadModal(id){
+  closeModal();
+  var m = MALE_LEADS.find(function(x){return x.id===id;});if(!m)return;
+  var html = '<div class="story-panel"><div class="story-title">🎁 馈赠定情信物给【'+m.name+'】</div>'+
+    '<div class="story-text"><p>选一件宝物赠予意中人，大幅提升其好感心意：</p></div></div><div class="story-choices">'+
+    '<button class="story-choice" onclick="doGiftLead(&apos;'+id+'&apos;,&apos;grass&apos;)">🌿 赠送【凝霜花束】（好感+15，消耗凝霜花×1）</button>'+
+    '<button class="story-choice" onclick="doGiftLead(&apos;'+id+'&apos;,&apos;pill&apos;)">💊 赠送【同心驻颜丹】（好感+25，消耗驻颜丹×1）</button>'+
+    '<button class="story-choice" onclick="doGiftLead(&apos;'+id+'&apos;,&apos;stone&apos;)">💎 赠送【万宝灵犀宝匣】（好感+20，消耗灵石1000）</button>'+
+    '<button class="story-choice" onclick="openDaoistModal()">返回</button></div>';
+  openModal('🎁 赠礼定情', html);
+}
+
+function doGiftLead(id, type){
+  closeModal();
+  var m = MALE_LEADS.find(function(x){return x.id===id;});
+  var sp = G.spouseList.find(function(x){return x.id===id;});
+  var curAff = sp ? (sp.aff||80) : ((G.flags&&G.flags['aff_'+id])||30);
+  
+  if(type==='grass'){
+    if((G.store['凝霜花']||0)<=0){toast('缺少【凝霜花】');return;}
+    G.store['凝霜花']--;
+    curAff += 15;
+  } else if(type==='pill'){
+    if((G.store['同心驻颜丹']||0)<=0){toast('缺少【同心驻颜丹】');return;}
+    G.store['同心驻颜丹']--;
+    curAff += 25;
+  } else {
+    if(G.stones<1000){toast('灵石不足1000');return;}
+    G.stones-=1000;
+    curAff += 20;
+  }
+  
+  if(sp){ sp.aff = cl(curAff); }
+  else { G.flags['aff_'+id] = cl(curAff); }
+  
+  addLog('🎁 你将精心准备的厚礼赠予【'+m.name+'】。他耳尖泛红，视若珍宝地收下，对你好感大涨！（好感升至 '+curAff+'）','pink');
+  render();autoSave();
+}
+
+function tryMarryLead(id){
+  closeModal();
+  var m = MALE_LEADS.find(function(x){return x.id===id;});if(!m)return;
+  var aff = (G.flags&&G.flags['aff_'+id])||30;
+  if(aff < 80){
+    openModal('【情缘未满 · 结发尚早】',
+      '<div class="story-panel"><div class="story-title">💕 缘分未到</div>'+
+      '<div class="story-text"><p>【'+m.name+'】眼波流转，神情虽倾慕，却略带矜持：</p>'+
+      '<p>「仙子美意，在下心中感激。只是两情相悦非一朝一夕之功，待好感达到 80（当前：'+aff+'）时，在下定当亲上仙府迎娶相伴。」</p>'+
+      '<p><span class="em">提示：可通过【踏月清谈】、【飞剑情笺】与【赠礼定情】提升好感！</span></p></div></div>'+
+      '<button class="main-btn" onclick="openDaoistModal()">明白</button>');
+    return;
+  }
+
+  if(G.spouseList.length > 0 && !(G.flags&&G.flags.canHarem)){
+    toast('需晋升【金丹期】后方可开辟后宫迎纳多位道侣！');return;
+  }
+
+  G.spouseList.push({id:m.id, name:m.name, title:m.title, aff:aff});
+  G.mind = 100;
+  addLog('💍 红绸漫天，九天凤辇相迎！你与【'+m.name+'】举办盛大结发双修大典，正式结为生死道侣！（道心圆满）','purple');
+  openModal('【龙凤和鸣 · 结为道侣】',
+    '<div class="story-panel"><div class="story-title">💍 '+m.name+' 正式入驻仙府</div>'+
+    '<div class="story-text"><p>云霄仙阙之上百鸟朝凤，九天祥云汇聚成双喜之形。</p>'+
+    '<p>【'+m.name+'】一袭大红喜服，深情执起你的纤手，当着天地神明的面郑重许下万年誓约：</p>'+
+    '<p>「生同衾，死同穴；千山暮雪，唯伴卿行。」</p></div></div>'+
+    '<button class="main-btn" onclick="closeModal()">永结同心</button>');
+  render();autoSave();
+}
+
 function interactLead(id){
   closeModal();
   var m = MALE_LEADS.find(function(x){return x.id===id;});if(!m)return;
@@ -1038,13 +1249,14 @@ function interactLead(id){
     openModal('【红颜仙劫 · '+m.name+'】', html);
   });
 }
+
 function chooseLeadOpt(id, stage, optIdx){
   closeModal();
   var m = MALE_LEADS.find(function(x){return x.id===id;});if(!m)return;
   var st = stage===30 ? m.s30 : (stage===60 ? m.s60 : m.s90);
   var c = st.choices[optIdx];
   if(!G.flags) G.flags={};
-  G.flags['aff_'+id] = (G.flags['aff_'+id]||30) + (c.aff||15);
+  G.flags['aff_'+id] = cl(((G.flags['aff_'+id])||30) + (c.aff||15));
 
   if(c.aff) G.mind = cl(G.mind + 5);
   if(c.exp) G.exp += c.exp;
@@ -1052,25 +1264,24 @@ function chooseLeadOpt(id, stage, optIdx){
   if(c.power) G.power += c.power;
   if(c.stones) G.stones += c.stones;
 
-  addLog('💕 你与【'+m.name+'】羁绊深化，心意相通。','pink');
+  addLog('💕 你与【'+m.name+'】羁绊深化，心意相通（好感+'+(c.aff||15)+'）。','pink');
 
   var isMarried = G.spouseList.some(function(x){return x.id===m.id;});
-  if(!isMarried){
-    if(G.spouseList.length===0 || (G.flags && G.flags.canHarem)){
-      G.spouseList.push({id:m.id, name:m.name, title:m.title, aff:80});
-      addLog('💍 【'+m.name+'】愿为你的入幕之宾，正式入驻仙府结为道侣！','purple');
-    }
+  if(!isMarried && (G.flags['aff_'+id] >= 80)){
+    addLog('💡 【'+m.name+'】对你情根深种，好感已达80！可前往【绝色蓝颜】界面举办结发大典迎娶！','purple');
   }
   render();autoSave();
 }
 function doTwinCultivation(){
-  if(G.spouseList.length===0){toast('后宫尚无道侣，快去寻访美男！');return;}
+  if(G.spouseList.length===0){toast('仙府尚无结发道侣，快去蓝颜谱提升好感迎娶！');return;}
   var sp = pk(G.spouseList);
-  G.mind = cl(G.mind + 10);
-  G.exp += Math.round(30 * G.root.mult);
-  addLog('💞 你与夫君【'+sp.name+'】同榻双修，阴阳互泰，真气游走全身，修为大涨！','pink');
+  G.mind = cl(G.mind + 12);
+  var expGain = Math.round(35 * G.root.mult);
+  G.exp += expGain;
+  addLog('💞 你与夫君【'+sp.name+'】同榻双修，阴阳互泰，真气游走全身，修为+'+expGain+'！','pink');
 
-  if(G.children.length<4 && Math.random()<0.4){
+  // 解除4个上限，支持培养更多天骄儿女
+  if(G.children.length < 10 && Math.random() < 0.38){
     pushStory(function(){birthChildDialog(sp.name);});
   }
   render();autoSave();
@@ -1600,6 +1811,421 @@ function doRestart(){
 /* ================= 启灵入道 ================= */
 newGame();
 render();
+
+/* ================= 神农古鼎 · 自由配方古法炼丹工坊 ================= */
+var ALCHEMY_RECIPES = [
+  {id:'pill_breath', name:'益气清心丹', icon:'💊', cost:{洗髓草:2, 晨露:1}, desc:'清热定神，补充精力与心境', effect:'精力+2，心境+6，修为+45', run:function(crit){
+    var mult = crit?2:1;
+    G.actionsLeft = Math.min(MAX_ACTIONS_PER_XUN+2, G.actionsLeft + 2*mult);
+    G.mind = cl(G.mind + 6*mult);
+    G.exp += 45*mult;
+    return '服下益气清心丹，灵台一片空灵澄澈！精力+'+(2*mult)+'，心境+'+(6*mult)+'，修为+'+(45*mult)+'。';
+  }},
+  {id:'pill_bone', name:'洗髓伐脉金丹', icon:'✨', cost:{洗髓草:2, 九叶紫芝:1, 地火精华:1}, desc:'重塑凡胎经脉，大幅增强根骨法力', effect:'修为+180，法力+35，心境+10', run:function(crit){
+    var mult = crit?2:1;
+    G.exp += 180*mult;
+    G.power += 35*mult;
+    G.mind = cl(G.mind + 10*mult);
+    return '金丹入喉，浑身骨节如炒豆爆响，灵脉扩宽三成！修为+'+(180*mult)+'，法力+'+(35*mult)+'！';
+  }},
+  {id:'pill_frost', name:'凝霜护心膏', icon:'❄️', cost:{凝霜花:2, 纯阳朱果:1}, desc:'阴阳并济圣药，护持五脏，对娘亲寒毒有奇效', effect:'气血+40，心境+25，娘亲好转', run:function(crit){
+    var mult = crit?2:1;
+    G.health = cl(G.health + 40*mult);
+    G.mind = cl(G.mind + 25*mult);
+    if(G.mom && !G.mom.dead){ G.mom.health = cl(G.mom.health + 25*mult); }
+    return '清凉膏体入腹，周身燥热尽退，神清气爽！气血+'+(40*mult)+'，娘亲身子亦大为舒泰！';
+  }},
+  {id:'pill_beauty', name:'驻颜雪肌丸', icon:'🌸', cost:{凝霜花:1, 七宝金莲:1, 晨露:2}, desc:'容颜常驻，九洲少有的神女美颜仙丹', effect:'赠予蓝颜好感度+35，自身魅力四射', run:function(crit){
+    var mult = crit?2:1;
+    G.mind = cl(G.mind + 20*mult);
+    G.store['驻颜雪肌丸'] = (G.store['驻颜雪肌丸']||0) + (1*mult);
+    return '炼成驻颜雪肌丸'+(1*mult)+'枚！香气扑鼻，仙光流转，放入储物戒中可赠予心仪蓝颜或自行服用！';
+  }},
+  {id:'pill_life', name:'纯阳回命仙丹', icon:'🍒', cost:{纯阳朱果:2, 千年何首乌:1, 地火精华:1}, desc:'天阶延寿圣物，逆转生死，直接彻底根除娘亲寒毒', effect:'气血回满，寿元上限+30，娘亲彻底康复', run:function(crit){
+    G.health = 100;
+    G.maxLife = (G.maxLife||100) + 30;
+    if(G.mom && !G.mom.dead){
+      G.mom.health = 100; G.mom.sick = false; G.mom.stage = 3;
+    }
+    return '🌟 纯阳仙光冲霄而起！服之生机无尽，寿元+30年！娘亲多年宿疾寒毒随之彻底化解！';
+  }},
+  {id:'pill_twin', name:'阴阳通玄合欢丹', icon:'💞', cost:{九叶紫芝:1, 纯阳朱果:1, 七宝金莲:1}, desc:'道侣阴阳双修暴击神丹，仙嗣仙缘极大增强', effect:'道侣好感+30，下次双修修为+300', run:function(crit){
+    G.store['阴阳通玄合欢丹'] = (G.store['阴阳通玄合欢丹']||0) + 1;
+    return '丹炉散发阵阵旖旎异香，炼得阴阳通玄合欢丹！与夫君同修时将触发天阶天地异象！';
+  }}
+];
+
+function openAlchemyModal(){
+  if(!G.alchemyLevel) G.alchemyLevel = 1;
+  if(!G.alchemyExp) G.alchemyExp = 0;
+  var html = '<div class="story-panel"><div class="story-title">🔥 神农古鼎 · 丹道工坊 (炼丹造诣：Lv.'+G.alchemyLevel+')</div>'+
+    '<div class="story-text" style="font-size:12px;color:#6b4d57;line-height:1.6;">'+
+    '以九幽地火与草木至灵为引。控火得当可炼出带【丹纹生云】的极品绝品丹药！<br>'+
+    '当前拥有材料：'+
+    '<span style="display:inline-block;margin:3px 6px;padding:2px 6px;background:#fff;border-radius:4px;border:1px solid #ecc9d4;">晨露: '+(G.store.晨露||0)+'</span>'+
+    '<span style="display:inline-block;margin:3px 6px;padding:2px 6px;background:#fff;border-radius:4px;border:1px solid #ecc9d4;">地火精华: '+(G.store.地火精华||0)+'</span>'+
+    '</div></div>';
+
+  html += '<div style="display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;padding-right:4px;">';
+  for(var i=0; i<ALCHEMY_RECIPES.length; i++){
+    var r = ALCHEMY_RECIPES[i];
+    var canCraft = true;
+    var costStr = [];
+    for(var ing in r.cost){
+      var need = r.cost[ing];
+      var have = G.store[ing] || 0;
+      if(have < need) canCraft = false;
+      costStr.push(ing + ' ' + have + '/' + need);
+    }
+    html += '<div class="biz-card" style="margin-bottom:0;padding:8px 10px;">'+
+      '<div class="biz-head"><span style="font-weight:bold;color:#8a4358;">'+r.icon+' '+r.name+'</span>'+
+      '<span style="font-size:11px;color:#2a7538;">'+r.effect+'</span></div>'+
+      '<div class="biz-desc" style="margin:4px 0 6px;">需配方：'+costStr.join(' · ')+'</div>'+
+      '<div style="display:flex;gap:6px;">'+
+      '<button class="main-btn" style="flex:1;padding:4px 6px;font-size:11px;background:#4b8258;" '+(canCraft?'onclick="doCraftPill('+i+', false)"':'disabled style="opacity:.4"')+'>文火温养 (100%成功)</button>'+
+      '<button class="main-btn" style="flex:1;padding:4px 6px;font-size:11px;background:#a13b5a;" '+(canCraft?'onclick="doCraftPill('+i+', true)"':'disabled style="opacity:.4"')+'>武火爆炼 (概率极品双倍)</button>'+
+      '</div></div>';
+  }
+  html += '</div><button class="main-btn" style="background:#a37f88;margin-top:10px;" onclick="closeModal()">返回仙阁</button>';
+  openModal('🔥 神农鼎 · 丹道工坊', html);
+}
+
+function doCraftPill(idx, isAggressive){
+  closeModal();
+  var r = ALCHEMY_RECIPES[idx];
+  if(!r) return;
+  for(var ing in r.cost){
+    if((G.store[ing]||0) < r.cost[ing]){ toast('配方材料不足：'+ing); return; }
+  }
+  for(var ing in r.cost){
+    G.store[ing] -= r.cost[ing];
+  }
+  
+  var crit = false;
+  var success = true;
+  if(isAggressive){
+    var roll = Math.random();
+    if(roll < 0.15){
+      success = false;
+    } else if(roll > 0.55){
+      crit = true;
+    }
+  }
+
+  if(!success){
+    addLog('💥 武火火候失控，地火反噬！炉中药渣化为焦炭……（损耗了部分草药）', 'bd');
+    toast('丹炉炸鼎，炼丹失败');
+  } else {
+    G.alchemyExp = (G.alchemyExp||0) + (crit?35:20);
+    if(G.alchemyExp >= G.alchemyLevel * 60){
+      G.alchemyLevel++;
+      toast('🎉 丹道境界突破！当前炼丹造诣达到 Lv.'+G.alchemyLevel);
+    }
+    var msg = r.run(crit);
+    if(crit){
+      addLog('🔥【紫气东来 · 丹纹生云】武火凝练出极品绝世【'+r.name+'】！'+msg, 'gold');
+      toast('🌟 极品丹纹出世！药效倍增！');
+    } else {
+      addLog('🍵 神农鼎稳稳凝出一炉灵气盎然的【'+r.name+'】！'+msg, 'gd2');
+      toast('炼丹成功：'+r.name);
+    }
+  }
+  render(); autoSave();
+}
+
+/* ================= 灵兽仙苑 · 萌宠互动与温馨陪伴 ================= */
+function openPetModal(){
+  if(!G.pets || !G.pets.length){
+    G.pets = [
+      {id:'fox', name:'九尾雪狐 (白团儿)', type:'fox', affection:35, hunger:70, level:1, desc:'通体雪白如粉团，九尾初显，最喜蜷在你膝头呼噜打滚'},
+      {id:'bird', name:'赤金青鸾 (啾啾)', type:'bird', affection:25, hunger:65, level:1, desc:'上古神禽遗种，羽毛青翠泛赤金流光，鸣如玉磬'}
+    ];
+  }
+  var html = '<div class="story-panel"><div class="story-title">🐾 后山仙林 · 灵兽嬉戏</div>'+
+    '<div class="story-text" style="font-size:12px;color:#6b4d57;">'+
+    '后山溪水清澈，仙芝灵草遍生。两只小家伙听到脚步声，兴奋地从草丛扑腾着迎了上来！'+
+    '</div></div>';
+
+  html += '<div style="display:flex;flex-direction:column;gap:10px;">';
+  for(var i=0; i<G.pets.length; i++){
+    var p = G.pets[i];
+    var isFox = p.type === 'fox';
+    html += '<div class="biz-card" style="margin-bottom:0;padding:10px;">'+
+      '<div class="biz-head"><span style="font-weight:bold;color:#8a4358;">'+(isFox?'🦊':'🐦')+' '+p.name+'</span>'+
+      '<span style="font-size:11px;color:#c4426f;">💖 亲密 '+p.affection+'/100 · 饱食 '+p.hunger+'/100</span></div>'+
+      '<div class="biz-desc" style="margin:4px 0 8px;">'+p.desc+'</div>'+
+      '<div style="display:flex;gap:5px;flex-wrap:wrap;">'+
+      '<button class="main-btn" style="flex:1;min-width:70px;padding:4px 6px;font-size:11px;" onclick="petTouch('+i+')">'+(isFox?'🌸 揉揉软肚皮':'🪶 梳理羽翎')+'</button>'+
+      '<button class="main-btn" style="flex:1;min-width:70px;padding:4px 6px;font-size:11px;background:#4b8258;" onclick="petFeed('+i+')">🍎 投喂灵草仙果</button>'+
+      '<button class="main-btn" style="flex:1;min-width:70px;padding:4px 6px;font-size:11px;background:#965b32;" onclick="petExplore('+i+')">'+(isFox?'🎒 巡山寻宝':'💌 青鸾衔书')+'</button>'+
+      '</div></div>';
+  }
+  html += '</div><button class="main-btn" style="background:#a37f88;margin-top:10px;" onclick="closeModal()">返回仙阁</button>';
+  openModal('🦊 后山萌宠 · 灵兽仙苑', html);
+}
+
+function petTouch(idx){
+  closeModal();
+  var p = G.pets[idx];
+  p.affection = cl(p.affection + 8);
+  G.mind = cl(G.mind + 8);
+  G.actionsLeft = Math.min(MAX_ACTIONS_PER_XUN+2, G.actionsLeft + 1);
+  if(p.type === 'fox'){
+    addLog('🦊 你将白团儿抱在膝上，轻揉它毛茸茸的下巴。小家伙舒服得眯起粉色眼睛，呼噜呼噜地用额头蹭你的掌心，整个人都被治愈了！（精力+1，心境+8）', 'pink');
+    toast('白团儿打了个滚，贴着你的手心撒娇');
+  } else {
+    addLog('🐦 你轻抚啾啾华美柔顺的青金羽毛，啾啾欢快地发出一声如玉磬般的清鸣，洒下一片温润灵光为您洗涤心神！（精力+1，心境+8）', 'pink');
+    toast('啾啾展翅扑棱，蹭了蹭你的脸颊');
+  }
+  render(); autoSave();
+}
+
+function petFeed(idx){
+  closeModal();
+  var p = G.pets[idx];
+  var feedItems = ['洗髓草', '凝霜花', '纯阳朱果', '九叶紫芝'];
+  var usedItem = null;
+  for(var fi=0; fi<feedItems.length; fi++){
+    var it = feedItems[fi];
+    if((G.store[it]||0) > 0){ usedItem = it; break; }
+  }
+  if(!usedItem){
+    toast('储物袋中暂无灵草或仙果，先去种植采收吧');
+    return;
+  }
+  G.store[usedItem]--;
+  p.hunger = cl(p.hunger + 35);
+  p.affection = cl(p.affection + 12);
+  addLog('🍎 你拿出新鲜水灵的【'+usedItem+'】喂给'+p.name+'。小家伙开心地嚼得腮帮子鼓鼓，尾巴欢快地摇晃，亲密度大涨！', 'gd');
+  toast(p.name+'吃得心满意足！');
+  render(); autoSave();
+}
+
+function petExplore(idx){
+  closeModal();
+  var p = G.pets[idx];
+  if(p.type === 'fox'){
+    var rewards = [
+      {n:'晨露×3', fn:function(){ G.store.晨露=(G.store.晨露||0)+3; }},
+      {n:'地火精华×2', fn:function(){ G.store.地火精华=(G.store.地火精华||0)+2; }},
+      {n:'九叶紫芝仙种×1', fn:function(){ G.store.九叶紫芝种子=(G.store.九叶紫芝种子||0)+1; }},
+      {n:'灵石+300', fn:function(){ G.stones+=300; }}
+    ];
+    var rew = pk(rewards); rew.fn();
+    addLog('🎒 白团儿摇着蓬松雪尾巴钻入悬崖古洞，不一会儿嘴里叼着宝贝欢快地跑了回来：获得【'+rew.n+'】！', 'gold');
+    toast('白团儿寻宝满载而归！');
+  } else {
+    // 青鸾传书
+    if(!G.spouseList.length){
+      var rewStones = ri(150, 400); G.stones += rewStones;
+      addLog('💌 啾啾展翅九霄，引来四方灵气凝聚，为你衔回山野散落的上古灵石+'+rewStones+'两！', 'gd2');
+      toast('啾啾巡山归来');
+    } else {
+      var sp = pk(G.spouseList);
+      addLog('💌 啾啾化作青虹掠过天际，将你采撷的仙草送往夫君【'+sp.name+'】手中。片刻后啾啾叼回一封带着墨香与深情的小笺，附赠灵石+300！', 'pink');
+      G.stones += 300; sp.aff = cl((sp.aff||80) + 5);
+      toast('收到夫君的深情回信');
+    }
+  }
+  render(); autoSave();
+}
+
+/* ================= 洞府雅舍 · 烹茶抚琴焚香 ================= */
+function doCozyTeaCeremony(){
+  G.mind = cl(G.mind + 12);
+  G.actionsLeft = Math.min(MAX_ACTIONS_PER_XUN+3, G.actionsLeft + 1);
+  var poems = [
+    '「寒夜客来茶当酒，竹炉汤沸火初红。」你在窗前汲灵泉温茶，白雾升腾，道心通透澄明。',
+    '「山中何所有，岭上多白云。」案头古琴幽咽，香炉中紫檀轻吐，红尘俗念随风而逝。',
+    '「松下茅亭五月凉，翡翠阴中抱玉床。」轻啜一口甘冽雪茶，灵力绵绵滋润百骸，神怡气爽。'
+  ];
+  addLog('🪔 '+pk(poems)+'（心境+12，精力+1）', 'pink');
+  toast('品茗听琴，洗涤道心');
+  render(); autoSave();
+}
+
+/* ================= 8位绝色蓝颜 · 踏月清谈与飞剑情笺 ================= */
+var MALE_LETTERS = {
+  master: {
+    letter: '「见字如面。为师昨夜入定，神游太虚，入目所及却尽是你在落英峰练剑的身影。修道万载，本以为心若枯井止水，却不想情丝一旦缠绕，便再难自拔。天冷风急，记得披上为师为你炼制的云鹤披风。」',
+    replies: ['「师尊，徒儿今夜便去落英峰陪您烹雪煮茶。」', '将亲手绣制的同心剑穗寄还师尊']
+  },
+  guard: {
+    letter: '「小姐，属下昨夜在巡夜时，见后山月色极美，便用短刃折了一枝不染凡尘的冰晶雪莲放在您门前。属下嘴笨，不知如何讨小姐欢心，唯有这把剑、这条命，永生永世皆由小姐差遣。」',
+    replies: ['推开门拉他进屋，替他捂暖冰凉的手', '「傻无咎，往后只准做我的夫君，不许叫小姐。」']
+  },
+  demon: {
+    letter: '「本尊向来随心所欲，天下人惧我如恶鬼。可只要你蹙一蹙眉头，本尊便觉得这万载魔域、万里江山都不及你一笑。听闻你近来种植仙草辛苦，魔宫七十二洞天灵脉本尊已替你圈下，随你差遣！」',
+    replies: ['「堂堂魔尊，怎的在信里这般黏人？」', '约他明夜在魔渊断崖共饮千日醉']
+  },
+  prince: {
+    letter: '「阿音，今日内阁议事，诸臣吵得不可开交，孤只觉得烦闷至极。唯有展开你昔日赠我的香囊，嗅到那一抹淡淡药香，心神才得以宁静。待孤扫平朝野党争，便以九龙仪仗迎你入主东宫。」',
+    replies: ['「朝堂险恶，殿下多加保重身子。」', '为他寄去安神益气的亲手炼制灵膏']
+  },
+  doctor: {
+    letter: '「师妹，今晨药王谷晨露初结，我为你采了七朵带露的九叶紫芝。近来听闻你潜心丹道，莫要熬坏了双眼。若是疲惫了，随时唤师兄过来替你推拿按揉穴位。」',
+    replies: ['倚在师兄怀里任由他替自己捏肩舒络', '「师兄煎的药膳，最合我的胃口。」']
+  },
+  merchant: {
+    letter: '「大当家！海外鲛人国刚送来一批万年冰蚕丝与东海明珠，我连夜让人扣下全给你送去洞府铺地！只要仙子高兴，别说灵石，便是这万宝楼的整座金山银山，沈某也双手奉上！」',
+    replies: ['「沈大少爷，有钱也不是这么挥霍的~」', '请他来仙阁一同品尝新酿的百花灵酒']
+  },
+  buddha: {
+    letter: '「阿弥陀佛。贫僧面壁三十载，本以为佛法无边，能度一切苦厄。直至在菩提树下遇见女施主……袈裟染了红尘香，贫僧方知，你便是我此生渡不过的劫，亦是我甘愿沉沦的道。」',
+    replies: ['伸手抚上佛子眉心朱砂，低语相伴', '「圣僧，红尘万丈，随我走吧。」']
+  },
+  sword: {
+    letter: '「小爷我今天又在论剑台打趴了三个大派首徒，无趣得很！你什么时候有空出关？小爷刚猎了一只肥美的雪玉灵兔，就等你出关一起在后山烤着吃呢！不许找那个清冷师尊，只准找小爷！」',
+    replies: ['笑着揉乱少年的碎发去后山野餐', '「好，今天依你，尝尝你的烤兔手艺。」']
+  }
+};
+
+function openRomanticDate(id){
+  closeModal();
+  var m = MALE_LEADS.find(function(x){return x.id===id;});
+  if(!m) return;
+  var sp = G.spouseList.find(function(x){return x.id===id;});
+  var aff = sp ? (sp.aff||80) : ((G.flags&&G.flags['aff_'+id])||40);
+  
+  var dateScenes = {
+    master: {title:'落英水榭 · 抚琴烹雪', text:'月色溶溶，白衣师尊顾长生坐在紫竹水榭前，修长指尖抚动古琴，琴音温润如泉。<br><br>见你到来，他眸底冰雪尽化为春水，轻轻拉你坐于身侧，握住你的手带你在琴弦上抚过一曲高山流水：「为师心意，尽在此曲中。」'},
+    guard: {title:'星汉灿烂 · 屋脊并肩', text:'黑夜清凉，赵无咎默默抱着重剑守在你身旁，脱下还带着他体温的玄甲披风披在你肩头。<br><br>少年脸颊微红，低低道：「属下嘴笨不会说话……但只要小姐抬头，属下永远在您一步之内。」'},
+    demon: {title:'万妖绝巅 · 红罗暖帐', text:'夜幽冥斜倚在黑玉王座之上，身后是浩瀚魔界星穹。见你走近，他伸手一把将你揽入怀中，低笑灼热：<br><br>「小仙女，这九天十地哪怕全烧成灰烬，本尊这怀抱，也永远只留给你一人避风。」'},
+    prince: {title:'王府画舫 · 烟波对饮', text:'画舫划过潋滟碧波，太子萧景煜亲自为你剥开一颗晶莹灵荔枝送到你唇边，眼神专注深情：<br><br>「万千繁华孤见得多了，唯有与你在这江上泛舟的片刻，孤才觉得自己是个活生生的人。」'},
+    doctor: {title:'百草药庐 · 温汤揉肩', text:'苏念卿为你调配了一池温润的百草灵泉，白雾蒸腾中，他轻柔地替你按揉酸痛的肩颈穴位，声音温柔治愈：<br><br>「修仙逆天而行，莫把所有担子都压在自己肩上，一切有师兄在呢。」'},
+    merchant: {title:'万宝天阁 · 烟火九洲', text:'沈万金打了个响指，整座浮空仙城瞬间千万盏九彩琉璃孔明灯升空，照亮了你的眼眸。沈大少爷得意又宠溺地望着你：<br><br>「怎么样？千金买仙子一笑，本少爷这笔买卖，做得很值吧？」'},
+    buddha: {title:'菩提树下 · 梵音红线', text:'无尘佛子双手合十，手中却缠绕着一根娇艳红线。他低垂佛眸，将红线另一端轻轻系在你的纤细皓腕上，嗓音微颤：<br><br>「宁负如来……不负卿。往后三千大千世界，贫僧愿做女施主的护法侍从。」'},
+    sword: {title:'后山崖坪 · 少年欢歌', text:'剑痴少年萧云澜席地而坐，正喜滋滋地翻烤着滋滋冒油的灵兽肉。他擦了把脸上的炭灰，把最嫩的一块递到你嘴边：<br><br>「快尝尝！小爷跑了三座仙山才猎到的！只要你喜欢，小爷天天给你打野味！」'}
+  };
+
+  var sc = dateScenes[id] || {title:'花前月下', text:'你与意中人携手漫步在云霞之间，情意绵绵。'};
+  var html = '<div class="story-panel"><div class="story-title">💕 '+m.name+' · '+sc.title+'</div>'+
+    '<div class="story-text" style="line-height:1.7;">'+sc.text+'</div></div>'+
+    '<div class="story-choices">'+
+    '<button class="story-choice" onclick="doFinishDate(&apos;'+id+'&apos;)">十指相扣，静享温存时光（心境+15，好感+8）</button>'+
+    '<button class="story-choice" onclick="closeModal()">依依惜别</button></div>';
+  openModal('【仙侣温情 · '+m.name+'】', html);
+}
+
+function doFinishDate(id){
+  closeModal();
+  var sp = G.spouseList.find(function(x){return x.id===id;});
+  if(sp){ sp.aff = cl((sp.aff||80) + 8); }
+  else { G.flags['aff_'+id] = cl(((G.flags&&G.flags['aff_'+id])||40) + 8); }
+  G.mind = cl(G.mind + 15);
+  var mLead = MALE_LEADS.find(function(x){return x.id===id;}); addLog('💕 你与【'+(mLead?mLead.name:id)+'】度过了一段温馨浪漫的二人时光，道心欢悦，情深意笃。', 'pink');
+  render(); autoSave();
+}
+
+function openLoveLetter(id){
+  closeModal();
+  var m = MALE_LEADS.find(function(x){return x.id===id;});
+  if(!m) return;
+  var lData = MALE_LETTERS[id] || {letter:'「展信舒颜。修仙路长，甚是念卿。」', replies:['亲笔回信传情']};
+  
+  var html = '<div class="story-panel" style="background:#fffcf7;border:1px solid #d4b595;padding:14px;box-shadow:inset 0 0 12px rgba(180,140,100,0.15);">'+
+    '<div class="story-title" style="color:#8a4358;border-bottom:1px solid #ecc9d4;padding-bottom:6px;">💌 来自【'+m.name+'】的飞剑传书</div>'+
+    '<div class="story-text" style="font-family:serif;font-size:13px;color:#4a323a;line-height:1.8;padding:8px 0;">'+lData.letter+'</div>'+
+    '</div><div class="story-choices" style="margin-top:10px;">';
+  for(var ri=0; ri<lData.replies.length; ri++){
+    html += '<button class="story-choice" onclick="doSendLetterReply(&apos;'+id+'&apos;, '+ri+')">✍️ 回复：'+lData.replies[ri]+'</button>';
+  }
+  html += '<button class="story-choice" onclick="closeModal()">珍藏信笺</button></div>';
+  openModal('💌 飞剑情笺', html);
+}
+
+function doSendLetterReply(id, replyIdx){
+  closeModal();
+  var m = MALE_LEADS.find(function(x){return x.id===id;});
+  var sp = G.spouseList.find(function(x){return x.id===id;});
+  if(sp){ sp.aff = cl((sp.aff||80) + 10); }
+  else { G.flags['aff_'+id] = cl(((G.flags&&G.flags['aff_'+id])||40) + 10); }
+  G.mind = cl(G.mind + 10);
+  addLog('💌 你挥笔写下深情回笺，系在青鸾赤羽之上飞向远方。收到回信的【'+(m?m.name:id)+'】好感大涨！', 'pink');
+  toast('情书已寄出');
+  render(); autoSave();
+}
+
+
+/* ================= 本命法宝与功法绝学中枢 ================= */
+function openEquipModal(){
+  var eq = G.equip || {};
+  var w = eq.weapon || {name:'无', power:0, desc:''};
+  var a = eq.armor || {name:'无', power:0, def:0, desc:''};
+  var t = eq.treasure || {name:'无', power:0, desc:''};
+
+  var html = '<div class="story-panel"><div class="story-title">🗡️ 仙子本命法宝与护道行囊</div>'+
+    '<div class="story-text">'+
+    '<p><b>本命神兵：</b><span style="color:#8a4358;font-weight:bold;">'+w.name+'</span> ('+w.grade+') · 法力+'+w.power+'<br><small style="color:#78585e;">'+w.desc+'</small></p>'+
+    '<p><b>护道法衣：</b><span style="color:#8a4358;font-weight:bold;">'+a.name+'</span> ('+a.grade+') · 法力+'+a.power+' 防御雷抗+'+(a.def||0)+'<br><small style="color:#78585e;">'+a.desc+'</small></p>'+
+    '<p><b>护身异宝：</b><span style="color:#8a4358;font-weight:bold;">'+t.name+'</span> ('+t.grade+') · 法力+'+t.power+'<br><small style="color:#78585e;">'+t.desc+'</small></p>'+
+    '</div></div>'+
+    '<div class="story-panel"><div class="story-title">📜 参悟功法心经</div>'+
+    '<div class="story-text">'+
+    '<p>当前运转核心功法：<b>《青莲吐纳真经》</b>（每旬吐纳收益+30%，渡劫护体）</p>'+
+    '</div></div>'+
+    '<div class="story-choices">'+
+    '<button class="story-choice" onclick="doUpgradeEquip(&apos;weapon&apos;)">⚡ 消耗 1500灵石 熔铸强化【本命飞剑】（法力+30）</button>'+
+    '<button class="story-choice" onclick="doUpgradeEquip(&apos;armor&apos;)">🛡️ 消耗 1500灵石 淬炼铭刻【护身法衣】（防御雷抗+15）</button>'+
+    '<button class="story-choice" onclick="closeModal()">返回洞府</button></div>';
+  openModal('🗡️ 本命神兵与功法宝库', html);
+}
+
+function doUpgradeEquip(type){
+  closeModal();
+  if(G.stones < 1500){ toast('灵石不足1500'); return; }
+  G.stones -= 1500;
+  if(type === 'weapon'){
+    G.equip.weapon.power += 30;
+    G.power += 30;
+    addLog('⚡ 你引地火精华淬炼本命飞剑，剑锋寒芒闪烁，杀意滔天！（本命神兵法力+30）','gold');
+  } else {
+    G.equip.armor.def = (G.equip.armor.def||0) + 15;
+    G.equip.armor.power += 15;
+    G.power += 15;
+    addLog('🛡️ 护道法衣被镀上一层太阴金纹，防御雷抗暴涨！（法衣雷抗+15）','gd');
+  }
+  render();autoSave();
+}
+
+/* ================= 寻父宿命录全流程追踪 ================= */
+function openFatherQuestModal(){
+  var q = G.mysteryQuest;
+  var title = '📜 寻父主线宿命录';
+  var statusTxt = '';
+  var btnTxt = '';
+  var fnStr = '';
+
+  if(q === 0){
+    statusTxt = '<b>阶段一：母亲妆匣里的断玉</b><br><br>你与娘亲相依为命，自幼未见生父。传闻父亲当年留下了一枚神秘暖玉后便孤身引走强敌……<br><br><span style="color:#c4426f;">目标：前往静室【照料孝敬娘亲】向娘亲问安打探，或在【秘境探险】中寻获残玉！</span>';
+    btnTxt = '🍵 向娘亲请安并询问身世';
+    fnStr = 'doMomAskFather()';
+  } else if(q === 1){
+    statusTxt = '<b>阶段二：天机阁的古老秘辛</b><br><br>握着掌心滚烫的凤凰暖玉，娘亲告知此玉乃帝尊信物。南域天机阁藏有九洲三千年的仙魔秘史。<br><br><span style="color:#c4426f;">目标：修为达到【筑基期】以上，前往九洲天机阁解密身世！</span>';
+    btnTxt = (G.realm >= 1 ? '✨ 携残玉登上天机阁请神卦推演' : '修为不足筑基期（当前'+REALMS[G.realm].name+'）');
+    fnStr = (G.realm >= 1 ? 'triggerFatherStage(2)' : 'closeModal()');
+  } else if(q === 2){
+    statusTxt = '<b>阶段三：万魔深渊与封印古阵</b><br><br>天机阁揭晓：你的生父竟是九重天阙的纯阳仙帝！当年大战被魔尊设阵封印于九幽最深处的寒潭血渊中！<br><br><span style="color:#c4426f;">目标：修为达到【金丹期】以上，深入九幽深渊古阵！</span>';
+    btnTxt = (G.realm >= 2 ? '⚔️ 踏入九幽深渊，寻访封印石阵' : '修为不足金丹期（当前'+REALMS[G.realm].name+'）');
+    fnStr = (G.realm >= 2 ? 'triggerFatherStage(3)' : 'closeModal()');
+  } else if(q === 3){
+    statusTxt = '<b>阶段四：破阵斩断天阶锁仙链</b><br><br>九幽深渊下，九道天魔锁链贯穿了父亲的神躯！两枚凤凰神玉共鸣爆发出万道金芒！<br><br><span style="color:#c4426f;">目标：修为达到【元婴期】以上，斩断魔链迎回父亲！</span>';
+    btnTxt = (G.realm >= 3 ? '⚡ 运转通天剑意与法宝，斩断九幽魔链！' : '修为不足元婴期（当前'+REALMS[G.realm].name+'）');
+    fnStr = (G.realm >= 3 ? 'triggerFatherStage(4)' : 'closeModal()');
+  } else {
+    statusTxt = '<b>阶段五：一家团圆 · 纯阳仙尊归位（大圆满）</b><br><br>父亲已驱散体内魔咒，重归纯阳仙帝神格，每日亲自为女儿传道灌顶！母亲安康长生，仙府坐拥极品仙脉，万仙来朝！';
+    btnTxt = '🎉 仙帝反哺，天伦永驻';
+    fnStr = 'closeModal()';
+  }
+
+  var html = '<div class="story-panel"><div class="story-title">'+title+'</div>'+
+    '<div class="story-text" style="line-height:1.8;">'+statusTxt+'</div></div>'+
+    '<div class="story-choices">'+
+    '<button class="story-choice" onclick="'+fnStr+'">'+btnTxt+'</button>'+
+    '<button class="story-choice" onclick="closeModal()">返回</button></div>';
+  openModal('📜 寻父宿命录', html);
+}
+
 </script>
 </body>
 </html>

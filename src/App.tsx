@@ -36,7 +36,7 @@ import {
 } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'showcase' | 'play_gaomen' | 'play_xiuxian' | 'overview' | 'market' | 'sandbox'>('showcase');
+  const [activeTab, setActiveTab] = useState<'showcase' | 'play_gaomen' | 'play_xiuxian' | 'play_shelter' | 'overview' | 'market' | 'sandbox'>('showcase');
   const [deviceFrame, setDeviceFrame] = useState<'desktop' | 'mobile'>('desktop');
   const [keyRefresh, setKeyRefresh] = useState(0);
   const [copied, setCopied] = useState(false);
@@ -45,6 +45,7 @@ export default function App() {
   const xiuxianUrl = '/xiuxian_female.html';
   const binjiangDeluxeUrl = '/binjiang.html';
   const tianyuanUrl = '/assets/aistudio/tianyuan_cae35171.html';
+  const shelterUrl = '/shelter.html';
 
   const downloadFile = (url: string, filename: string) => {
     const a = document.createElement('a');
@@ -66,7 +67,8 @@ export default function App() {
       { url: gaomenUrl, name: '古代世家_高门主母掌家录.html' },
       { url: xiuxianUrl, name: '云霄仙府_修真经营录.html' },
       { url: binjiangDeluxeUrl, name: '滨江市_打工人生豪华版.html' },
-      { url: tianyuanUrl, name: '桃花村_田园经营录.html' }
+      { url: tianyuanUrl, name: '桃花村_田园经营录.html' },
+      { url: shelterUrl, name: '方舟纪元_废土避难所经营录.html' }
     ];
     games.forEach((g, i) => {
       setTimeout(() => downloadFile(g.url, g.name), i * 350);
@@ -132,6 +134,17 @@ export default function App() {
           >
             <Flame className="w-3.5 h-3.5" />
             🌸 《修真经营录》试玩
+          </button>
+          <button
+            onClick={() => setActiveTab('play_shelter')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === 'play_shelter'
+                ? 'bg-gradient-to-r from-amber-600 to-emerald-600 text-white shadow-lg shadow-amber-600/20 font-bold'
+                : 'text-amber-300 hover:text-amber-100 hover:bg-slate-900'
+            }`}
+          >
+            <ShieldCheck className="w-3.5 h-3.5" />
+            🛡️ 《废土避难所》试玩
           </button>
           <button
             onClick={() => setActiveTab('overview')}
@@ -481,6 +494,64 @@ export default function App() {
                     </div>
                   </div>
                 </div>
+
+                {/* 5. 方舟纪元 · 废土避难所 */}
+                <div className="rounded-2xl border border-amber-500/40 bg-gradient-to-b from-slate-900/95 via-amber-950/20 to-slate-900/90 p-6 flex flex-col justify-between space-y-4 hover:border-amber-400/60 transition shadow-xl group">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-10 h-10 rounded-xl bg-amber-900/40 border border-amber-500/40 flex items-center justify-center text-amber-300">
+                          <ShieldCheck className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-lg text-white group-hover:text-amber-300 transition">
+                            方舟纪元 · 废土避难所经营录
+                          </h4>
+                          <span className="text-xs text-slate-400 font-mono">public/shelter.html (58 KB)</span>
+                        </div>
+                      </div>
+                      <span className="text-xs px-2.5 py-1 rounded-md bg-amber-950/60 text-amber-300 border border-amber-800 font-medium">
+                        末日废土
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      废土绝境中的希望灯塔：管理第101号地下避难所，水培温室种植抗辐射番茄，机械工坊检修柴油发电机组；收容机械少女安娜、退役老军医陈大夫、荒野猎人雷诺与遗孤小妹妹小朵；抚摸忠犬黑子治愈疲惫，搜寻废弃超市医院，在长波电台搜寻人类文明火种，挺过严酷核冬与尸潮！
+                    </p>
+
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">水培温室自给</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">忠犬黑子温情陪伴</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">调频电台与商队</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700/60">四大希望终局</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-3">
+                    <button
+                      onClick={() => setActiveTab('play_shelter')}
+                      className="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md shadow-amber-600/30 transition"
+                    >
+                      <Play className="w-3.5 h-3.5 fill-white" /> 在线试玩
+                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => downloadFile(shelterUrl, '方舟纪元_废土避难所经营录.html')}
+                        className="px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1 transition"
+                      >
+                        <Download className="w-3.5 h-3.5 text-amber-400" /> 下载 HTML
+                      </button>
+                      <a
+                        href={shelterUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="px-3 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-400 hover:text-white text-xs flex items-center gap-1 transition"
+                      >
+                        全屏 ↗
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -725,7 +796,90 @@ export default function App() {
           </div>
         )}
 
-        {/* ================= 3. 三大作精细化横评 ================= */}
+        {/* ================= 2.5 废土避难所试玩 ================= */}
+        {activeTab === 'play_shelter' && (
+          <div className="space-y-6">
+            <div className="rounded-2xl border border-amber-500/40 bg-gradient-to-r from-slate-900 via-amber-950/20 to-slate-900 p-6 lg:p-8">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                <div className="space-y-3 max-w-3xl">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold">
+                      🛡️ 末日绝境 · 希望营地与避难所经营大作
+                    </span>
+                    <span className="text-xs text-slate-400 font-mono">public/shelter.html (58 KB 纯原生单文件)</span>
+                  </div>
+                  <h2 className="text-2xl font-black text-amber-200">《方舟纪元 · 废土避难所经营录》</h2>
+                  <p className="text-xs text-slate-300 leading-relaxed">
+                    专为末日生存与家园模拟打造的纯原生单文件经营大作：<strong>率领幸存者建设第101号避难所；水培温室种植抗辐射番茄，后厨围炉熬煮肉汤，工坊检修柴油发电机；四位个性鲜明的同伴与忠犬黑子温情陪伴；深入废弃商厦与医院搜荒，调频电台联络八方商队与难民，挺过极寒严冬，铸就四大希望终局！</strong>
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={() => downloadFile(shelterUrl, '方舟纪元_废土避难所经营录.html')}
+                    className="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-600 to-emerald-600 hover:from-amber-500 hover:to-emerald-500 text-white text-xs font-bold flex items-center gap-2 shadow-lg shadow-amber-600/30 transition transform hover:-translate-y-0.5"
+                  >
+                    📥 一键下载《废土避难所》HTML
+                  </button>
+                  <a
+                    href={shelterUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition"
+                  >
+                    新窗口全屏畅玩 <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* 真机试玩视口 */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-400 font-medium">视口切换：</span>
+                  <button
+                    onClick={() => setDeviceFrame('desktop')}
+                    className={`px-2.5 py-1 text-xs rounded-md transition ${deviceFrame==='desktop'?'bg-amber-600 text-white font-semibold':'text-slate-400 hover:text-slate-200'}`}
+                  >
+                    全屏大视口
+                  </button>
+                  <button
+                    onClick={() => setDeviceFrame('mobile')}
+                    className={`px-2.5 py-1 text-xs rounded-md flex items-center gap-1 transition ${deviceFrame==='mobile'?'bg-amber-600 text-white font-semibold':'text-slate-400 hover:text-slate-200'}`}
+                  >
+                    <Smartphone className="w-3.5 h-3.5" /> 手机竖屏框
+                  </button>
+                </div>
+                <button
+                  onClick={() => setKeyRefresh(prev => prev + 1)}
+                  className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 flex items-center gap-1 transition"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" /> 重启避难所
+                </button>
+              </div>
+
+              <div className="bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center p-2 min-h-[660px]">
+                <div
+                  className={`transition-all duration-300 overflow-hidden rounded-lg shadow-2xl ${
+                    deviceFrame === 'mobile'
+                      ? 'w-[375px] h-[680px] border-4 border-slate-700'
+                      : 'w-full h-[650px]'
+                  }`}
+                >
+                  <iframe
+                    key={`sh-${keyRefresh}`}
+                    src={shelterUrl}
+                    title="废土避难所"
+                    className="w-full h-full border-0 bg-slate-950"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ================= 3. 多作精细化横评 ================= */}
         {activeTab === 'overview' && (
           <div className="space-y-8">
             <div className="rounded-2xl border border-slate-800 bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-slate-950 p-6 lg:p-8 space-y-4">

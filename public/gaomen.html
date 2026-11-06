@@ -824,6 +824,14 @@ function renderPageContent(){
           '</div>'+
         '</div></div>';
     }
+    html += '<div style="font-weight:700;font-size:12.5px;margin:12px 0 6px;color:#7e1f34;display:flex;align-items:center;gap:6px;">'+
+      '🌸 后花园雅趣与闺阁手作：</div>';
+    html += '<div class="acts-grid" style="margin-bottom:10px;">';
+    html += createActCard('🍲', '后花园 · 四时雅趣小膳房', '采荷蒸糕、春酿桃花酒、冬烹雪水煎茶，呈奉夫君与老太君', 1, 'actSeasonalLeisure()');
+    html += createActCard('🪡', '锦绣百宝 · 闺阁女红绣房', '飞针走线绣同心囊、缝玄狐大氅、纳百衲长命锁与寿字抹额', 1, 'actEmbroidery()');
+    html += createActCard('🐱', '御赐波斯异瞳白狮猫「雪球」', '抱膝揉毛顺毛呼噜、赏赐银鱼羹、花园打滚衔回奇珍信物', 1, 'actPetCat()');
+    html += '</div>';
+
     el.innerHTML = html;
   }
   else if(p === 'finance'){
@@ -872,6 +880,7 @@ function renderPageContent(){
           '<div class="card-body">根骨悟性：<b>'+ch.talent+'</b> '+(ch.married?'(已配世家贵戚)':'(待字/议亲中)')+'</div>'+
           '<div class="card-acts">'+
             '<button class="main-btn secondary" style="padding:3px 10px;font-size:11.5px;" onclick="actChildExam('+k+')">考问功课经义</button>'+
+            '<button class="main-btn" style="padding:3px 10px;font-size:11.5px;background:#4f46e5;" onclick="actTutorChild('+k+')">膝前伴读讲古</button>'+
             (!ch.married && ch.age>=14 ? '<button class="main-btn gold" style="padding:3px 10px;font-size:11.5px;" onclick="actChildMatch('+k+')">京城名门择亲结发</button>' : '')+
           '</div>'+
         '</div></div>';
@@ -1730,6 +1739,167 @@ window.onload = function(){
   render();
   setMobileView('main');
 };
+
+/* ================= 8. 后花园四时雅趣小膳房手作 ================= */
+function actSeasonalLeisure(){
+  if(!useEnergy(1)) return;
+  var sName = SEASONS[Math.floor((G.month-1)/3)%4];
+  var foodList = {
+    '春': {name:'桃花醉与酥皮百花香糕', desc:'清晨带丫鬟在后花园采摘初绽桃花，汲取朝露，酿制清冽醇甘的桃花春酿，蒸出芬芳酥皮花糕。'},
+    '夏': {name:'酥酪冰碗与碧筒荷花酥', desc:'炎夏取冰窖藏冰，覆以鲜酪、糖渍莲子、蜜桃与西瓜丁，巧制层层如莲花初绽的粉白酥点。'},
+    '秋': {name:'金桂冬酿与糖渍板栗羹', desc:'金秋折下满树浓香金桂，佐以糯米蜜糖酿出桂香老酒，细火慢熬软糯甜香的板栗银耳甜羹。'},
+    '冬': {name:'红梅烹雪松针茶与暖胃羊肉煲', desc:'折取红梅花瓣上的未融新雪，在红泥小火炉上煮沸，冲泡极品古树松针茶，满室清冽茶香。'}
+  };
+  var f = foodList[sName] || foodList['春'];
+
+  var html = '<div class="story-panel"><div class="story-title">🍲 四时雅趣 · 【'+f.name+'】</div>'+
+    '<div class="story-text" style="font-size:12.5px;color:#4a323a;line-height:1.7;">'+
+    f.desc+'<br><br>'+
+    '精巧点心与温热美酒装入紫檀雕花食盒中，香气四溢。大娘子打算如何发落这份手作？'+
+    '</div></div>'+
+    '<div class="story-choices" style="display:flex;flex-direction:column;gap:8px;">'+
+    '<button class="story-choice" onclick="deliverSeasonalFood(\'husband\')">🏮 亲提食盒赴外书房探视夫君（红袖添香，夫妻情分+10，夫君欣慰回馈）</button>'+
+    '<button class="story-choice" onclick="deliverSeasonalFood(\'mother\')">堂 呈奉寿安堂给婆母请安品尝（孝悌感人，老太君慈心+10，赏赐珍宝）</button>'+
+    '<button class="story-choice" onclick="deliverSeasonalFood(\'harem\')">🌸 传令分赐内宅姬妾与各房哥儿姐儿（主母恩威并施，人心归附，威仪+6）</button>'+
+    '<button class="story-choice" onclick="deliverSeasonalFood(\'self\')">🍵 留于正房自赏品尝，静养身心（精力恢复+2，主母怡然自得）</button>'+
+    '</div>';
+  openModal('🍲 小膳房 · 四时雅趣手作', html);
+}
+
+function deliverSeasonalFood(target){
+  closeModal();
+  if(target === 'husband'){
+    G.husbandAff = cl(G.husbandAff + 10);
+    G.silver += 100;
+    addLog('🍲 你携温热手作亲赴外书房。沈砚之放下手中公文，握住你的柔荑动容感叹：「得妻如此，砚之在外何惧艰险！」情分+10，夫君私库转入公中100两。', 'gold', '夫妻深情');
+    toast('侯爷深感大娘子体贴柔情');
+  } else if(target === 'mother'){
+    G.motherAff = cl(G.motherAff + 10);
+    G.privateSilver += 150;
+    addLog('堂 寿安堂老太君尝了你亲制的手作，眉开眼笑赞不绝口：「我定远侯府娶了锦仪，真是阖府的大福气！」慈心+10，老夫人当场赏赐南海珍珠手串（私房+150两）。', 'pink', '婆媳融洽');
+    toast('老太君笑逐颜开');
+  } else if(target === 'harem'){
+    G.prestige = cl(G.prestige + 6);
+    for(var i=0; i<G.concubines.length; i++){
+      G.concubines[i].obedient = cl(G.concubines[i].obedient + 8);
+    }
+    addLog('🌸 各房姨娘与哥儿姐儿领了大娘子赏赐的精致茶点，感念主母恩德，纷纷到阶前叩首谢恩。主母威仪+6，各房规矩整饬！', 'green', '恩威并施');
+    toast('后宅妾室恭顺心服');
+  } else {
+    G.energy = Math.min(G.maxEnergy, G.energy + 2);
+    G.prestige = cl(G.prestige + 2);
+    addLog('🍵 你在临窗软榻上闲坐品尝，茶香温润，心旷神怡，浑身倦意一扫而空。（精力当前+2）', '', '雅趣修心');
+    toast('身心舒泰');
+  }
+  render();
+}
+
+/* ================= 9. 锦绣百宝 · 闺阁女红绣房 ================= */
+function actEmbroidery(){
+  var html = '<div class="story-panel"><div class="story-title">🪡 锦绣百宝 · 穿针引线</div>'+
+    '<div class="story-text" style="font-size:12.5px;color:#4a323a;line-height:1.7;">'+
+    '大娘子自幼习得一手出神入化的金陵苏绣绝技，飞针走线如行云流水。请选择本次缝制的女红珍品：'+
+    '</div></div>'+
+    '<div class="story-choices" style="display:flex;flex-direction:column;gap:8px;">'+
+    '<button class="story-choice" onclick="doCraftEmbroidery(\'pouch\')">🪡 绣【双面苏绣同心荷包】（耗嫁妆20两 · 赠夫君佩戴，夫妻情分+12，侯爷官声+5）</button>'+
+    '<button class="story-choice" onclick="doCraftEmbroidery(\'cloak\')">🧥 缝【玄狐滚边蜀锦大氅】（耗嫁妆80两 · 严冬御寒，侯爷动情落泪，夫妻情分暴涨+18）</button>'+
+    '<button class="story-choice" onclick="doCraftEmbroidery(\'lock\')">👶 纳【金线百衲长命锁肚兜】（耗嫁妆30两 · 为孩儿祈福辟邪，子嗣体质悟性+10）</button>'+
+    '<button class="story-choice" onclick="doCraftEmbroidery(\'brow\')">🧓 织【福寿绵长紫貂暖额】（耗嫁妆50两 · 赠老太君防风避寒，婆母慈心+15）</button>'+
+    '<button class="story-choice" onclick="closeModal()">暂不刺绣</button>'+
+    '</div>';
+  openModal('🪡 闺阁女红 · 锦绣百宝坊', html);
+}
+
+function doCraftEmbroidery(type){
+  closeModal();
+  if(!useEnergy(1)) return;
+  if(type === 'pouch'){
+    if(G.privateSilver < 20){ toast('嫁妆私房不足20两'); return; }
+    G.privateSilver -= 20;
+    G.husbandAff = cl(G.husbandAff + 12);
+    G.reputation = cl(G.reputation + 5);
+    addLog('🪡 你挑灯夜绣，缝制成双面绣并蒂莲同心荷包。沈砚之日日系在腰间入宫当值，同僚勋贵无不称羡侯爷娶得贤妻！（情分+12，侯府声望+5）', 'gold', '信物定情');
+  } else if(type === 'cloak'){
+    if(G.privateSilver < 80){ toast('嫁妆私房不足80两'); return; }
+    G.privateSilver -= 80;
+    G.husbandAff = cl(G.husbandAff + 18);
+    addLog('🧥 你亲选顶级玄狐皮与蜀锦缝制御寒大氅。寒风凛冽之夜，沈砚之披上大氅，紧紧将你拥入怀中，热泪盈眶：「砚之此生，绝不负夫人！」（夫妻情分暴涨+18）', 'pink', '生死契阔');
+  } else if(type === 'lock'){
+    if(G.privateSilver < 30){ toast('嫁妆私房不足30两'); return; }
+    G.privateSilver -= 30;
+    for(var k=0; k<G.children.length; k++){
+      G.children[k].talent = cl(G.children[k].talent + 8);
+    }
+    addLog('👶 你一针一线纳好百衲肚兜与金线长命锁，孩儿戴在身上福泽庇佑，少病少灾，聪敏机警！（儿女子嗣资质+8）', 'green', '母爱深沉');
+  } else if(type === 'brow'){
+    if(G.privateSilver < 50){ toast('嫁妆私房不足50两'); return; }
+    G.privateSilver -= 50;
+    G.motherAff = cl(G.motherAff + 15);
+    addLog('🧓 你绣了万寿金莲紫貂抹额送去寿安堂。老夫人戴在头上倍感温热舒坦，拉着你的手不住落泪，直夸比亲生女儿还要贴心！（老太君慈心+15）', 'pink', '至孝大义');
+  }
+  render();
+}
+
+/* ================= 10. 御赐异瞳白狮子猫「雪球」互动 ================= */
+function actPetCat(){
+  if(!useEnergy(1)) return;
+  var html = '<div class="story-panel"><div class="story-title">🐱 庭院灵宠 · 御赐波斯异瞳白狮猫「雪球」</div>'+
+    '<div class="story-text" style="font-size:12.5px;color:#4a323a;line-height:1.7;">'+
+    '宫中贵妃姑母御赐的纯白长毛狮子猫「雪球」，一蓝一金两只琉璃般的眼睛晶莹剔透。<br>'+
+    '见大娘子步入内院，它踩着无声的肉垫轻巧跃上绣榻，软乎乎的身子蹭着你的罗裙，发出惬意的呼噜呼噜声。'+
+    '</div></div>'+
+    '<div class="story-choices" style="display:flex;flex-direction:column;gap:8px;">'+
+    '<button class="story-choice" onclick="doCatAction(\'cuddle\')">💆 抱入怀中顺毛抚摸（听雪球踩奶呼噜，疲劳尽消，精力当前+1）</button>'+
+    '<button class="story-choice" onclick="doCatAction(\'feed\')">🐟 赏赐小膳房秘制银鱼羹（雪球吃得心花怒放，满地打滚求贴贴）</button>'+
+    '<button class="story-choice" onclick="doCatAction(\'hunt\')">🐾 放它后花园捕蝶扑花（雪球钻入太湖石丛，衔回奇珍信物！）</button>'+
+    '</div>';
+  openModal('🐱 御赐白狮猫 · 雪球日常', html);
+}
+
+function doCatAction(act){
+  closeModal();
+  if(act === 'cuddle'){
+    G.energy = Math.min(G.maxEnergy, G.energy + 1);
+    G.prestige = cl(G.prestige + 2);
+    addLog('🐱 你将雪球搂在怀里，雪白温热的长毛蓬松柔软。听着它呼噜呼噜在你手腕上踩奶，平日掌家的雷霆严肃全化为了如水温柔。（精力+1，身心治愈）', 'pink', '白猫温存');
+    toast('被雪球治愈了');
+  } else if(act === 'feed'){
+    G.silver = Math.max(0, G.silver - 10);
+    addLog('🐟 丫鬟端上一小盏香气喷喷的鲜蒸银鱼羹。雪球吧唧吧唧舔得干干净净，吃完仰面翻开粉色肚皮打滚，逗得满屋丫鬟欢笑一堂。', 'green', '庭院趣闻');
+    toast('雪球吃得超开心');
+  } else {
+    var gifts = [
+      {desc:'雪球从太湖石假山缝隙里衔出一只旧年丢失的【金累丝嵌红宝石蝴蝶簪】，擦拭后光彩照人！（私房+120两）', fn:function(){ G.privateSilver += 120; }},
+      {desc:'雪球在草丛里扑出一只藏有密信的油纸包，竟是表妹柳纤纤写给外头书生的诉苦信！主母执掌铁证，威仪+8！', fn:function(){ G.prestige = cl(G.prestige + 8); }},
+      {desc:'雪球叼回一朵盛放的极品并蒂红梅，放在你的绣鞋边喵喵叫，可爱至极。', fn:function(){ G.reputation = cl(G.reputation + 3); }}
+    ];
+    var g = gifts[Math.floor(Math.random()*gifts.length)];
+    g.fn();
+    addLog('🐾 雪球摇着毛茸茸的大尾巴钻入花丛扑蝶捉雀。片刻后：'+g.desc, 'gold', '白猫衔宝');
+    toast('雪球立了大功');
+  }
+  render();
+}
+
+/* ================= 11. 世家儿女 · 膝前伴读描红与慈母讲古 ================= */
+function actTutorChild(k){
+  var ch = G.children[k];
+  if(!ch) return;
+  if(!useEnergy(1)) return;
+  
+  ch.talent = cl(ch.talent + 10);
+  G.prestige = cl(G.prestige + 4);
+  var talks = [
+    '你在案前握着'+ch.name+'稚嫩的小手，一笔一划在雪浪宣纸上描红大字「天地玄黄，修身齐家」。孩子仰起通红的小脸：「母亲，孩儿长大也要像父亲一样做顶天立地的大丈夫，孝敬母亲！」',
+    '夜幕降临，窗外雨打芭蕉。你坐在床榻前为'+ch.name+'掖紧锦被，轻声讲述金陵先祖力挽狂澜的忠烈往事。孩子听得眼神明亮，握紧了小拳头暗下奋发之誓。',
+    '你亲自端来温热的核桃益智羹喂给'+ch.name+'，细细纠正TA读书时的坐姿与吐字。母子连心，脉脉温情流淌在书房烛光之中。'
+  ];
+  var txt = talks[Math.floor(Math.random()*talks.length)];
+  addLog('📖 【膝前伴读】'+txt+'（'+ch.name+'悟性+10，主母威仪+4）', 'gold', '慈母训导');
+  toast('伴读温情 · 子嗣勤勉成材');
+  render();
+}
+
 </script>
 </body>
 </html>

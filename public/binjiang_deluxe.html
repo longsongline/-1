@@ -455,6 +455,9 @@ function newGame(){
     indName:'互联网',indMult:1.15,onProbation:0,salaryPenalty:1,
     children:[],pregnant:false,
     fund:0,ins:false,fixed:0,pet:null,
+    homeDecors:[], // 已购买的治愈软装
+    parentParcels:1, // 待拆的老家包裹
+    hometownAff:75,
     me:{name:'小滨',age:24,health:85,mood:75,ability:35},
     parents:{health:85,alive:true},parentsLive:false,
     spouse:null,npcs:[],flags:{},logs:[],
@@ -580,11 +583,13 @@ var ACTS={
     render();}},
   cleanHome:{ic:'🧹',t1:'大扫除',t2:'心情+6 · 消耗1精力',costMoney:0,costAct:1,page:'home',run:function(){
     G.me.mood=cl(G.me.mood+6);addLog('🧹 屋里窗明几净，收拾整齐后心情也变得明朗。','gd');useEnergy(1);}},
-  adoptPet:{ic:'🐾',t1:'领养宠物',t2:'花费800元 · 从此家里多个伴',costMoney:800,costAct:1,page:'home',can:function(){return !G.pet&&G.money>=800;},run:function(){openAdopt();}},
-  interactPet:{ic:'🎾',t1:'逗宠物玩',t2:'心情+10 健康+2 · 消耗1精力',costMoney:0,costAct:1,page:'home',can:function(){return !!G.pet;},run:function(){
-    G.me.mood=cl(G.me.mood+10);G.me.health=cl(G.me.health+2);
-    G.pet.love=cl(G.pet.love+8);G.pet.exp=(G.pet.exp||0)+12;
-    addLog('🎾 你陪'+G.pet.name+'玩球，它兴奋地扑进你怀里撒娇打滚。','gd');useEnergy(1);}},
+  homeDecorAct:{ic:'🛋️',t1:'温馨小家软装',t2:'免精力 · 购置暖光落日灯/地毯/投影仪/绿植',costMoney:0,costAct:0,page:'home',run:function(){
+    openHomeDecorModal();}},
+  adoptPet:{ic:'🐾',t1:'领养流浪宠物',t2:'花费800元 · 救助小生灵，从此家里多个伴',costMoney:800,costAct:1,page:'home',can:function(){return !G.pet&&G.money>=800;},run:function(){openAdopt();}},
+  interactPet:{ic:'🐱',t1:'吸宠互动 · 治愈解压',t2:'免精力 · 抚摸踩奶、喂罐头、玩耍梳毛',costMoney:0,costAct:0,page:'home',can:function(){return !!G.pet;},run:function(){
+    openPetInteractModal();}},
+  spouseDateAct:{ic:'🕯️',t1:'与伴侣烛光温存',t2:'消耗1精力 300元 · 交流心声，感情笃深',costMoney:300,costAct:1,page:'home',can:function(){return !!G.spouse;},run:function(){
+    doSpouseDate();useEnergy(1);}},
 
   /* —— 公司 —— */
   workHard:{ic:'💼',t1:'专注工作',t2:'绩效+9 能力+1 · 精力-2 健康-3 心情-2',costMoney:0,costAct:2,page:'company',can:function(){return !G.unemployed;},run:function(){
@@ -616,6 +621,17 @@ var ACTS={
     if(tgt){tgt.aff=cl(tgt.aff+10);addLog('☕ 你和'+tgt.name+'在咖啡馆度过了一个愉快的下午，好感+10。','gd');npcBeat(tgt);}
     else{addLog('☕ 你在独立咖啡馆静心品尝手冲，心情+8。','gd');tryMeet('social');}
     useEnergy(2);}},
+  /* —— 故乡与恩人亲情 —— */
+  hometownCallAct:{ic:'📞',t1:'给老家父母打电话',t2:'免精力 · 听妈妈唠叨家常，宽慰思乡之情',costMoney:0,costAct:0,page:'hometown',run:function(){
+    doHometownCall();}},
+  hometownParcelAct:{ic:'📦',t1:'拆老家寄来的大包裹',t2:'免精力 · 妈妈亲手包的手工水饺与特产腊肉',costMoney:0,costAct:0,page:'hometown',run:function(){
+    openHometownParcel();}},
+  hometownRemitAct:{ic:'🧧',t1:'向老家汇款尽孝',t2:'免精力 · 贴补家用，让老两口吃好穿暖',costMoney:0,costAct:0,page:'hometown',run:function(){
+    doHometownRemit();}},
+  hometownVisitAct:{ic:'🚄',t1:'休假回老家探亲',t2:'精力-2 耗资800元 · 围炉吃热乎家常菜，重温童年温馨',costMoney:800,costAct:2,page:'hometown',run:function(){
+    doHometownVisit();useEnergy(2);}},
+
+  /* —— 街区与社交 —— */
   libStudy:{ic:'📚',t1:'图书馆自习刷题',t2:'能力+6 心情-2 · 精力-2 免费',costMoney:0,costAct:2,page:'street',run:function(){
     G.me.ability=cl(G.me.ability+6,0,250);G.me.mood=cl(G.me.mood-2);
     addLog('📚 你在自习室研读专业前沿专著与考证习题，能力+6。','gd');
@@ -633,6 +649,8 @@ var ACTS={
   nightFood:{ic:'🍢',t1:'夜市烟火宵夜',t2:'心情+12 健康-3 · 精力-1 花费90元',costMoney:90,costAct:1,page:'street',ph:'night',run:function(){
     G.me.mood=cl(G.me.mood+12);G.me.health=cl(G.me.health-3);
     addLog('🍢 烤脑花、生蚝配冰啤酒，烟火气抚慰了一天的疲惫。心情+12。','gd');useEnergy(1);}},
+  wontonStallAct:{ic:'🥟',t1:'深夜老李柴火馄饨',t2:'精力-1 花费18元 · 浓汤暖胃，听市井长谈消解孤独',costMoney:18,costAct:1,page:'street',run:function(){
+    doWontonStall();useEnergy(1);}},
   barChill:{ic:'🍸',t1:'精酿酒吧浅酌',t2:'心情+15 · 精力-1 花费240元',costMoney:240,costAct:1,page:'street',ph:'night',run:function(){
     G.me.mood=cl(G.me.mood+15);G.me.health=cl(G.me.health-4);
     addLog('🍸 在爵士乐酒吧与老友谈天说地，微醺适度，心情+15。','gd');useEnergy(1);}},
@@ -1832,6 +1850,252 @@ function doRestart(){
 newGame();
 render();
 startGameNaming();
+
+/* ================= 温馨出租屋软装装扮系统 ================= */
+var HOME_DECOR_CATALOG = [
+  {id:'sunset_lamp', name:'暖光落日氛围灯', icon:'🌇', cost:380, desc:'下班推开门，温暖的橘黄色柔光洒满房间', bonus:'回家休息心情额外+8'},
+  {id:'plush_rug', name:'羊羔绒厚地毯与懒人沙发', icon:'🛋️', cost:850, desc:'陷在软绵绵的怀抱里，疲劳一扫而空', bonus:'每旬初额外恢复1点精力'},
+  {id:'air_fryer', name:'多功能智能空气炸锅', icon:'🍗', cost:550, desc:'自制烤鸡翅与蛋挞，下厨省时更香甜', bonus:'下厨省下外卖钱额外+150元'},
+  {id:'projector', name:'4K超清家用巨幕投影仪', icon:'🎬', cost:1900, desc:'拉上窗帘，出租屋秒变私人豪华影院', bonus:'周末影音放松心情暴增+25'},
+  {id:'green_plants', name:'阳台治愈绿植多肉花架', icon:'🪴', cost:320, desc:'生机盎然的龟背竹与多肉，给小窝注入自然呼吸', bonus:'健康度每旬自然+2'},
+  {id:'vinyl_player', name:'复古黑胶木纹唱片机', icon:'📻', cost:1300, desc:'伴着慵懒的爵士黑胶唱片，静享滨江夜色', bonus:'工作压力大幅降低，职场疲倦缓解'}
+];
+
+function openHomeDecorModal(){
+  if(!G.homeDecors) G.homeDecors = [];
+  var html = '<div class="story-panel"><div class="story-title">🛋️ 温馨小家软装设计</div>'+
+    '<div class="story-text" style="font-size:12px;color:#3b5673;">'+
+    '漂泊在滨江市，房子虽然是租来的，但生活是自己的。亲手挑选喜爱的家具软装，打造治愈疲惫的避风港。'+
+    '</div></div>';
+
+  html += '<div style="display:flex;flex-direction:column;gap:8px;max-height:270px;overflow-y:auto;">';
+  for(var i=0; i<HOME_DECOR_CATALOG.length; i++){
+    var d = HOME_DECOR_CATALOG[i];
+    var bought = G.homeDecors.indexOf(d.id) !== -1;
+    html += '<div class="biz-card" style="margin-bottom:0;padding:8px 10px;">'+
+      '<div class="biz-head"><span style="font-weight:bold;color:#1e5b99;">'+d.icon+' '+d.name+'</span>'+
+      '<span style="font-size:11px;color:'+(bought?'#4b8258':'#d9534f')+';">'+(bought?'✨ 已布置于家中':num(d.cost)+'元')+'</span></div>'+
+      '<div class="biz-desc" style="margin:4px 0 6px;">'+d.desc+'<br><span style="color:#2a7538;font-weight:bold;">【治愈效果】'+d.bonus+'</span></div>'+
+      '<div style="text-align:right;">'+
+      (bought ? '<button class="main-btn" disabled style="opacity:.5;background:#8596a8;padding:3px 10px;font-size:11px;">已拥有</button>' :
+        '<button class="main-btn" style="padding:3px 12px;font-size:11px;background:#1e5b99;" onclick="buyHomeDecor('+i+')">购买添置</button>')+
+      '</div></div>';
+  }
+  html += '</div><button class="main-btn" style="background:#8596a8;margin-top:10px;" onclick="closeModal()">返回温馨小家</button>';
+  openModal('🛋️ 温馨出租屋软装', html);
+}
+
+function buyHomeDecor(idx){
+  var d = HOME_DECOR_CATALOG[idx];
+  if(!d) return;
+  if(G.money < d.cost){ toast('存款余额不足'+d.cost+'元'); return; }
+  G.money -= d.cost;
+  G.homeDecors.push(d.id);
+  G.me.mood = cl(G.me.mood + 15);
+  addLog('🛋️ 你花费'+d.cost+'元网购了【'+d.name+'】。亲手拆箱组装摆好，暖光亮起的一瞬，出租屋瞬间充满了家的温暖！（心情+15）', 'gd2');
+  toast('装扮成功：'+d.name);
+  closeModal(); render(); autoSave();
+}
+
+/* ================= 治愈萌宠深度互动系统 ================= */
+function openPetInteractModal(){
+  if(!G.pet){ openAdopt(); return; }
+  var p = G.pet;
+  var html = '<div class="story-panel"><div class="story-title">🐾 '+p.kind+' · 「'+p.name+'」的治愈日常</div>'+
+    '<div class="story-text" style="font-size:12px;color:#3b5673;">'+
+    (p.kind==='猫'?'毛茸茸的小橘猫迈着轻巧的猫步走到你脚边，轻轻用软乎乎的小脑门蹭着你的脚踝，喉咙发出满足的呼噜声。':
+     p.kind==='狗'?'小狗欢快地甩着蓬松尾巴，嘴里叼着磨牙玩具，两眼放光地扑进你怀里使劲摇尾巴！':
+     '玄凤鹦鹉歪着粉扑扑的小脑袋，在你的指尖上轻巧梳理羽毛，脆生生学你说话。')+
+    '<br><br><span style="color:#c4426f;">💖 亲密度：'+p.love+'/100</span> · <span style="color:#2a7538;">🍖 饱食度：'+p.hunger+'/100</span>'+
+    '</div></div>';
+
+  html += '<div style="display:flex;flex-direction:column;gap:8px;">'+
+    '<button class="story-choice" onclick="doPetCuddle()">💆 沉浸揉肚子吸毛抚摸（毛茸茸治愈解压，心情+15，精力+1）</button>'+
+    '<button class="story-choice" onclick="doPetFeedCan()">🥫 投喂营养主食肉罐头（花费45元，亲密+12，饱食满腹）</button>'+
+    '<button class="story-choice" onclick="doPetPlayGame()">🎾 挥舞逗猫棒/扔飞盘畅快玩耍（精力-1，宠物亲密+15）</button>'+
+    '<button class="story-choice" onclick="doPetSpa()">🛁 居家宠物洗护香波SPA（花费80元，宠物香喷喷，健康+5）</button>'+
+    '<button class="story-choice" onclick="closeModal()">轻抚小家伙，去忙别的</button>'+
+    '</div>';
+  openModal('🐾 萌宠治愈陪伴', html);
+}
+
+function doPetCuddle(){
+  closeModal();
+  G.pet.love = cl(G.pet.love + 8);
+  G.me.mood = cl(G.me.mood + 15);
+  G.actionsLeft = Math.min(MAX_ACTIONS_PER_XUN+2, G.actionsLeft + 1);
+  var lines = [
+    '你将'+G.pet.name+'抱入怀中，脸颊贴着它温软顺滑的绒毛。听着它有节奏的呼噜呼噜声，所有内卷与加班的烦闷瞬间烟消云散。（精力+1，心情+15）',
+    G.pet.name+'舒舒服服地四脚朝天翻出白肚皮，小爪子在你手腕上一按一按踩奶，眼神里满是对你全心全意的信任与依恋。',
+    '闭上眼静静抱着毛茸茸的小家伙。生活虽然忙碌艰辛，但幸好推开门，还有一个小生命永远在毫无保留地爱着你。'
+  ];
+  addLog('🐾 '+pk(lines), 'gd2');
+  toast('被毛茸茸的小家伙治愈了');
+  render(); autoSave();
+}
+
+function doPetFeedCan(){
+  closeModal();
+  if(G.money < 45){ toast('零钱不足45元'); return; }
+  G.money -= 45;
+  G.pet.hunger = cl(G.pet.hunger + 35);
+  G.pet.love = cl(G.pet.love + 12);
+  addLog('🥫 你开了一罐香气扑鼻的纯肉主食罐头。'+G.pet.name+'吧唧吧唧狼吞虎咽，吃完后满意地舔干净了小胡子，用头顶使劲蹭你的掌心！', 'gd');
+  toast(G.pet.name+'吃得超满足');
+  render(); autoSave();
+}
+
+function doPetPlayGame(){
+  closeModal();
+  if(G.actionsLeft < 1){ toast('精力不足，歇会儿吧'); return; }
+  G.actionsLeft--;
+  G.pet.love = cl(G.pet.love + 15);
+  G.me.mood = cl(G.me.mood + 10);
+  addLog('🎾 你拿着玩具在客厅和'+G.pet.name+'嬉闹追逐，小家伙在羊毛毯上滑稽翻滚，逗得你哈哈大笑。（心情+10）', 'gd');
+  toast(G.pet.name+'玩得不亦乐乎');
+  render(); autoSave();
+}
+
+function doPetSpa(){
+  closeModal();
+  if(G.money < 80){ toast('零钱不足80元'); return; }
+  G.money -= 80;
+  G.pet.love = cl(G.pet.love + 10);
+  G.me.health = cl(G.me.health + 4);
+  addLog('🛁 细心给'+G.pet.name+'吹干毛发并梳顺，整只小可爱变得毛茸茸、香喷喷，抱在怀里像一团软棉花糖！', 'gd2');
+  toast('洗得香喷喷软绵绵');
+  render(); autoSave();
+}
+
+/* ================= 故乡父母 · 亲情家书与家乡包裹 ================= */
+function finishHometownCall(){
+  closeModal();
+  addLog('📞 挂上电话，虽然妈妈唠唠叨叨，但心底却涌上一阵踏实与暖意。（心情+14）','gd');
+  render(); autoSave();
+}
+function finishHometownParcel(){
+  closeModal();
+  addLog('📦 拆开老家寄来的大包裹，吃着妈妈亲手包的手工饺子，家的味道永远是打工人最坚硬的铠甲。','gd2');
+  render(); autoSave();
+}
+function finishHometownVisit(){
+  closeModal();
+  addLog('🚄 回老家小住探亲，家常温情洗涤了所有身心疲惫，重燃起对生活的无限勇气。','gd2');
+  render(); autoSave();
+}
+
+function doHometownCall(){
+  G.me.mood = cl(G.me.mood + 14);
+  G.hometownAff = cl((G.hometownAff||75) + 6);
+  var momWords = [
+    '「儿子/闺女，吃饭了没？滨江降温降得厉害，千万别为了省电舍不得开暖气！妈给你寄的厚被子盖上了没？」',
+    '「在外面工作顺心不？受了委屈别一个人憋着，实在干得不开心咱就回家，咱家虽说不富裕，但总有一口热饭吃！」',
+    '「你爸刚才还念叨你呢，一接电话又不好意思说，非让我问你钱够不够花，别舍不得吃好的！」'
+  ];
+  openModal('【亲情电话 · 故乡唠叨】',
+    '<div class="story-panel"><div class="story-title">📞 听筒那一端的牵挂</div>'+
+    '<div class="story-text" style="font-size:13px;color:#4a323a;line-height:1.7;">'+
+    pk(momWords)+
+    '</div></div>'+
+    '<div class="story-choices">'+
+    '<button class="story-choice" onclick="finishHometownCall()">「妈，我在这挺好的，您和爸多保重身体！」</button>'+
+    '</div>');
+  render(); autoSave();
+}
+
+function openHometownParcel(){
+  G.me.mood = cl(G.me.mood + 18);
+  G.me.health = cl(G.me.health + 8);
+  G.money += 300; // 节省伙食
+  var parcelItems = [
+    '整整三大包妈妈亲手包的荠菜猪肉手工水饺（还冻得硬邦邦的），一坛秘制香辣牛肉酱，还有老家院里老槐树上打下的新鲜核桃！',
+    '一箱老家亲戚自家熏制的柴火腊肉和香肠，妈妈在包裹里塞了亲手纳的纯棉鞋垫，附带一张字迹歪歪扭扭的便利贴：「天冷垫鞋里暖和」。',
+    '满满一纸箱老家当季甜柿子、手工红薯粉条与自家酿的花生油。厚实的泡沫箱里还夹着妈妈偷偷塞在深处的500块压箱底零钱！'
+  ];
+  openModal('【拆开包裹 · 沉甸甸的乡愁】',
+    '<div class="story-panel"><div class="story-title">📦 来自老家的大邮包</div>'+
+    '<div class="story-text" style="font-size:13px;color:#4a323a;line-height:1.7;">'+
+    '物流快递把一个沉甸甸裹了七层胶带的大纸箱送到门口。<br><br>'+
+    '拆开层层保温棉：'+pk(parcelItems)+'<br><br>'+
+    '<b>【尝一口妈妈的手艺】</b>下锅煮熟咬开，熟悉的味道在舌尖绽放，瞬间让你红了眼眶。（健康+8，心情+18，省下伙食费300元）'+
+    '</div></div>'+
+    '<div class="story-choices">'+
+    '<button class="story-choice" onclick="finishHometownParcel()">把特产整齐码进冰箱，给妈妈发微信报平安</button>'+
+    '</div>');
+  render(); autoSave();
+}
+
+function doHometownRemit(){
+  var html = '<div class="story-panel"><div class="story-title">🧧 孝敬汇款 · 回馈父母</div>'+
+    '<div class="story-text" style="font-size:12px;color:#3b5673;">'+
+    '父母辛苦供你读书成材，如今年岁渐高。汇去一笔孝心款，让二老改善伙食、换套体面的过冬棉衣或定期体检。'+
+    '</div></div>'+
+    '<div class="story-choices">'+
+    '<button class="story-choice" onclick="confirmRemit(1000)">🧧 汇款 1,000元（买保健品与添置换季衣物）</button>'+
+    '<button class="story-choice" onclick="confirmRemit(3000)">🧧 汇款 3,000元（为老家翻新家电与父母体检金）</button>'+
+    '<button class="story-choice" onclick="confirmRemit(10000)">🧧 汇款 10,000元（大额孝心储蓄，父母笑逐颜开）</button>'+
+    '<button class="story-choice" onclick="closeModal()">囊中羞涩，改日再寄</button>'+
+    '</div>';
+  openModal('🧧 孝敬老家父母', html);
+}
+
+function confirmRemit(amt){
+  closeModal();
+  if(G.money < amt){ toast('存款不足'+amt+'元'); return; }
+  G.money -= amt;
+  G.hometownAff = cl((G.hometownAff||75) + Math.round(amt/300));
+  if(G.parents) G.parents.health = cl(G.parents.health + 8);
+  addLog('🧧 你给老家父母汇去了'+num(amt)+'元孝敬金。不久收到父亲微信：「钱收到了，你一个人在外打拼别总往家里寄，自己吃好点！」（父母亲情与健康提升）', 'gd2');
+  toast('孝心汇款成功');
+  render(); autoSave();
+}
+
+function doHometownVisit(){
+  G.me.mood = cl(G.me.mood + 22);
+  G.me.health = cl(G.me.health + 10);
+  openModal('【休假探亲 · 围炉欢聚】',
+    '<div class="story-panel"><div class="story-title">🚄 高铁驶向故乡的炊烟</div>'+
+    '<div class="story-text" style="font-size:13px;color:#4a323a;line-height:1.7;">'+
+    '走出县城小站，远远就看见爸爸顶着寒风伸着脖子张望。进门屋里暖气扑面，桌上早已摆满了你从小最爱吃的红烧肉、清蒸鱼和热气腾腾的鸡汤。<br><br>'+
+    '妈妈不停往你碗里夹菜：「瘦了，在外面肯定没好好吃。多吃点，都是自家养的！」<br><br>'+
+    '吃饱喝足躺在童年的旧木床上，听着隔壁爸妈压低声音的交谈与窗外熟悉的风声，这一夜，你睡得格外香甜安稳。（心情+22，健康+10）'+
+    '</div></div>'+
+    '<div class="story-choices">'+
+    '<button class="story-choice" onclick="finishHometownVisit()">带着父母装满后备箱的特产，元气满满返回滨江！</button>'+
+    '</div>');
+  render(); autoSave();
+}
+
+/* ================= 深夜老李柴火小馄饨摊 ================= */
+function doWontonStall(){
+  G.money -= 18;
+  G.me.mood = cl(G.me.mood + 14);
+  G.me.health = cl(G.me.health + 5);
+  var stories = [
+    '老李麻利地将一碗热气腾腾的柴火小馄饨端到你面前，上面洒满了虾皮、紫菜与翠绿葱花，还特意给你多卧了一只金黄的荷包蛋：「小伙子/姑娘，加班到这会儿不容易，趁热喝口热汤，暖和！」',
+    '坐在街角的小马扎上，旁边是同样刚下班的代驾小哥和外卖小哥，大家吸溜着热馄饨，哈着白气有一搭没一搭聊着家长里短。小小的市井摊子，照亮了无数在深夜奔波的普通人。',
+    '寒风呼啸，一勺滚烫鲜美的骨汤下肚，胃里瞬间暖融融的。老李笑着递过一瓣糖蒜：「生活就像这柴火，只要火不灭，日子总会越熬越旺的！」'
+  ];
+  addLog('🥟 坐在街角老李馄饨摊前。'+pk(stories)+'（花费18元，心情+14，健康+5）', 'gd2');
+  toast('热汤下肚，整个人都暖和了');
+  render(); autoSave();
+}
+
+/* ================= 伴侣浪漫烛光日常 ================= */
+function doSpouseDate(){
+  if(!G.spouse) return;
+  G.me.mood = cl(G.me.mood + 18);
+  G.spouse.aff = cl((G.spouse.aff||80) + 8);
+  var scenes = [
+    '你们在临江的露台餐厅点了牛排与红酒。晚风轻拂，伴侣握住你的手，看着对岸璀璨的滨江天际线：「谢谢你一直陪在我身边，只要我们同心协力，未来的日子一定会越来越好。」',
+    '晚饭后两个人牵着手在滨江绿道上散步吹风，有一搭没一搭聊着各自白天的趣事与烦恼，平凡而温暖的烟火气，正是爱情最好的模样。',
+    '伴侣下班特意绕路买来了你最爱吃的那家芝士草莓蛋糕，点起香薰蜡烛，在客厅放着慢节奏情歌，相视一笑，心有灵犀。'
+  ];
+  addLog('🕯️ 你与伴侣【'+G.spouse.name+'】共度浪漫烛光之夜。'+pk(scenes)+'（心情+18，感情笃深）', 'pink');
+  toast('与伴侣感情升温');
+  render(); autoSave();
+}
+
 </script>
 </body>
 </html>

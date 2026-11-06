@@ -1,0 +1,2468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>方舟纪元 · 废土避难所经营录 (纯原生单文件典藏典雅版)</title>
+<style>
+/* ================= 废土工业与微光温情 · 色彩与基础系统 ================= */
+:root {
+  --bg-core: #101316;
+  --bg-card: #181d22;
+  --bg-sub: #21272f;
+  --bg-hover: #29313a;
+  --border-main: #2f3742;
+  --border-glow: #e06c75;
+  --text-main: #e6edf3;
+  --text-sub: #8b949e;
+  --text-dim: #6e7681;
+  --accent-amber: #d29922;
+  --accent-emerald: #3fb950;
+  --accent-cyan: #38bdf8;
+  --accent-rose: #f43f5e;
+  --accent-rust: #ea580c;
+  --accent-gold: #f59e0b;
+  --accent-purple: #a855f7;
+  --panel-radius: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  background: var(--bg-core);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  line-height: 1.5;
+  font-size: 13px;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* 顶部微光粒子与辐射烟雾 */
+#dustCanvas {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 1; opacity: 0.35;
+}
+
+.wrap {
+  position: relative; z-index: 2;
+  max-width: 1120px; margin: 0 auto;
+  min-height: 100vh; display: flex; flex-direction: column;
+  padding: 10px 12px 64px;
+}
+
+/* ================= 顶部状态栏 ================= */
+.topbar {
+  background: var(--bg-card);
+  border: 1px solid var(--border-main);
+  border-radius: var(--panel-radius);
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  display: flex; flex-direction: column; gap: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.brand-row {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.brand-title {
+  font-size: 15px; font-weight: bold; color: #fff;
+  display: flex; align-items: center; gap: 8px;
+}
+.brand-title small {
+  font-size: 11px; font-weight: normal; color: var(--accent-amber);
+  background: rgba(210, 153, 34, 0.15); padding: 2px 6px; border-radius: 4px;
+  border: 1px solid rgba(210, 153, 34, 0.3);
+}
+.brand-right {
+  display: flex; gap: 6px; align-items: center;
+}
+
+/* 紧凑状态微标矩阵 */
+.chips-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+@media (max-width: 640px) {
+  .chips-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.chip {
+  background: var(--bg-sub);
+  border: 1px solid var(--border-main);
+  border-radius: 6px;
+  padding: 4px 8px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 11.5px;
+}
+.chip-lbl { color: var(--text-sub); }
+.chip-val { font-weight: bold; color: var(--text-main); }
+.chip-val.green { color: var(--accent-emerald); }
+.chip-val.amber { color: var(--accent-amber); }
+.chip-val.cyan { color: var(--accent-cyan); }
+.chip-val.rose { color: var(--accent-rose); }
+.chip-val.purple { color: var(--accent-purple); }
+.chip.btn {
+  cursor: pointer; transition: all 0.2s;
+  justify-content: center; font-weight: bold;
+}
+.chip.btn:hover { border-color: var(--accent-amber); }
+.chip.btn:active { transform: scale(0.97); }
+
+/* 主线剧情进度横幅 */
+.story-milestone-banner {
+  background: linear-gradient(90deg, rgba(210,153,34,0.12), rgba(56,189,248,0.1));
+  border: 1px solid rgba(210,153,34,0.3);
+  border-radius: 6px;
+  padding: 6px 10px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px;
+}
+.story-milestone-banner b { color: var(--accent-amber); }
+.story-milestone-banner .banner-btn {
+  background: var(--bg-sub); border: 1px solid var(--border-main);
+  color: var(--accent-cyan); padding: 2px 8px; border-radius: 4px;
+  cursor: pointer; font-size: 11px;
+}
+
+/* ================= 移动端视图切换条 ================= */
+.m-dock-switch {
+  display: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border-main);
+  border-radius: var(--panel-radius);
+  padding: 3px;
+  margin-bottom: 8px;
+}
+@media (max-width: 768px) {
+  .m-dock-switch { display: flex; gap: 4px; }
+}
+.m-switch-btn {
+  flex: 1; padding: 6px 0; border: none; background: transparent;
+  color: var(--text-sub); font-size: 12px; font-weight: bold;
+  border-radius: 6px; cursor: pointer; text-align: center;
+}
+.m-switch-btn.on {
+  background: var(--bg-sub); color: var(--accent-cyan);
+  border: 1px solid var(--border-main);
+}
+
+/* ================= 主布局分栏 ================= */
+.main-cols {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  gap: 10px;
+  flex: 1;
+}
+@media (max-width: 768px) {
+  .main-cols { grid-template-columns: 1fr; }
+  .col-hidden-mobile { display: none !important; }
+}
+
+/* 左侧栏：避难所状态、幸存者名册、起居日志 */
+.left-col {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-main);
+  border-radius: var(--panel-radius);
+  padding: 10px 12px;
+}
+.panel-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-main);
+  font-size: 13px; font-weight: bold; color: #fff;
+}
+.panel-head small { font-size: 11px; color: var(--text-dim); font-weight: normal; }
+
+/* 幸存者列表 */
+.survivors-list {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.survivor-item {
+  background: var(--bg-sub);
+  border: 1px solid var(--border-main);
+  border-radius: 6px;
+  padding: 6px 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.survivor-avatar {
+  width: 34px; height: 34px; border-radius: 6px;
+  background: #111; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.survivor-info { flex: 1; min-width: 0; }
+.survivor-name {
+  display: flex; justify-content: space-between; font-weight: bold; font-size: 12px;
+}
+.survivor-role { font-size: 11px; color: var(--text-sub); margin-top: 1px; }
+.survivor-bar {
+  height: 4px; background: #161b22; border-radius: 2px; margin-top: 4px; overflow: hidden;
+}
+.survivor-bar-inner {
+  height: 100%; background: var(--accent-emerald); border-radius: 2px;
+}
+
+/* 避难所日志流 */
+.log-box {
+  background: #0d1117;
+  border: 1px solid var(--border-main);
+  border-radius: 6px;
+  padding: 8px;
+  height: 180px;
+  overflow-y: auto;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  line-height: 1.6;
+}
+.log-row { margin-bottom: 4px; display: flex; gap: 6px; }
+.log-time { color: var(--text-dim); flex-shrink: 0; }
+.log-green { color: var(--accent-emerald); }
+.log-amber { color: var(--accent-amber); }
+.log-cyan { color: var(--accent-cyan); }
+.log-rose { color: var(--accent-rose); }
+.log-purple { color: var(--accent-purple); }
+
+/* 右侧栏：主交互区 */
+.right-col {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.tab-nav {
+  display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px;
+}
+.tab-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-main);
+  color: var(--text-sub);
+  padding: 7px 12px;
+  border-radius: var(--panel-radius);
+  cursor: pointer; font-size: 12.5px; font-weight: bold;
+  white-space: nowrap; transition: all 0.2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.tab-btn:hover { border-color: var(--text-sub); color: #fff; }
+.tab-btn.on {
+  background: var(--bg-sub);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.15);
+}
+
+/* 场景横幅环境卡 */
+.scene-intro {
+  background: var(--bg-card);
+  border: 1px solid var(--border-main);
+  border-radius: var(--panel-radius);
+  padding: 10px 12px;
+  font-size: 12.5px;
+  color: var(--text-sub);
+  line-height: 1.6;
+}
+
+/* 操作选项卡列表 */
+.acts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+@media (max-width: 640px) {
+  .acts-grid { grid-template-columns: 1fr; }
+}
+
+.act-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-main);
+  border-radius: var(--panel-radius);
+  padding: 10px;
+  display: flex; gap: 10px;
+  cursor: pointer; transition: all 0.2s;
+  position: relative;
+}
+.act-card:hover {
+  border-color: var(--accent-amber);
+  background: var(--bg-hover);
+  transform: translateY(-1px);
+}
+.act-card:active { transform: scale(0.98); }
+.act-card.off {
+  opacity: 0.55; cursor: not-allowed;
+}
+.act-card.off:hover { transform: none; border-color: var(--border-main); }
+.act-ic {
+  width: 38px; height: 38px; border-radius: 6px;
+  background: var(--bg-sub); display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.act-bd { flex: 1; min-width: 0; }
+.act-title-row {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.act-title { font-weight: bold; font-size: 13px; color: #fff; }
+.act-cost { font-size: 11px; color: var(--accent-amber); font-weight: bold; }
+.act-desc { font-size: 11.5px; color: var(--text-sub); margin-top: 2px; line-height: 1.4; }
+
+/* 底部常驻停靠栏 */
+.bottom-dock {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(18, 21, 24, 0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border-main);
+  padding: 8px 12px;
+  display: flex; justify-content: center; gap: 8px;
+}
+.dock-btn {
+  background: var(--bg-sub);
+  border: 1px solid var(--border-main);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 12px; font-weight: bold;
+  cursor: pointer; transition: all 0.2s;
+}
+.dock-btn.primary {
+  background: linear-gradient(135deg, #b91c1c, #991b1b);
+  border-color: #ef4444; color: #fff;
+}
+.dock-btn:hover { border-color: var(--accent-amber); }
+.dock-btn:active { transform: scale(0.97); }
+
+/* 弹窗系统 */
+.modal-mask {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.75);
+  display: none; align-items: center; justify-content: center;
+  z-index: 200; padding: 12px;
+}
+.modal-mask.show { display: flex; }
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border-main);
+  border-radius: var(--panel-radius);
+  max-width: 600px; width: 100%; max-height: 85vh;
+  overflow-y: auto;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
+.modal-head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border-main);
+}
+.modal-title { font-size: 15px; font-weight: bold; color: #fff; }
+.modal-close {
+  background: transparent; border: none; color: var(--text-sub);
+  font-size: 16px; cursor: pointer; padding: 4px;
+}
+.story-box {
+  background: var(--bg-sub);
+  border: 1px solid var(--border-main);
+  border-radius: 6px;
+  padding: 12px;
+  line-height: 1.6;
+  font-size: 12.5px;
+  margin-bottom: 12px;
+}
+.story-choices {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.choice-btn {
+  background: var(--bg-sub);
+  border: 1px solid var(--border-main);
+  color: var(--text-main);
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer; text-align: left;
+  font-size: 12.5px; transition: all 0.2s;
+}
+.choice-btn:hover {
+  background: #28303b; border-color: var(--accent-cyan);
+}
+
+/* 提示 Toast */
+#toast {
+  position: fixed; bottom: 65px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.85); color: #fff;
+  padding: 6px 14px; border-radius: 20px; font-size: 12px;
+  border: 1px solid var(--border-main);
+  pointer-events: none; z-index: 300; opacity: 0;
+  transition: opacity 0.3s;
+}
+#toast.show { opacity: 1; }
+
+
+/* 水培槽位可视化卡片 */
+.crops-preview-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-main);
+  border-radius: var(--panel-radius);
+  padding: 10px;
+  margin-bottom: 8px;
+}
+.crops-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+.crop-bed {
+  background: var(--bg-sub);
+  border: 1px solid var(--border-main);
+  border-radius: 6px;
+  padding: 8px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.crop-bed-top {
+  display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; font-weight: bold;
+}
+.crop-bed-bar {
+  height: 6px; background: #121518; border-radius: 3px; overflow: hidden;
+}
+.crop-bed-bar-inner {
+  height: 100%; background: linear-gradient(90deg, #3fb950, #2ea043); border-radius: 3px;
+}
+.crop-bed-status {
+  font-size: 10.5px; color: var(--text-dim); display: flex; justify-content: space-between;
+}
+
+/* 战备装备网格 */
+.gear-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 8px;
+}
+@media (max-width: 600px) { .gear-grid { grid-template-columns: 1fr; } }
+.gear-card {
+  background: var(--bg-sub);
+  border: 1px solid var(--border-main);
+  border-radius: 6px;
+  padding: 10px;
+  display: flex; gap: 8px; align-items: center;
+}
+.gear-icon {
+  font-size: 24px; width: 40px; height: 40px; background: #121518; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.gear-info { flex: 1; min-width: 0; }
+.gear-name { font-weight: bold; font-size: 12px; color: #fff; }
+.gear-desc { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
+
+/* 广播旋钮交互界面 */
+.radio-console {
+  background: #0d1217;
+  border: 2px solid #23303c;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.radio-screen {
+  background: #06100c;
+  border: 1px solid #144933;
+  color: #39e58c;
+  font-family: monospace;
+  padding: 10px;
+  border-radius: 4px;
+  min-height: 54px;
+  box-shadow: inset 0 0 10px rgba(57,229,140,0.2);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+.radio-dials {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.dial-btn {
+  background: #19222b;
+  border: 1px solid #334455;
+  color: #c9d1d9;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.dial-btn.active {
+  background: #1b3a2f;
+  border-color: #39e58c;
+  color: #39e58c;
+}
+
+/* 避难所手记卡片 */
+.diary-card {
+  background: var(--bg-sub);
+  border: 1px solid var(--border-main);
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 8px;
+}
+.diary-author {
+  display: flex; justify-content: space-between; font-weight: bold; font-size: 12px;
+  margin-bottom: 4px;
+}
+.diary-content {
+  font-size: 12px; color: var(--text-sub); line-height: 1.6;
+}
+
+/* 温馨装潢卡 */
+.decor-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10.5px;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<canvas id="dustCanvas"></canvas>
+
+<div class="wrap">
+  <!-- 顶部状态栏 -->
+  <header class="topbar">
+    <div class="brand-row">
+      <div class="brand-title">
+        <span>🛡️ 方舟纪元 · 废土避难所</span>
+        <small id="shelterGrade">第101号深地地宫</small>
+      </div>
+      <div class="brand-right">
+        <button class="chip btn" id="btnAudio" onclick="toggleAudio()">🎵 废土清音</button>
+        <button class="chip btn" onclick="openChronicleModal()">📖 编年史</button>
+        <button class="chip btn" onclick="openEndingsModal()">🏆 终局图鉴</button>
+      </div>
+    </div>
+
+    <!-- 主线剧情进度横幅 -->
+    <div class="story-milestone-banner" id="milestoneBanner">
+      <div><b>当前主线：</b><span id="milestoneText">【第一幕 · 寒夜微光】加固避难所铅门，保障温室与电力供给</span></div>
+      <button class="banner-btn" onclick="openStoryMilestoneModal()">查看纪元目标</button>
+    </div>
+
+    <!-- 资源与生存指数矩阵 -->
+    <div class="chips-grid" id="chipsGrid"></div>
+  </header>
+
+  <!-- 移动端视图切换条 -->
+  <div class="m-dock-switch">
+    <button class="m-switch-btn on" id="btnTabMain" onclick="setMobileView('main')">🏢 避难所中枢与工坊</button>
+    <button class="m-switch-btn" id="btnTabSide" onclick="setMobileView('side')">👥 同伴状态与生息手记</button>
+  </div>
+
+  <!-- 主布局分栏 -->
+  <div class="main-cols">
+    <!-- 左侧栏：幸存者名册、避难所设施、起居日志 -->
+    <div class="left-col" id="leftCol">
+      <!-- 避难所温馨度与生活指数 -->
+      <div class="panel">
+        <div class="panel-head">
+          <span>🏡 避难所温馨度</span>
+          <small id="cozyLevelText">微温庇护所 (0/100)</small>
+        </div>
+        <div class="survivor-bar" style="height:6px;margin-bottom:8px;">
+          <div class="survivor-bar-inner" id="cozyBarInner" style="width:10%;background:linear-gradient(90deg, #d29922, #3fb950);"></div>
+        </div>
+        <div style="font-size:11px;color:var(--text-sub);line-height:1.4;" id="cozyBuffText">
+          ✨ 当前增益：每日夜间精力额外+0，全员心境流失减缓0%。
+        </div>
+      </div>
+
+      <!-- 幸存者名单与忠犬 -->
+      <div class="panel">
+        <div class="panel-head">
+          <span>👥 同行同伴 & 忠犬</span>
+          <small id="dateIndicator">晴朗干爽 · 融雪初春</small>
+        </div>
+        <div class="survivors-list" id="survivorList"></div>
+      </div>
+
+      <!-- 避难所起居运行日志 -->
+      <div class="panel">
+        <div class="panel-head">
+          <span>📟 避难所终端日志</span>
+          <small>系统指令流</small>
+        </div>
+        <div class="log-box" id="logBox"></div>
+      </div>
+    </div>
+
+    <!-- 右侧栏：避难所核心中枢与场景操作 -->
+    <div class="right-col" id="rightCol">
+      <!-- 场景选项卡 -->
+      <nav class="tab-nav" id="tabNav"></nav>
+
+      <!-- 场景环境描写 -->
+      <div class="scene-intro" id="sceneIntro"></div>
+
+      <!-- 操作卡网格 -->
+      <div class="acts-grid" id="actsGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 底部常驻操作栏 -->
+<div class="bottom-dock">
+  <button class="dock-btn primary" onclick="nextDayCycle()">⏳ 度过今日 (结算生存消耗)</button>
+  <button class="dock-btn" onclick="openSaveModal()">💾 存读档</button>
+  <button class="dock-btn" onclick="openDiaryModal()">📝 幸存者日记</button>
+  <button class="dock-btn" onclick="showHelpModal()">❓ 生存法则</button>
+  <button class="dock-btn" onclick="doRestart()">🔄 重新开局</button>
+</div>
+
+<!-- 模态弹窗系统 -->
+<div class="modal-mask" id="modalMask">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title" id="modalTitle">标题</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ================= 1. 游戏核心状态机与常量 ================= */
+var SEASONS = ['融雪初春', '烈阳辐射夏', '酸雨枯叶秋', '极寒凛冬'];
+var WEATHER_LIST = ['晴朗干爽', '轻度酸雨', '辐射微尘', '废土风暴', '极度严寒', '和煦破晓'];
+
+var G = {
+  day: 1,
+  year: 1,
+  seasonIdx: 0,
+  weather: '晴朗干爽',
+  energy: 6,
+  maxEnergy: 6,
+  // 核心生存资源
+  food: 48,        // 储备粮
+  water: 42,       // 纯净水
+  power: 40,       // 电能储备
+  med: 14,         // 医疗药品
+  scrap: 85,       // 废土零件废铁
+  fuel: 28,        // 柴油重油
+  shelterHp: 95,   // 避难所防爆结构强度 (0-100)
+  airFilter: 90,   // 空气净化滤网寿命 (0-100)
+  radiation: 12,   // 避难所辐射累积 (越低越安全)
+  curPage: 'greenhouse',
+  // 战备装备库
+  gear: {
+    mask: { tier: 1, name: '活性炭防尘口罩', desc: '简易滤棉防护，微量过滤辐射' },
+    suit: { tier: 1, name: '战术防风皮衣', desc: '耐磨皮层，抵挡轻度抓伤' },
+    exosuit: { tier: 1, name: '轻型工兵背负骨架', desc: '提升物资搜荒搬运效率' },
+    dogRig: { tier: 1, name: '帆布搜荒轻携鞍包', desc: '黑子随队，搜荒额外发现零件' }
+  },
+  // 温馨装潢指数
+  cozyScore: 15,
+  decors: {
+    carpet: false,
+    lights: false,
+    gramophone: false,
+    plantPot: false,
+    bookshelf: false,
+    hotSpringPipe: false
+  },
+  // 电台当前调谐频段
+  radioFreq: '88.5',
+  // 主线进度与三幕大纲
+  act: 1, // 1: 寒夜微光, 2: 荒原回响, 3: 黎明抉择
+  storyMilestones: {
+    act1Done: false,
+    act2Done: false,
+    act3Done: false
+  },
+  // 伙伴系统
+  survivors: [
+    { id:'anna', name:'安娜 (Anna)', title:'机械天才少女', avatar:'🔧', mood:80, health:90, affection:40, skill:'机械维修与芯片改装', desc:'喜欢抱着焊枪听战前旧黑胶唱片，外冷内热' },
+    { id:'chen', name:'老陈 (Chen)', title:'退役战地军医', avatar:'🩺', mood:75, health:85, affection:45, skill:'草药萃取与野战急救', desc:'总是把口粮省给孩子们，慈祥而坚韧的老医官' },
+    { id:'ray',  name:'雷诺 (Ray)',  title:'废土老练猎人', avatar:'🏹', mood:70, health:95, affection:35, skill:'荒野潜行与战术搜寻', desc:'满身伤疤，身经百战，搜荒时永远走在最前方' },
+    { id:'duo',  name:'小朵 (Duo)',  title:'幸存遗孤小妹妹', avatar:'👧', mood:65, health:80, affection:55, skill:'温室照料与希望之歌', desc:'在废墟防空洞被你救出，每晚依偎着听你讲末日前的大海' }
+  ],
+  // 忠犬伙伴
+  dog: {
+    name:'黑子 (Blacky)', kind:'防暴德牧军犬', avatar:'🐕', hunger:80, love:70, level:1, exp:0,
+    skillTitle:'敏锐搜救幼犬', desc:'战前退役警犬后代，眼神忠诚锐利，最喜在暖炉边翻肚皮'
+  },
+  // 温室农田 (水培床)
+  crops: [
+    { id:1, name:'抗辐射红番茄', mature:3, growth:1, watered:true, icon:'🍅' },
+    { id:2, name:'变异高产马铃薯', mature:4, growth:2, watered:true, icon:'🥔' },
+    { id:3, name:'纯净发光雪蘑菇', mature:2, growth:0, watered:false, icon:'🍄' }
+  ],
+  // 避难所设施等级
+  facilities: {
+    greenhouse: 1, // 水培温室
+    workshop: 1,   // 机械工坊
+    kitchen: 1,    // 避难所后厨
+    generator: 1,  // 地热柴油机组
+    radio: 1,      // 调频长波电台
+    defense: 1,    // 铁穹防御哨戒塔
+    geothermal: 0  // 地热温泉管道
+  },
+  // 编年史与日记手札
+  diaries: [
+    { day: 1, author: '安娜', avatar: '🔧', text: '避难所的主发电机终于被我和队长修好了。虽然柴油味有点呛，但当第一盏昏黄的白炽灯亮起时，小朵拍手笑了。有电，就有明天。' },
+    { day: 1, author: '小朵', avatar: '👧', text: '今天大黑把脑袋靠在我的膝盖上，好暖和呀！队长哥哥给了我一颗糖，甜甜的，像以前妈妈在童话里讲的草莓一样。' }
+  ],
+  logs: [],
+  flags: {},
+  endingsUnlocked: []
+};
+
+/* ================= 2. 场景定义与操作库 ================= */
+var PAGES = {
+  greenhouse: { id:'greenhouse', name:'🌱 水培温室', desc:'【生命源泉】封闭无土栽培温室。过滤循环水喷淋着嫩绿蔬菜，泥土与番茄叶的清香驱散了废土的荒凉。' },
+  kitchen:    { id:'kitchen',    name:'🍲 温暖后厨', desc:'【人间烟火】避难所核心大厅。红砖柴火炉灶咕嘟冒着热气，全员围坐在此分食热汤，听广播老歌。' },
+  workshop:   { id:'workshop',   name:'⚙️ 机械工坊', desc:'【工业中枢】车床轰鸣、焊花飞溅。检修发电机组、滤清器换芯、打造防爆防具与探险装备。' },
+  cozy:       { id:'cozy',       name:'🛋️ 避难所居室', desc:'【温暖家园】地下生活起居空间。布置柔软沙发、暖黄彩灯串与留声机，打造废土上的世外桃源。' },
+  explore:    { id:'explore',    name:'🗺️ 荒原搜荒', desc:'【废墟拾荒】推开重型防爆铅门，深入废弃超市、三甲医院、科研废墟与被掩埋的地铁站。' },
+  radio:      { id:'radio',      name:'📻 调频电台', desc:'【文明微光】旋转老旧波段旋钮，在无尽的白噪音中搜寻其他避难所暗号、废土商队与幸存者求救。' },
+  camp:       { id:'camp',       name:'🐕 营地温存', desc:'【同伴陪伴】避难所核心情感角落。揉揉黑子的软耳朵、陪小朵绘本描红、听老陈传授急救医术。' }
+};
+
+/* ================= 3. 通用辅助函数 ================= */
+function ri(min, max){ return Math.floor(Math.random()*(max - min + 1)) + min; }
+function cl(n, min, max){ return Math.min(Math.max(n, min||0), max||100); }
+
+function toast(msg){
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el.t);
+  el.t = setTimeout(function(){ el.classList.remove('show'); }, 2000);
+}
+
+function addLog(text, cls){
+  var timeStr = '第'+G.day+'日';
+  G.logs.unshift({ time: timeStr, text: text, cls: cls||'' });
+  if(G.logs.length > 40) G.logs.pop();
+  renderLogs();
+}
+
+function useEnergy(n){
+  if(G.energy < n){ toast('体力精力已耗尽，请进入下一日休整！'); return false; }
+  G.energy -= n; playBeep(520, 'sine', 0.15); render(); return true;
+}
+
+var mobileView = 'main';
+function setMobileView(view){
+  mobileView = view;
+  var btnMain = document.getElementById('btnTabMain');
+  var btnSide = document.getElementById('btnTabSide');
+  var leftCol = document.getElementById('leftCol');
+  var rightCol = document.getElementById('rightCol');
+  if(view === 'main'){
+    btnMain.className = 'm-switch-btn on';
+    btnSide.className = 'm-switch-btn';
+    rightCol.classList.remove('col-hidden-mobile');
+    leftCol.classList.add('col-hidden-mobile');
+  } else {
+    btnMain.className = 'm-switch-btn';
+    btnSide.className = 'm-switch-btn on';
+    leftCol.classList.remove('col-hidden-mobile');
+    rightCol.classList.add('col-hidden-mobile');
+  }
+}
+
+function openModal(title, html){
+  document.getElementById('modalTitle').innerHTML = title;
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalMask').classList.add('show');
+}
+function closeModal(){
+  document.getElementById('modalMask').classList.remove('show');
+  render();
+}
+
+/* ================= 4. Web Audio 废土空灵和弦引擎 ================= */
+var audioCtx = null;
+var audioOn = false;
+var bgmInterval = null;
+
+function toggleAudio(){
+  audioOn = !audioOn;
+  var btn = document.getElementById('btnAudio');
+  if(audioOn){
+    initAudio();
+    if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    playWastelandChords();
+    if(!bgmInterval) bgmInterval = setInterval(playWastelandChords, 5600);
+    btn.textContent = '🎵 废土清音已启';
+    btn.style.borderColor = 'var(--accent-cyan)';
+    toast('📻 避难所空灵吉他弦音已开启');
+  } else {
+    if(bgmInterval){ clearInterval(bgmInterval); bgmInterval = null; }
+    btn.textContent = '🔇 废土静音';
+    btn.style.borderColor = 'var(--border-main)';
+    toast('已静音');
+  }
+}
+
+function initAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function playWastelandChords(){
+  if(!audioOn || !audioCtx) return;
+  var chords = [
+    [220.00, 261.63, 329.63, 392.00, 110.00], // Am7 + Bass
+    [174.61, 220.00, 261.63, 329.63, 87.31],  // Fmaj7 + Bass
+    [196.00, 246.94, 293.66, 392.00, 98.00],  // G + Bass
+    [164.81, 196.00, 246.94, 329.63, 82.41]   // Em + Bass
+  ];
+  var c = chords[Math.floor(Math.random()*chords.length)];
+  for(var i=0; i<c.length; i++){
+    playTone(c[i], i === 4 ? 'sine' : 'triangle', 3.2, i*0.24, i === 4 ? 0.05 : 0.032);
+  }
+}
+
+function playTone(freq, type, dur, delay, gainVal){
+  if(!audioCtx) return;
+  setTimeout(function(){
+    try {
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = type||'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(gainVal||0.04, audioCtx.currentTime + 0.3);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + dur);
+    } catch(e){}
+  }, delay*1000);
+}
+
+function playBeep(freq, type, dur){
+  initAudio();
+  if(!audioCtx) return;
+  try {
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.type = type||'sine';
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + dur);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + dur);
+  } catch(e){}
+}
+
+/* ================= 5. 渲染引擎 ================= */
+function render(){
+  updateMilestoneState();
+  renderChips();
+  renderNav();
+  renderSceneIntro();
+  renderActs();
+  renderCozyPanel();
+  renderSurvivors();
+  renderLogs();
+}
+
+function updateMilestoneState(){
+  if(G.day <= 15){
+    G.act = 1;
+    document.getElementById('milestoneText').innerHTML = '【第一幕 · 寒夜微光】稳固地下工农业生产，给小朵和伙伴们一个温暖庇护所 (进行中: '+G.day+'/15日)';
+  } else if(G.day <= 35){
+    G.act = 2;
+    document.getElementById('milestoneText').innerHTML = '【第二幕 · 荒原回响】化解铁颅匪帮危机，突破老陈抗毒血清，搭建地热暖泉 (进行中: '+G.day+'/35日)';
+  } else {
+    G.act = 3;
+    document.getElementById('milestoneText').innerHTML = '【第三幕 · 黎明抉择】破译深空空间站，向地表撒播生机，迈向四大传奇终局！('+G.day+'日)';
+  }
+}
+
+function renderChips(){
+  var sName = SEASONS[G.seasonIdx];
+  var html = '';
+  html += '<div class="chip"><span class="chip-lbl">📅 纪元历</span><span class="chip-val amber">第'+G.day+'日 ('+sName+')</span></div>';
+  html += '<div class="chip"><span class="chip-lbl">⚡ 行动力</span><span class="chip-val green">'+G.energy+' / '+G.maxEnergy+'</span></div>';
+  html += '<div class="chip"><span class="chip-lbl">🍞 口粮</span><span class="chip-val '+(G.food<15?'rose':'green')+'">'+G.food+' 份</span></div>';
+  html += '<div class="chip"><span class="chip-lbl">💧 纯净水</span><span class="chip-val '+(G.water<15?'rose':'cyan')+'">'+G.water+' 升</span></div>';
+  html += '<div class="chip"><span class="chip-lbl">🔋 电力储备</span><span class="chip-val '+(G.power<12?'rose':'amber')+'">'+G.power+' 度</span></div>';
+  html += '<div class="chip"><span class="chip-lbl">🔩 废料零件</span><span class="chip-val">'+G.scrap+' 件</span></div>';
+  html += '<div class="chip"><span class="chip-lbl">🛡️ 闸门防爆</span><span class="chip-val '+(G.shelterHp<40?'rose':'green')+'">'+G.shelterHp+'%</span></div>';
+  html += '<div class="chip"><span class="chip-lbl">☣️ 辐射水平</span><span class="chip-val '+(G.radiation>50?'rose':'green')+'">'+G.radiation+' mSv</span></div>';
+  document.getElementById('chipsGrid').innerHTML = html;
+  document.getElementById('dateIndicator').textContent = G.weather + ' · ' + sName;
+}
+
+function renderCozyPanel(){
+  var c = G.cozyScore;
+  var title = '微温庇护 (初级)';
+  if(c >= 70) title = '废土世外桃源 (极品)';
+  else if(c >= 40) title = '暖阳地宫 (中级)';
+
+  document.getElementById('cozyLevelText').textContent = title + ' ('+c+'/100)';
+  document.getElementById('cozyBarInner').style.width = Math.min(100, c) + '%';
+
+  var extraEnergy = c >= 60 ? 1 : 0;
+  var moodShield = Math.min(50, Math.floor(c * 0.4));
+  document.getElementById('cozyBuffText').innerHTML =
+    '✨ 当前增益：每日夜间精力额外+'+extraEnergy+'，全员心境流失减缓'+moodShield+'%，夜间休息自动愈合伤势。';
+}
+
+function renderNav(){
+  var html = '';
+  for(var k in PAGES){
+    var p = PAGES[k];
+    var on = G.curPage === k ? 'on' : '';
+    html += '<button class="tab-btn '+on+'" onclick="switchPage(\''+k+'\')">'+p.name+'</button>';
+  }
+  document.getElementById('tabNav').innerHTML = html;
+}
+
+function switchPage(pageKey){
+  G.curPage = pageKey;
+  playBeep(440, 'triangle', 0.1);
+  render();
+}
+
+function renderSceneIntro(){
+  var p = PAGES[G.curPage] || PAGES.greenhouse;
+  var html = p.desc;
+
+  if(G.curPage === 'greenhouse'){
+    html += '<div class="crops-preview-panel" style="margin-top:8px;">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-main);padding-bottom:5px;">'+
+        '<span style="font-weight:bold;color:var(--accent-emerald);">🌱 水培营养床实时态势 ('+G.crops.length+'个栽培槽)</span>'+
+        '<div style="display:flex;gap:4px;">'+
+          '<button class="dock-btn" style="padding:2px 8px;font-size:11px;" onclick="actWaterCrops()">💧 滴灌喷淋</button>'+
+          '<button class="dock-btn primary" style="padding:2px 8px;font-size:11px;" onclick="actHarvestCrops()">🌾 一键采收</button>'+
+        '</div>'+
+      '</div>'+
+      '<div class="crops-grid">';
+
+    for(var i=0; i<G.crops.length; i++){
+      var c = G.crops[i];
+      var pct = Math.min(100, Math.round((c.growth / c.mature) * 100));
+      var isReady = c.growth >= c.mature;
+      var stageTxt = isReady ? '✨ 硕果已熟' : (pct < 40 ? '🌱 幼苗破土' : '🌼 开花授粉');
+      html += '<div class="crop-bed">'+
+        '<div class="crop-bed-top"><span>'+c.icon+' '+c.name+'</span><span style="color:'+(isReady?'var(--accent-emerald)':'var(--accent-amber)')+';">'+(isReady?'成熟':(c.growth+'/'+c.mature+'旬'))+'</span></div>'+
+        '<div class="crop-bed-bar"><div class="crop-bed-bar-inner" style="width:'+pct+'%;background:'+(isReady?'#3fb950':'#d29922')+';"></div></div>'+
+        '<div class="crop-bed-status"><span>'+stageTxt+'</span><span style="color:'+(c.watered?'var(--accent-cyan)':'var(--text-dim)')+';">'+(c.watered?'💧 湿润':'需水')+'</span></div>'+
+        '</div>';
+    }
+    html += '</div></div>';
+  } else if(G.curPage === 'workshop'){
+    var g = G.gear || {};
+    html += '<div class="crops-preview-panel" style="margin-top:8px;">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border-main);padding-bottom:5px;">'+
+        '<span style="font-weight:bold;color:var(--accent-amber);">🦾 避难所外骨骼与战备装备状态</span>'+
+        '<button class="dock-btn" style="padding:2px 8px;font-size:11px;" onclick="openGearUpgradeModal()">⚡ 锻造强化</button>'+
+      '</div>'+
+      '<div class="gear-grid">'+
+        '<div class="gear-card"><div class="gear-icon">🤿</div><div class="gear-info"><div class="gear-name">'+(g.mask?g.mask.name:'战术面具')+' (T'+(g.mask?g.mask.tier:1)+')</div><div class="gear-desc">'+(g.mask?g.mask.desc:'防辐射过滤')+'</div></div></div>'+
+        '<div class="gear-card"><div class="gear-icon">🦺</div><div class="gear-info"><div class="gear-name">'+(g.suit?g.suit.name:'防弹背心')+' (T'+(g.suit?g.suit.tier:1)+')</div><div class="gear-desc">'+(g.suit?g.suit.desc:'抗伤害护甲')+'</div></div></div>'+
+        '<div class="gear-card"><div class="gear-icon">🦾</div><div class="gear-info"><div class="gear-name">'+(g.exosuit?g.exosuit.name:'动力外骨骼')+' (T'+(g.exosuit?g.exosuit.tier:1)+')</div><div class="gear-desc">'+(g.exosuit?g.exosuit.desc:'大幅增加搜荒物资')+'</div></div></div>'+
+        '<div class="gear-card"><div class="gear-icon">🐕</div><div class="gear-info"><div class="gear-name">'+(g.dogRig?g.dogRig.name:'黑子战具')+' (T'+(g.dogRig?g.dogRig.tier:1)+')</div><div class="gear-desc">'+(g.dogRig?g.dogRig.desc:'随队掩护搜救')+'</div></div></div>'+
+      '</div></div>';
+  }
+
+  document.getElementById('sceneIntro').innerHTML = html;
+}
+
+function renderSurvivors(){
+  var html = '';
+  // 幸存者
+  for(var i=0; i<G.survivors.length; i++){
+    var s = G.survivors[i];
+    html += '<div class="survivor-item" style="cursor:pointer;" onclick="openSurvivorMemoirModal(\''+s.id+'\')" title="点击查看深度羁绊夜话篇章">'+
+      '<div class="survivor-avatar">'+s.avatar+'</div>'+
+      '<div class="survivor-info">'+
+        '<div class="survivor-name"><span>'+s.name+'</span><span style="color:var(--accent-amber);font-size:10.5px;">心境 '+s.mood+'% · 亲密 '+s.affection+'</span></div>'+
+        '<div class="survivor-role">'+s.title+' · <span style="color:var(--accent-cyan);">📖 羁绊夜话 ➔</span></div>'+
+        '<div class="survivor-bar"><div class="survivor-bar-inner" style="width:'+s.health+'%;"></div></div>'+
+      '</div></div>';
+  }
+  // 忠犬黑子
+  var d = G.dog;
+  html += '<div class="survivor-item" style="border-color:rgba(210,153,34,0.3);background:#1a1c18;cursor:pointer;" onclick="openSurvivorMemoirModal(\'dog\')" title="点击查看忠犬陪伴故事">'+
+    '<div class="survivor-avatar" style="background:#2d2416;">'+d.avatar+'</div>'+
+    '<div class="survivor-info">'+
+      '<div class="survivor-name"><span style="color:var(--accent-amber);">'+d.name+' (Lv.'+d.level+')</span><span style="color:var(--accent-emerald);font-size:10.5px;">亲密 '+d.love+'/100</span></div>'+
+      '<div class="survivor-role">'+d.skillTitle+' · <span style="color:var(--accent-amber);">🐕 伴侣档案 ➔</span></div>'+
+      '<div class="survivor-bar"><div class="survivor-bar-inner" style="background:var(--accent-amber);width:'+d.love+'%;"></div></div>'+
+    '</div></div>';
+
+  document.getElementById('survivorList').innerHTML = html;
+}
+
+function renderLogs(){
+  var html = '';
+  for(var i=0; i<G.logs.length; i++){
+    var l = G.logs[i];
+    html += '<div class="log-row"><span class="log-time">['+l.time+']</span><span class="'+l.cls+'">'+l.text+'</span></div>';
+  }
+  document.getElementById('logBox').innerHTML = html;
+}
+
+/* ================= 6. 场景动作卡渲染与逻辑 ================= */
+function renderActs(){
+  var html = '';
+  var p = G.curPage;
+
+  if(p === 'greenhouse'){
+    html += createAct('🍅', '采收成熟农作与重新播种', '采摘水培水芹、成熟红番茄与饱满土豆，大量补给口粮', 1, 'actHarvestCrops()');
+    html += createAct('💧', '纯净水微喷灌溉与营养配比', '消耗2升纯净水微量配比营养素，使全圃作物生机旺盛、加速成熟', 1, 'actWaterCrops()');
+    html += createAct('🍄', '采收并繁育地底发光雪蘑菇', '在阴暗通风岩缝扦插菌丝，产出纯净抗辐射抗生素原浆', 1, 'actPlantMushrooms()');
+    html += createAct('🐝', '引入地底蜂箱与蜜源花卉', '消耗15废料打造蜂箱，产出天然纯蜜（烹饪金牌辅料），温室生长速度+25%', 2, 'actBuildBeehive()');
+    html += createAct('🍓', '培育高糖红心草莓水培床', '消耗18零件与小朵一同嫁接草莓苗，收获抚慰心灵的极品甜果', 2, 'actPlantStrawberry()');
+    html += createAct('🔬', '极地耐寒抗逆基因改良', '消耗25废料与精密芯片，永久提升全温室作物的产量+35%', 2, 'actUpgradeGreenhouse()');
+  }
+  else if(p === 'kitchen'){
+    html += createAct('🍲', '熬煮浓香土豆午餐肉汤', '消耗4份粮2升水 · 满屋飘香，全员围坐分食，心境与健康大涨', 1, 'actCookStew()');
+    html += createAct('☕', '烘焙烤蒲公英根代咖啡', '自制焦香热饮，提神醒脑，今日行动力额外恢复+2点', 1, 'actBrewCoffee()');
+    html += createAct('🥧', '烘烤金黄苹果肉桂派', '消耗3口粮1纯水（需蜂蜜），小朵最爱的甜美点心，全员心境+25', 1, 'actBakePie()');
+    html += createAct('🥞', '铁板香煎野葱玉米饼', '消耗3口粮，制作出金黄酥脆的耐储干粮，外出搜荒体力更强', 1, 'actCookPancakes()');
+    html += createAct('🥩', '给黑子煎一份厚切牛排', '消耗1口粮，忠犬黑子兴奋扑怀踩奶，饱食与亲密爆棚，经验飞涨', 0, 'actFeedDogMeat()');
+    html += createAct('🍵', '泡一壶暖胃野红茶配果干', '消耗1净水，与伙伴分饮热茶，疲惫尽除，心境+15', 1, 'actBrewTea()');
+  }
+  else if(p === 'workshop'){
+    html += createAct('🦾', '锻造动力外骨骼与战备装甲', '升级正压防毒面具、防弹胸甲、动力机甲与黑子战甲', 1, 'openGearUpgradeModal()');
+    html += createAct('⚙️', '全面检修柴油地热发电机', '消耗8零件消耗1柴油，电量储备+28度，消除停机隐患', 1, 'actServiceGenerator()');
+    html += createAct('🤿', '自制纳米高分子防辐射滤网', '消耗12废料与木炭，更换老化主通风过滤网寿命+45%', 1, 'actCraftFilter()');
+    html += createAct('🛡️', '焊装地下重型防爆铅门甲板', '焊入双层倾斜装甲与阻绝拒马，避难所防御强度+20%', 2, 'actReinforceShelter()');
+    html += createAct('♨️', '打通地下地热蒸汽供暖管道', '消耗30废料与15柴油，将地热蒸汽导入避难所，永久解决极寒，温馨度+25', 2, 'actBuildGeothermal()');
+    html += createAct('🔋', '扩容石墨烯超级储能电池组', '消耗22废料与芯片，将避难所电量上限扩展至150度', 2, 'actUpgradeBattery()');
+    html += createAct('🔫', '改造消音连发狙击弩与防刺服', '消耗16零件，为探险小队打造战术装备，搜荒危险大幅降低', 2, 'actCraftGear()');
+  }
+  else if(p === 'cozy'){
+    html += createAct('🛋️', '缝制复古皮质长椅与羊毛毯', '消耗15废料，摆放在壁炉旁，温馨度+12，伙伴心境流失减慢', 1, 'actCraftCarpet()');
+    html += createAct('💡', '悬挂暖黄色节能小彩灯串', '消耗10零件，避难所走廊与起居室满是浪漫暖光，温馨度+15', 1, 'actCraftLights()');
+    html += createAct('🎶', '修复战前橡木老式黑胶留声机', '消耗18零件，在废墟中找回一张爵士老唱片，温馨度+20，解锁留声机乐曲', 2, 'actCraftGramophone()');
+    html += createAct('🪴', '栽培室内发光多肉与雏菊花盆', '消耗5纯水与土壤，小桌上摆上生机盎然的花盆，温馨度+12', 1, 'actCraftPlantPot()');
+    html += createAct('📚', '打造避难所温情共享小书架', '消耗14零件，收集童话书、植物图鉴与小说，小朵学习+心境飞涨', 1, 'actCraftBookshelf()');
+    html += createAct('🛁', '建造地热地宫泡脚热泉池', '消耗25零件（需先打通地热），全员每晚泡脚驱寒，健康持续回满', 2, 'actCraftHotSpring()');
+  }
+  else if(p === 'explore'){
+    html += createAct('🏬', '探秘废弃红星超级商厦', '深入积灰塌方的超市负一层，搜寻午餐肉罐头与速食面', 2, 'actExploreMall()');
+    html += createAct('🏥', '涉险搜索市中心综合医院', '深入放射科与急诊冷库，寻找急救止血抗辐射针剂与血清', 2, 'actExploreHospital()');
+    html += createAct('🏭', '搜查废弃微电子元器件厂', '翻找精密芯片、耐热电容与高品质工业零件与工业柴油', 2, 'actExploreFactory()');
+    html += createAct('📡', '攀登荒原高地气象雷达塔', '排查战前高频雷达阵列，获取卫星通讯芯片与气象云图', 2, 'actExploreRadar()');
+    html += createAct('🏞️', '探秘避风峡谷野生地下暗河', '寻找未受辐射污染的岩隙甘泉，采集珍贵野生抗逆种苗', 2, 'actExploreOasis()');
+    html += createAct('🚐', '荒野截停失落武装补给车', '雷诺与黑子带队突击废土游荡武装运输车，缴获重装备与柴油', 2, 'actExploreConvoy()');
+  }
+  else if(p === 'radio'){
+    html += renderRadioConsoleHtml();
+    html += createAct('📻', '短波全频段搜寻幸存信号', '调谐无线电天线，搜寻地表漂浮气球信号与避难同袍', 1, 'actScanRadio()');
+    html += createAct('🐫', '接待废土流浪双头驼商队', '荒野商旅敲响防爆门，用多余农作换取电池与高科技零件', 0, 'actCaravanTrade()');
+    html += createAct('🆘', '响应紧急求救：接引受困难民', '电台收到冻僵难民的SOS哭声，决定是否放行接入避难所', 1, 'actRescueSurvivor()');
+    html += createAct('🛰️', '解码战前失联间谍卫星频段', '安娜尝试校准军方加密频道，解锁科技蓝图与末日真相', 2, 'actDecodeSatellite()');
+  }
+  else if(p === 'camp'){
+    html += createAct('🎁', '围炉温情赠礼与心意交换', '赠送草莓、肉排、老唱片或大骨头，全员心境与亲密大涨', 0, 'openCampGiftingModal()');
+    html += createAct('🐕', '揉揉黑子下巴与顺毛抚摸', '忠犬舒舒服服地翻肚皮呼噜，陪伴治愈所有末日严酷焦虑（精力+1）', 0, 'actPetDog()');
+    html += createAct('🎾', '避难所走廊跟黑子扔皮球', '训练黑子搜救灵敏度，忠犬经验+20，解锁更高级警犬搜救技能', 1, 'actPlayDogBall()');
+    html += createAct('🎨', '炉火前教小朵认字与画画', '握着小女孩的手在白纸上画出蔚蓝天空与小海豚，亲密大涨', 1, 'actTutorDuo()');
+    html += createAct('🎸', '安娜的旧电吉他独奏会', '壁炉火光摇曳，安娜拨弄吉他清唱战前民谣，全员心境+15', 1, 'actAnnaConcert()');
+    html += createAct('🩺', '向老陈请教战地急救医术', '老军医泡上甘草茶，细细传授草药辨识与毒素拔除术（药品+3）', 1, 'actTeaWithChen()');
+    html += createAct('🏹', '听雷诺讲述荒原猎兽传奇', '老猎人在篝火旁磨利短刀，传授荒野足迹追踪与陷阱制备诀窍', 1, 'actStoryWithRay()');
+  }
+
+  document.getElementById('actsGrid').innerHTML = html;
+}
+
+function renderRadioConsoleHtml(){
+  var freq = G.radioFreq;
+  var statusText = '频段 ['+freq+' MHz] - 信号锁定稳定';
+  if(freq === '88.5') statusText = '📻 88.5 FM【废土信天翁】商队行商专线 · 驼铃与交易暗号';
+  else if(freq === '94.2') statusText = '📻 94.2 FM【极光电台】失落旧世界民谣爵士 · 空灵女声清唱';
+  else if(freq === '101.5') statusText = '📻 101.5 FM【方舟救援网】荒原难民求救中继 · 自动SOS寻呼';
+  else if(freq === '105.8') statusText = '📻 105.8 FM【北境气象所】废土辐射云流与风暴预警测报';
+  else if(freq === '108.0') statusText = '📻 108.0 FM【深空信标】战前同步轨道空间站加密脉冲声';
+
+  setTimeout(initWaveformCanvas, 50);
+
+  return '<div class="radio-console" style="grid-column:1 / -1;">'+
+    '<div class="radio-screen">'+statusText+
+      '<canvas id="radioWaveCanvas" width="340" height="36" style="display:block;width:100%;height:32px;margin:6px 0 4px;border-radius:3px;background:#030a06;border:1px solid #144933;"></canvas>'+
+      '<span style="font-size:11px;opacity:0.8;">[信号场强: 94% | 解调: FM-Narrow | Web Audio 合成器联动态]</span>'+
+    '</div>'+
+    '<div class="radio-dials">'+
+      '<button class="dial-btn '+(freq==='88.5'?'active':'')+'" onclick="tuneRadio(\'88.5\')">88.5 废土商旅</button>'+
+      '<button class="dial-btn '+(freq==='94.2'?'active':'')+'" onclick="tuneRadio(\'94.2\')">94.2 极光民谣</button>'+
+      '<button class="dial-btn '+(freq==='101.5'?'active':'')+'" onclick="tuneRadio(\'101.5\')">101.5 SOS求救</button>'+
+      '<button class="dial-btn '+(freq==='105.8'?'active':'')+'" onclick="tuneRadio(\'105.8\')">105.8 气象预警</button>'+
+      '<button class="dial-btn '+(freq==='108.0'?'active':'')+'" onclick="tuneRadio(\'108.0\')">108.0 深空卫星</button>'+
+    '</div></div>';
+}
+
+function tuneRadio(f){
+  G.radioFreq = f;
+  playBeep(880, 'sine', 0.08);
+  if(f === '94.2'){
+    initAudio();
+    playWastelandChords();
+    toast('📻 接收到温暖的极光民谣弦音');
+  } else {
+    toast('电台调谐至 ' + f + ' MHz');
+  }
+  render();
+}
+
+function createAct(icon, title, desc, cost, fnStr){
+  var ok = G.energy >= cost;
+  return '<div class="act-card '+(ok?'':'off')+'" onclick="'+fnStr+'">'+
+    '<div class="act-ic">'+icon+'</div>'+
+    '<div class="act-bd">'+
+      '<div class="act-title-row"><span class="act-title">'+title+'</span><span class="act-cost">耗'+cost+'精力</span></div>'+
+      '<div class="act-desc">'+desc+'</div>'+
+    '</div></div>';
+}
+
+/* ================= 7. 详细玩法动作实现 ================= */
+
+/* —— 温室农耕 —— */
+function actHarvestCrops(){
+  if(!useEnergy(1)) return;
+  var harvestedFood = 0;
+  for(var i=0; i<G.crops.length; i++){
+    var c = G.crops[i];
+    if(c.growth >= c.mature){
+      var yieldBase = ri(10, 16);
+      if(G.flags.greenhouseUpgraded) yieldBase = Math.floor(yieldBase * 1.35);
+      harvestedFood += yieldBase;
+      c.growth = 0;
+      c.watered = false;
+    } else {
+      c.growth++;
+    }
+  }
+  if(harvestedFood > 0){
+    G.food += harvestedFood;
+    var descs = [
+      '🍅 你与小朵提着柳条编织的菜篮走进温室。掀开水培保温薄膜，红彤彤、沉甸甸的抗辐射番茄沾着水雾，散发着浓郁纯粹的草木甘香！小朵摘下一颗擦了擦，笑盈盈塞进你嘴里，清甜多汁！（口粮+'+harvestedFood+'）',
+      '🥔 挖起一窝窝水培生长的变异马铃薯，个个大如沙田柚，淀粉饱满细腻！老陈笑得合不拢嘴：“有了这批好土豆，全避难所一个冬天都不愁断粮了！”（口粮+'+harvestedFood+'）',
+      '🌱 翠绿欲滴的水芹菜与无土生菜水灵饱满，水培循环泵发出欢快的咕嘟声。在这深不见底的冰冷岩穴中，这片郁郁葱葱的绿意就是人类最顽强的生命礼赞！（口粮+'+harvestedFood+'）'
+    ];
+    addLog(descs[Math.floor(Math.random()*descs.length)], 'log-green');
+    toast('采收口粮 +'+harvestedFood);
+  } else {
+    addLog('🌱 作物正在温室内茁壮拔节生根，幼苗贪婪吸收着多光谱生长光，稍候即可迎来新一轮采摘成熟。', '');
+    toast('作物生长中');
+  }
+  render();
+}
+
+function actWaterCrops(){
+  if(G.water < 2){ toast('纯净水不足2升，快去工坊滤水或后厨！'); return; }
+  if(!useEnergy(1)) return;
+  G.water -= 2;
+  for(var i=0; i<G.crops.length; i++){
+    G.crops[i].watered = true;
+    G.crops[i].growth = Math.min(G.crops[i].mature, G.crops[i].growth + 1);
+  }
+  addLog('💧 喷淋系统将珍贵清甜水源洒向温室，幼苗贪婪吸收，生长速度加快！', 'log-cyan');
+  toast('温室喷淋完成');
+  render();
+}
+
+function actPlantMushrooms(){
+  if(!useEnergy(1)) return;
+  var yieldMed = ri(3, 5);
+  G.med += yieldMed;
+  addLog('🍄 采下岩壁缝隙间晶莹发光的雪蘑菇菌褶，萃取出高纯抗辐射原浆，药品+'+yieldMed+'份！', 'log-green');
+  toast('获得药品原浆 +'+yieldMed);
+  render();
+}
+
+function actBuildBeehive(){
+  if(G.flags.hasBeehive){
+    if(!useEnergy(1)) return;
+    G.flags.honey = (G.flags.honey||0) + 2;
+    addLog('🐝 从地底蜂箱中摇出两瓶金黄透亮的纯净野蜂蜜！散发着迷人的野花香气。', 'log-amber');
+    toast('获得纯野蜂蜜 +2瓶');
+    render();
+    return;
+  }
+  if(G.scrap < 15){ toast('废料零件不足15件'); return; }
+  if(!useEnergy(2)) return;
+  G.scrap -= 15;
+  G.flags.hasBeehive = true;
+  G.flags.honey = 3;
+  addLog('🐝 成功在温室顶角搭建起生态蜂箱！小蜜蜂穿梭在番茄与草莓花丛中授粉，温室作物更加繁茂！', 'log-green');
+  toast('生态蜂箱搭建成功！');
+  render();
+}
+
+function actPlantStrawberry(){
+  if(G.flags.hasStrawberry){
+    if(!useEnergy(1)) return;
+    var foodGain = ri(6, 10);
+    G.food += foodGain;
+    var duo = G.survivors.find(function(x){ return x.id==='duo'; });
+    if(duo){ duo.mood = cl(duo.mood + 15); duo.affection = cl(duo.affection + 8); }
+    addLog('🍓 摘下一篮红艳欲滴、香气扑鼻的高糖草莓！小朵吃得满嘴通红，笑得像朵花一样！（口粮+'+foodGain+'，小朵心境大涨）', 'log-green');
+    toast('采摘红心草莓！');
+    render();
+    return;
+  }
+  if(G.scrap < 18){ toast('零件不足18件'); return; }
+  if(!useEnergy(2)) return;
+  G.scrap -= 18;
+  G.flags.hasStrawberry = true;
+  G.crops.push({ id:G.crops.length+1, name:'高糖红心草莓', mature:3, growth:2, watered:true, icon:'🍓' });
+  addLog('🍓 你与小朵亲手种下了一整排高糖草莓苗，细心架上竹竿，温室里多了一抹清新的甜香！', 'log-green');
+  toast('成功繁育高糖草莓水培床');
+  render();
+}
+
+function actUpgradeGreenhouse(){
+  if(G.scrap < 25){ toast('废料零件不足25件'); return; }
+  if(!useEnergy(2)) return;
+  G.scrap -= 25;
+  G.flags.greenhouseUpgraded = true;
+  G.facilities.greenhouse++;
+  addLog('🔬 安娜为你安装了全光谱多频植物补光灯与恒温热液泵，全温室作物生长效率永久提升35%！', 'log-amber');
+  toast('温室基因与光合升级达成！');
+  render();
+}
+
+/* —— 温暖后厨 —— */
+function actCookStew(){
+  if(G.food < 4 || G.water < 2){ toast('食材不足 (需口粮×4, 纯净水×2)'); return; }
+  if(!useEnergy(1)) return;
+  G.food -= 4; G.water -= 2;
+  for(var i=0; i<G.survivors.length; i++){
+    G.survivors[i].mood = cl(G.survivors[i].mood + 15);
+    G.survivors[i].health = cl(G.survivors[i].health + 8);
+  }
+  var stewTexts = [
+    '🍲 红砖柴火大灶上，铸铁锅里炖开了一整锅浓稠滚烫的番茄土豆午餐肉汤！金黄油花伴着酸甜红汤翻滚，浓郁香气飘满了每一个走廊。全员手捧搪瓷大碗围坐吸溜热汤，脸蛋被蒸汽熏得红扑扑的，所有严寒与疲惫烟消云散！',
+    '🍲 切入大块粉糯的马铃薯、熟透的红心番茄与厚切午餐肉片，撒上一撮老陈烘焙的野葱碎。滚烫鲜浓的肉汤顺着喉咙滑进胃里，浑身暖烘烘的，大家相视而笑，这就是末日里最珍贵的家园味道！'
+  ];
+  addLog(stewTexts[Math.floor(Math.random()*stewTexts.length)], 'log-green');
+  toast('一碗热汤抚慰全员身心');
+  render();
+}
+
+function actBrewCoffee(){
+  if(!useEnergy(1)) return;
+  G.energy = Math.min(G.maxEnergy + 2, G.energy + 2);
+  addLog('☕ 烘烤研磨的蒲公英根代咖啡焦香扑鼻，滚烫下肚，精神为之一振！（今日精力额外+2）', 'log-amber');
+  toast('提神咖啡：精力+2');
+  render();
+}
+
+function actBakePie(){
+  if(G.food < 3 || G.water < 1){ toast('原料不足 (口粮×3, 水×1)'); return; }
+  if(!useEnergy(1)) return;
+  G.food -= 3; G.water -= 1;
+  for(var i=0; i<G.survivors.length; i++){
+    G.survivors[i].mood = cl(G.survivors[i].mood + 22);
+  }
+  addLog('🥧 烤箱出炉了金黄酥脆的热苹果肉桂派！浓郁甜香弥漫整个避难所，连严肃的雷诺都忍不住笑意连连，全员心境暴涨！', 'log-green');
+  toast('出炉极品烤苹果派！');
+  render();
+}
+
+function actCookPancakes(){
+  if(G.food < 3){ toast('口粮不足3份'); return; }
+  if(!useEnergy(1)) return;
+  G.food -= 3;
+  G.flags.hasRation = (G.flags.hasRation||0) + 3;
+  addLog('🥞 在铁板上烙出焦黄喷香的野葱玉米厚饼，铝箔真空封存，搜荒探险时可保命续航！（干粮+3）', 'log-cyan');
+  toast('煎制野葱玉米饼');
+  render();
+}
+
+function actFeedDogMeat(){
+  if(G.food < 1){ toast('口粮已尽，舍不得委屈小狗'); return; }
+  G.food--;
+  G.dog.hunger = cl(G.dog.hunger + 35);
+  G.dog.love = cl(G.dog.love + 15);
+  G.dog.exp += 25;
+  if(G.dog.exp >= 50 && G.dog.level === 1){
+    G.dog.level = 2;
+    G.dog.skillTitle = '警惕搜荒护卫犬';
+    addLog('🐕 黑子升级了！体格更结实威风，成长为【警惕搜荒护卫犬】！外出搜荒将提供安全护卫！', 'log-amber');
+  }
+  addLog('🍖 你煎了一块香喷喷的厚肉排喂给黑子。大德牧欢喜地狼吞虎咽，吃完用湿漉漉的鼻子蹭着你的掌心使劲摇尾巴！', 'log-green');
+  toast('黑子开心极了！');
+  render();
+}
+
+function actBrewTea(){
+  if(G.water < 1){ toast('纯净水不足1升'); return; }
+  if(!useEnergy(1)) return;
+  G.water -= 1;
+  for(var i=0; i<G.survivors.length; i++) G.survivors[i].mood = cl(G.survivors[i].mood + 12);
+  addLog('🍵 滚开的泉水冲泡着晒制干果与野生红茶叶。双手捧着温热的搪瓷杯，大家小口细啜，严冬的刺骨阴寒烟消云散。', 'log-cyan');
+  toast('品一壶暖胃野红茶');
+  render();
+}
+
+/* —— 机械工坊 —— */
+function actServiceGenerator(){
+  if(G.scrap < 8 || G.fuel < 1){ toast('检修材料不足 (需废料8, 柴油1)'); return; }
+  if(!useEnergy(1)) return;
+  G.scrap -= 8; G.fuel -= 1;
+  var maxP = G.flags.batteryUpgraded ? 150 : 100;
+  G.power = cl(G.power + 28, 0, maxP);
+  addLog('⚙️ 拧紧活塞螺栓，更换润滑油，重型柴油机组爆发出强劲低沉的轰鸣，储备电力+28度！', 'log-amber');
+  toast('发电机检修完成，电力+28');
+  render();
+}
+
+function actCraftFilter(){
+  if(G.scrap < 12){ toast('废料零件不足12件'); return; }
+  if(!useEnergy(1)) return;
+  G.scrap -= 12;
+  G.airFilter = cl(G.airFilter + 45);
+  G.radiation = Math.max(0, G.radiation - 18);
+  addLog('🤿 压制成新型活性炭与高分子滤网，避难所主进风口空气清新甘爽，辐射水平大幅降低！', 'log-green');
+  toast('防爆空气滤芯更换成功');
+  render();
+}
+
+function actReinforceShelter(){
+  if(G.scrap < 20){ toast('钢板零件不足20件'); return; }
+  if(!useEnergy(2)) return;
+  G.scrap -= 20;
+  G.shelterHp = cl(G.shelterHp + 20);
+  addLog('🛡️ 在三层合金防爆闸门外焊上厚实倾斜装甲与阻绝拒马，避难所固若金汤（强度+20%）！', 'log-green');
+  toast('防爆工事加固成功');
+  render();
+}
+
+function actBuildGeothermal(){
+  if(G.facilities.geothermal >= 1){ toast('地热蒸汽系统已建成！'); return; }
+  if(G.scrap < 30 || G.fuel < 15){ toast('材料不足 (废料×30, 柴油×15)'); return; }
+  if(!useEnergy(2)) return;
+  G.scrap -= 30; G.fuel -= 15;
+  G.facilities.geothermal = 1;
+  G.cozyScore += 25;
+  addLog('♨️ 巨型液压冲击钻打穿了地下700米处的天然地热温泉层！滚烫的清洁蒸汽顺着管道温暖了避难所每一间屋子！（温馨度+25，极寒不再致病）', 'log-green');
+  toast('地热蒸汽管道工程大捷！');
+  render();
+}
+
+function actUpgradeBattery(){
+  if(G.flags.batteryUpgraded){ toast('电池组已是最高级石墨烯组！'); return; }
+  if(G.scrap < 22){ toast('废料零件不足22件'); return; }
+  if(!useEnergy(2)) return;
+  G.scrap -= 22;
+  G.flags.batteryUpgraded = true;
+  addLog('🔋 组装完成石墨烯重型蓄能电容柜！避难所电力储存上限拓展至 150 度！', 'log-amber');
+  toast('储能电池组升级完成！');
+  render();
+}
+
+function actCraftGear(){
+  if(G.flags.hasGear){
+    toast('战术装备已强化');
+    return;
+  }
+  if(G.scrap < 16){ toast('零件不足16件'); return; }
+  if(!useEnergy(2)) return;
+  G.scrap -= 16;
+  G.flags.hasGear = true;
+  addLog('🔫 安娜为外出探险小队量身组装了一把带消音红点的全地形战术卡宾枪与轻质复合装甲！', 'log-amber');
+  toast('战术搜荒装备强化完成');
+  render();
+}
+
+/* —— 避难所居室 & 温馨装潢 —— */
+function actCraftCarpet(){
+  if(G.decors.carpet){ toast('复古沙发与地毯已布置在壁炉旁'); return; }
+  if(G.scrap < 15){ toast('废料零件不足15件'); return; }
+  if(!useEnergy(1)) return;
+  G.scrap -= 15;
+  G.decors.carpet = true;
+  G.cozyScore += 12;
+  addLog('🛋️ 你用废弃车座皮面和洗净的羊毛制成了舒适的大沙发与厚地毯。大家脱下沉重战靴踩在上面，惬意得叹了口气。', 'log-amber');
+  toast('舒适沙发与羊毛地毯已就绪！');
+  render();
+}
+
+function actCraftLights(){
+  if(G.decors.lights){ toast('暖黄小彩灯串已挂满走廊'); return; }
+  if(G.scrap < 10){ toast('废料零件不足10件'); return; }
+  if(!useEnergy(1)) return;
+  G.scrap -= 10;
+  G.decors.lights = true;
+  G.cozyScore += 15;
+  addLog('💡 你与小朵将串联好的暖黄色小灯泡挂满避难所生活区。柔和的光晕驱散了地下的阴森压抑，宛如童话梦境。', 'log-green');
+  toast('温馨小彩灯串装点完毕！');
+  render();
+}
+
+function actCraftGramophone(){
+  if(G.decors.gramophone){
+    initAudio();
+    playWastelandChords();
+    toast('🎶 战前留声机悠悠回响');
+    return;
+  }
+  if(G.scrap < 18){ toast('零件不足18件'); return; }
+  if(!useEnergy(2)) return;
+  G.scrap -= 18;
+  G.decors.gramophone = true;
+  G.cozyScore += 20;
+  addLog('🎶 擦拭掉铜喇叭上的黄沙，换上崭新的细钢针。黑胶慢转，温润优雅的爵士老歌流淌在地下大厅，所有同伴潸然泪下。', 'log-cyan');
+  toast('战前橡木留声机修复成功！');
+  render();
+}
+
+function actCraftPlantPot(){
+  if(G.decors.plantPot){ toast('桌面已摆满雏菊与多肉盆栽'); return; }
+  if(G.water < 3){ toast('纯净水不足3升'); return; }
+  if(!useEnergy(1)) return;
+  G.water -= 3;
+  G.decors.plantPot = true;
+  G.cozyScore += 12;
+  addLog('🪴 在木盒里装满温室黑土，扦插上一盆嫩黄的小雏菊和发光多肉。冰冷的钢板墙壁前，多了一抹灵动的生命色彩。', 'log-green');
+  toast('生机盆栽装点桌面！');
+  render();
+}
+
+function actCraftBookshelf(){
+  if(G.decors.bookshelf){ toast('避难所小书架已落成'); return; }
+  if(G.scrap < 14){ toast('零件不足14件'); return; }
+  if(!useEnergy(1)) return;
+  G.scrap -= 14;
+  G.decors.bookshelf = true;
+  G.cozyScore += 14;
+  addLog('📚 钉好三层杉木书架，摆上搜集回来的《格林童话》、《地球植物简史》与诗集。小朵常常抱着书本看到入迷。', 'log-amber');
+  toast('文化书架落成！');
+  render();
+}
+
+function actCraftHotSpring(){
+  if(!G.facilities.geothermal){ toast('需要先在工坊打通地下地热管道！'); return; }
+  if(G.decors.hotSpringPipe){ toast('热泉泡脚池已在使用中！'); return; }
+  if(G.scrap < 20){ toast('废料零件不足20件'); return; }
+  if(!useEnergy(2)) return;
+  G.scrap -= 20;
+  G.decors.hotSpringPipe = true;
+  G.cozyScore += 20;
+  addLog('🛁 铺上圆润鹅卵石，引来地热矿物温泉。每天劳累过后，全员围坐池畔泡脚谈天，疲劳一扫而空！', 'log-green');
+  toast('天然地热热泉池竣工！');
+  render();
+}
+
+/* —— 废土荒原搜荒 —— */
+function actExploreMall(){
+  if(!useEnergy(2)) return;
+  var html = '<div class="story-box">'+
+    '<b>【废墟拾荒 · 红星超市遗址】</b><br><br>'+
+    '你与雷诺握紧战术手电推开碎裂的卷帘门。货架东倒西歪，空气中弥漫着尘土与陈年速食的味道。<br>'+
+    '在地下库房深处，手电光照亮了几个完好无损的军绿色加厚包装箱！但与此同时，墙角传来了变异狂犬低沉粗粝的嘶吼……'+
+    '</div><div class="story-choices">'+
+    '<button class="choice-btn" onclick="doMallOption(\'stealth\')">🤫 让雷诺使用微声弩箭潜行狙击，无声搬运箱子</button>'+
+    '<button class="choice-btn" onclick="doMallOption(\'rush\')">🔥 释放信号弹照明并火力压制强攻，争夺全部物资</button>'+
+    '<button class="choice-btn" onclick="closeModal()">小心后撤，暂不涉险</button>'+
+    '</div>';
+  openModal('🏬 废弃超市搜荒', html);
+}
+
+function doMallOption(type){
+  closeModal();
+  if(type === 'stealth'){
+    var foundFood = ri(14, 22);
+    var foundWater = ri(10, 16);
+    G.food += foundFood; G.water += foundWater;
+    addLog('🏬 潜行搜寻大捷！毫发无损地搬回【口粮+'+foundFood+'】、【纯净瓶装水+'+foundWater+'升】！', 'log-green');
+    toast('满载而归！');
+  } else {
+    var foundFood2 = ri(24, 36);
+    var foundScrap = ri(12, 20);
+    G.food += foundFood2; G.scrap += foundScrap;
+    var hurt = Math.random() < 0.3;
+    if(hurt && !G.flags.hasGear){
+      G.survivors[2].health = cl(G.survivors[2].health - 12);
+      addLog('🔥 火力全开击溃变异兽！缴获大批军用口粮+'+foundFood2+'、废料+'+foundScrap+'；雷诺受了点皮外伤。', 'log-amber');
+    } else {
+      addLog('🔥 战术配合天衣无缝！横扫地下仓库，缴获极品口粮+'+foundFood2+'与高纯金属零件！', 'log-green');
+    }
+    toast('大获全胜！');
+  }
+  render();
+}
+
+function actExploreHospital(){
+  if(!useEnergy(2)) return;
+  var html = '<div class="story-box">'+
+    '<b>【绝密探险 · 仁爱综合医院地下冷库】</b><br><br>'+
+    '医院走廊布满枯黄的落叶与碎玻璃。穿过满是辐射报警声的重症隔离区，老陈敏锐地指着锁闭的特种低温冷藏柜：<br>'+
+    '「里面保存着战前军用急救抗辐射血清与特效广谱抗生素！」'+
+    '</div><div class="story-choices">'+
+    '<button class="choice-btn" onclick="doHospitalOption(true)">🩺 配合老陈解开密码锁，仔细回收无菌血清冷藏盒</button>'+
+    '<button class="choice-btn" onclick="closeModal()">环境辐射过高，先行撤离</button>'+
+    '</div>';
+  openModal('🏥 综合医院探险', html);
+}
+
+function doHospitalOption(ok){
+  closeModal();
+  var meds = ri(10, 16);
+  G.med += meds;
+  G.radiation = cl(G.radiation + 8);
+  addLog('🏥 成功回收一整箱战前高纯抗辐射安瓿与急救凝胶，避难所医疗药品+'+meds+'份！（受微量辐射浸染）', 'log-green');
+  toast('医疗药品大丰收 +'+meds);
+  render();
+}
+
+function actExploreFactory(){
+  if(!useEnergy(2)) return;
+  var scrapGain = ri(30, 50);
+  var fuelGain = ri(6, 12);
+  G.scrap += scrapGain; G.fuel += fuelGain;
+  addLog('🏭 深入微电子厂动力车间，拆卸下大批高纯铜排、精密继电器与工业柴油储备（零件+'+scrapGain+'，柴油+'+fuelGain+'）！', 'log-cyan');
+  toast('工坊物资收获丰厚');
+  render();
+}
+
+function actExploreRadar(){
+  if(!useEnergy(2)) return;
+  var scrapGain = ri(20, 30);
+  G.scrap += scrapGain;
+  G.flags.hasRadarChip = true;
+  addLog('📡 登上百米高风呼啸的废弃气象雷达塔，成功拆解下一块完好的军用微波高频信号解调芯片（零件+'+scrapGain+'）！', 'log-amber');
+  toast('获取高空雷达芯片！');
+  render();
+}
+
+function actExploreOasis(){
+  if(!useEnergy(2)) return;
+  var waterGain = ri(18, 28);
+  var foodGain = ri(8, 14);
+  G.water += waterGain; G.food += foodGain;
+  addLog('🏞️ 避风峡谷深处的地底暗河清澈甘冽，未经任何辐射污染！灌满储水罐（纯水+'+waterGain+'升），还顺手采了野生浆果！', 'log-green');
+  toast('暗河清泉满载而归！');
+  render();
+}
+
+function actExploreConvoy(){
+  if(!useEnergy(2)) return;
+  var html = '<div class="story-box">'+
+    '<b>【伏击战 · 荒原流窜掠夺者装甲卡车】</b><br><br>'+
+    '雷诺在山梁上发来暗号：一辆废土匪帮重型改装皮卡车陷入了酸雨泥沼，车斗里堆满了油桶与沉重木箱。'+
+    '</div><div class="story-choices">'+
+    '<button class="choice-btn" onclick="doConvoyRaid()">⚡ 协同黑子包抄，鸣枪震慑俘获车辆物资</button>'+
+    '<button class="choice-btn" onclick="closeModal()">不冒无谓风险，放其离开</button>'+
+    '</div>';
+  openModal('🚐 截击装甲车', html);
+}
+
+function doConvoyRaid(){
+  closeModal();
+  G.fuel += 12; G.scrap += 28; G.food += 16;
+  addLog('🚐 干净利落的伏击！匪帮弃车溃逃，避难所缴获柴油+12桶、合金板+28件与脱水军粮+16份！', 'log-green');
+  toast('截击战大获全胜！');
+  render();
+}
+
+/* —— 调频电台与商队 —— */
+
+/* —— 调频电台全频段深度文本库 —— */
+var RADIO_BROADCAST_POOL = {
+  '88.5': [
+    '【废土信天翁 · 商队电波】「……叮当……驼铃声清脆回荡……这里是老麦克的流浪驼队！刚穿过灰烬大裂谷，我们带了二十包无污染干红枣、三把纯铜气动焊枪和两打密封青霉素！今晚我们在废弃07号加油站扎营，欢迎各避难所带脱水蔬菜来以物易物！愿荒野的风不吹迷旅人的眼！」',
+    '【废土信天翁 · 市场行情】「……播报今日废土大宗物资兑换比：三桶纯净轻柴油可换十袋杂粮粉；两组未拆封空气滤网可换一只健壮产奶母山羊！提醒各位老友，铁颅盗贼团在成南旧国道设卡，千万绕行西侧石灰岩峡谷！」',
+    '【废土信天翁 · 行商夜话】「……荒原上的年轻掌门人们，别灰心！今天路过红石镇废墟，我亲眼看见石缝里长出了一整片开着金黄色小花的苦菜，几只小蜜蜂在上面扑棱！大自然没有死，大地正慢慢把毒素吐干净呢！」',
+    '【废土信天翁 · 寻人留言】「……插播一条付费寻人简讯：原滨海三中物理老师周文博，如果你在收音机前，你的妻子和学生已在第101号避难所周边安定，请顺着白色风车方向寻来……」'
+  ],
+  '94.2': [
+    '【极光电台 · 空灵留声】「……这里是94.2兆赫，极光民谣台……在铅灰色的大地之下，你今天辛苦了。请放下手中的工具，听安娜为你放一首旧世界的黑胶老歌《写给春天的信》……“当北风吹过荒原的落叶，不要遗忘阳光穿透云层的温度；纵然夜色如墨，炉火依然在掌心跳舞……”」',
+    '【极光电台 · 晚安诗行】「……送给废土深处每一个孤独守夜人：天空并不是永远灰暗，它只是在积蓄一场洗净尘埃的大雨。闭上眼吧，梦里有深蓝的大海，海浪拍打着金色的沙滩，孩子们在草地上奔跑……晚安，明天的太阳依然会照常升起。」',
+    '【极光电台 · 记忆博物馆】「……今天朗读战前一位母亲在日记本里写下的段落：“今天早晨给院子里的小雏菊浇水，阳光把窗帘映成暖黄色。烤箱里烤着苹果派，猫咪在阳台晒太阳……生活平凡得让人想落泪。”亲爱的朋友，终有一天，我们会把这一切重新夺回来。」',
+    '【极光电台 · 摇篮曲】「……在温暖的地宫深处，红砖柴火炉咕嘟炖着热汤。小狗依偎在脚边，小姑娘已经抱着兔子睡着了。听那悠扬的木吉他音符，穿过钢板与岩层，守护这一夜香甜的梦境……」'
+  ],
+  '101.5': [
+    '【方舟救援网 · 紧急寻呼】「……SOS！SOS！这里是原市地质勘探队遗留小队……我们在红岩峡谷暗穴避难，随行带有四名冻伤学生和两名植物学学者！我们随身携带了完整的变异小麦杂交育种胚芽样本！请求周边有能力的避难所指引信标，我们愿以全部科研成果相赠！」',
+    '【方舟救援网 · 成功接引】「……通报好消息：昨夜第101号避难所成功接引了一对冻僵的农学母子，孩子已脱离生命危险，温室已重新恢复生机！在严冬中守望相助的人类，绝不会走向灭绝！」',
+    '【方舟救援网 · 避险警报】「……呼叫荒原所有巡逻猎人！北岭冰川发生局部塌方，一股高浓度放射性冰雪泥石流正涌入黑水河谷，请所有地表作业人员立即撤回防爆铅门内，密封通风百叶窗！」'
+  ],
+  '105.8': [
+    '【北境气象所 · 辐射测报】「……高空7000米平流层探测气球发回最新数据：极地低压槽正在减弱，未来72小时废土表层辐射背景值将从 45 mSv 降至 18 mSv！这是今年入春以来最清朗的天气窗口，适合外出搜荒与清理太阳能板！」',
+    '【北境气象所 · 季节警报】「……强冷涡旋南下，酸雨云系正移出盆地，紧随其后的是一股干燥的微风。根据地表红外遥感，向阳山坡已有野生抗旱草籽萌动！请各种植区做好采种与授粉准备！」'
+  ],
+  '108.0': [
+    '【深空信标 · 轨道卫星】「……滴——嗒——滴——这里是战前同步轨道气象遥感卫星‘启明星三号’自动脉冲信标……下行频段锁定……检测到全球地表叶绿素反射光谱正在以年均 3.2% 速度回升……文明记忆库备份完好，等待地面主机握手确认……」',
+    '【深空信标 · 绝密解码】「……破译进度 88%……获取到空间站‘天宫十六号’最后航天员指令长留存录音：“……这里是深空观测舱……我们从舷窗望下去，地球依然是那颗美丽的蔚蓝色星球……孩子们，活下去，我们在群星之间等你们！”」'
+  ]
+};
+
+function actScanRadio(){
+  if(!useEnergy(1)) return;
+  var freq = G.radioFreq || '88.5';
+  var list = RADIO_BROADCAST_POOL[freq] || RADIO_BROADCAST_POOL['88.5'];
+  var b = list[Math.floor(Math.random()*list.length)];
+  addLog('📻 ' + b, 'log-cyan');
+  toast('成功接收调频广播！');
+  render();
+}
+
+
+function actCaravanTrade(){
+  var html = '<div class="story-box">'+
+    '<b>【荒漠流浪商队 · 驼铃清脆】</b><br><br>'+
+    '戴着防毒面具的游商老麦克牵着双头骆驼敲响外门防爆视窗：<br>'+
+    '「朋友，闻到你们避难所排风口的番茄香气了！我这里有顶级发电机零部件与抗辐射针，换你们几口新鲜蔬菜如何？」'+
+    '</div><div class="story-choices">'+
+    '<button class="choice-btn" onclick="doTrade(1)">🥕 以 8份口粮 交换 22件精密零件</button>'+
+    '<button class="choice-btn" onclick="doTrade(2)">🍅 以 10份口粮 交换 8份高效抗辐射药品</button>'+
+    '<button class="choice-btn" onclick="doTrade(3)">🔩 以 15件零件 交换 10桶机组重柴油</button>'+
+    '<button class="choice-btn" onclick="closeModal()">暂时不需要交换</button>'+
+    '</div>';
+  openModal('🐫 荒野流浪商队', html);
+}
+
+function doTrade(type){
+  closeModal();
+  if(type === 1){
+    if(G.food < 8){ toast('口粮不足8份'); return; }
+    G.food -= 8; G.scrap += 22;
+    addLog('🐫 与商队交易：用新鲜番茄换得22件精密机械零件！', 'log-green');
+  } else if(type === 2){
+    if(G.food < 10){ toast('口粮不足10份'); return; }
+    G.food -= 10; G.med += 8;
+    addLog('🐫 与商队交易：换得8份战前高效抗辐射药剂！', 'log-green');
+  } else {
+    if(G.scrap < 15){ toast('零件不足15件'); return; }
+    G.scrap -= 15; G.fuel += 10;
+    addLog('🐫 与商队交易：换取10桶工业重柴油，发电机燃料充裕！', 'log-green');
+  }
+  toast('贸易达成');
+  render();
+}
+
+function actRescueSurvivor(){
+  if(!useEnergy(1)) return;
+  var html = '<div class="story-box">'+
+    '<b>【求救信号 · 漫天风雪中的敲门声】</b><br><br>'+
+    '避难所外红外探头捕捉到两名冻得瑟瑟发抖的流浪农学母子，母亲紧紧抱着孩子，嘴唇乌青：<br>'+
+    '「求求开开门……孩子快冻死了，我们懂温室水培，绝不白吃一口饭！」'+
+    '</div><div class="story-choices">'+
+    '<button class="choice-btn" onclick="doRescueChoice(true)">🚪 打开防爆闸门接纳入避难所，奉上热姜汤与毛毯（消耗4口粮2水，温室效率永久+20%）</button>'+
+    '<button class="choice-btn" onclick="doRescueChoice(false)">❄️ 避难所储备有限，仅从传递口送出两个干面包打发其离开</button>'+
+    '</div>';
+  openModal('🆘 难民收容抉择', html);
+}
+
+function doRescueChoice(accept){
+  closeModal();
+  if(accept){
+    G.food = Math.max(0, G.food - 4); G.water = Math.max(0, G.water - 2);
+    for(var i=0; i<G.survivors.length; i++) G.survivors[i].mood = cl(G.survivors[i].mood + 15);
+    addLog('🚪 你力排众议打开闸门救下了母子。暖烘烘的壁炉前，母亲泪如雨下连连鞠躬，发誓尽心侍奉水培温室！（全员心境+15，温室效率跃升）', 'log-green');
+    toast('善举温暖人心');
+  } else {
+    G.food = Math.max(0, G.food - 2);
+    addLog('❄️ 隔着铅门送出干粮。看着母子在风雪中离去的背影，避难所大厅内一片沉寂。', 'log-amber');
+  }
+  render();
+}
+
+function actDecodeSatellite(){
+  if(!useEnergy(2)) return;
+  G.flags.satelliteDecoded = true;
+  addLog('🛰️ 安娜终于破译了战前同步轨道气象卫星的加密下行信号！掌握了全球残留绿洲分布坐标地图！（解锁新世界希望结局关键信标）', 'log-green');
+  toast('绝密卫星数据破译成功！');
+  render();
+}
+
+/* —— 营地温存与情感陪伴 —— */
+function actPetDog(){
+  G.dog.love = cl(G.dog.love + 8);
+  G.energy = Math.min(G.maxEnergy, G.energy + 1);
+  var lines = [
+    '黑子舒服地把毛茸茸的大下巴搁在你膝盖上，尾巴有节奏地在地板上啪嗒啪嗒拍打，清澈黑亮的眼睛里满是对你的依赖与无条件信任。',
+    '你揉揉黑子柔软立挺的三角耳朵和下巴逆毛，大狗舒服得伸了个懒腰，打了个大大哈欠，翻出暖烘烘的白肚皮向你撒娇，毛茸茸的触感融化了末日的疲惫。',
+    '抱住黑子温热厚实的毛脖子，闻着它身上淡淡的干草与太阳味道。在荒芜冰冷的废土深处，有它这样一位忠贞不渝的伙伴陪伴真好。（精力+1，身心治愈）',
+    '大黑用湿漉漉的黑鼻子轻轻顶了顶你的手掌心，随后轻轻把两只前爪搭在你的手臂上，喉咙里发出撒娇似的呼噜轻鸣，像个依恋家人的大孩子。',
+    '你蹲下身挠着大黑的后颈软毛，德牧舒服得眯成两条缝，后腿随着节奏在半空中欢快地弹跳，小朵在一旁看着咯咯笑个不停，地下室满是欢声笑语。'
+  ];
+  addLog('🐕 '+lines[Math.floor(Math.random()*lines.length)], 'log-green');
+  toast('被黑子治愈了 · 精力+1');
+  render();
+}
+
+function actPlayDogBall(){
+  if(!useEnergy(1)) return;
+  G.dog.exp += 25;
+  G.dog.love = cl(G.dog.love + 10);
+  if(G.dog.exp >= 50 && G.dog.level === 1){
+    G.dog.level = 2;
+    G.dog.skillTitle = '警惕搜荒护卫犬';
+    addLog('🐕 黑子体格愈发矫健，嗅觉敏锐，升级为【警惕搜荒护卫犬】！', 'log-amber');
+  }
+  addLog('🎾 在地下走廊把皮球扔出去，黑子欢脱地蹬起四蹄飞奔捡回，咬住球头向你邀功讨摸摸！', 'log-green');
+  toast('黑子训练经验+25');
+  render();
+}
+
+function actTutorDuo(){
+  if(!useEnergy(1)) return;
+  var duo = G.survivors.find(function(x){ return x.id==='duo'; });
+  if(duo){ duo.mood = cl(duo.mood + 18); duo.affection = cl(duo.affection + 12); }
+  var talks = [
+    '小朵用彩色蜡笔在白纸上画了一个带大烟囱的小房子，旁边画着你、她和黑子：「哥哥/姐姐，等外面的毒云散了，我们就在阳光下建这样的大房子好不好？」',
+    '小朵握着你的手，一笔一划在雪浪纸上写下自己的名字。小女孩抬起明亮大眼睛，奶声奶气为你唱了一首末日前的儿歌，全大厅的人都听得眼眶湿润。',
+    '你给小朵剥开一颗珍藏的草莓味水果糖。小女孩含在嘴里舍不得嚼，笑得眼睛弯成了两弯新月。'
+  ];
+  addLog('🎨 '+talks[Math.floor(Math.random()*talks.length)], 'log-green');
+  toast('小朵开心得抱住了你');
+  render();
+}
+
+function actAnnaConcert(){
+  if(!useEnergy(1)) return;
+  var anna = G.survivors.find(function(x){ return x.id==='anna'; });
+  if(anna){ anna.mood = cl(anna.mood + 16); anna.affection = cl(anna.affection + 10); }
+  for(var i=0; i<G.survivors.length; i++) G.survivors[i].mood = cl(G.survivors[i].mood + 12);
+  initAudio();
+  playWastelandChords();
+  addLog('🎸 壁炉火光跳动，安娜擦干净手上的机油，抱着一把老旧电吉他弹起舒缓悠扬的旋律。大家闭目轻和，仿佛旧世界的璀璨星空重现眼前。', 'log-cyan');
+  toast('温暖的烛光音乐会');
+  render();
+}
+
+function actTeaWithChen(){
+  if(!useEnergy(1)) return;
+  var chen = G.survivors.find(function(x){ return x.id==='chen'; });
+  if(chen){ chen.mood = cl(chen.mood + 14); chen.affection = cl(chen.affection + 10); }
+  G.med = cl(G.med + 4);
+  addLog('🍵 老陈在红茶里加了少许晒干的野薄荷叶，清香扑鼻。老人细细向你传授了废土止血包扎与毒素辨识的心得秘诀（药品储备+4）。', 'log-green');
+  toast('获老陈真传 · 医术提升');
+  render();
+}
+
+function actStoryWithRay(){
+  if(!useEnergy(1)) return;
+  var ray = G.survivors.find(function(x){ return x.id==='ray'; });
+  if(ray){ ray.mood = cl(ray.mood + 15); ray.affection = cl(ray.affection + 10); }
+  addLog('🏹 雷诺一边用磨刀石打磨战术匕首，一边向你传授辨别地表变异巨蝎行迹与防沙尘暴的宝贵求生经验。', 'log-amber');
+  toast('猎人经验传授');
+  render();
+}
+
+/* ================= 8. 每日结算与生存危机判定 ================= */
+function nextDayCycle(){
+  // 1. 消耗日常食物与水
+  var totalPeople = G.survivors.length + 1; // 加上主角自己
+  var reqFood = totalPeople * 2;
+  var reqWater = totalPeople * 2;
+  var reqPower = 5;
+
+  G.food -= reqFood;
+  G.water -= reqWater;
+  G.power -= reqPower;
+
+  // 滤网衰减
+  G.airFilter = Math.max(0, G.airFilter - 3);
+  if(G.airFilter < 20) G.radiation = cl(G.radiation + 10);
+
+  // 作物自长
+  for(var i=0; i<G.crops.length; i++){
+    if(G.crops[i].watered) G.crops[i].growth = Math.min(G.crops[i].mature, G.crops[i].growth + 1);
+  }
+
+  // 时间推进
+  G.day++;
+  if(G.day % 15 === 0){
+    G.seasonIdx = (G.seasonIdx + 1) % 4;
+    addLog('🍂 四季流转！废土气候迈入【'+SEASONS[G.seasonIdx]+'】！', 'log-amber');
+  }
+  G.weather = WEATHER_LIST[Math.floor(Math.random()*WEATHER_LIST.length)];
+  
+  // 温馨度回血与精力计算
+  var bonusEnergy = G.cozyScore >= 60 ? 1 : 0;
+  G.energy = G.maxEnergy + bonusEnergy;
+
+  // 随机日记记录
+  recordDailyDiary();
+
+  // 危机事件检查
+  checkSurviveState();
+  addLog('⏳ 第'+G.day+'日黎明破晓。全员消耗口粮'+reqFood+'、净水'+reqWater+'、电力'+reqPower+'度。天气：'+G.weather+'。', '');
+  toast('新的一天开始了');
+  render();
+}
+
+function recordDailyDiary(){
+  var entries = [
+    { author: '小朵', avatar: '👧', text: '今天在温室里看到了第一朵小红番茄花开，黄灿灿的像小星星。我和大黑说，我们一定会等到真正的大太阳的。' },
+    { author: '安娜', avatar: '🔧', text: '电台里又听到了昨晚的莫尔斯电码，队长说那可能是战前卫星的自动握手协议。只要我们坚持下去，希望就在眼前。' },
+    { author: '老陈', avatar: '🩺', text: '昨晚给雷诺换了药，伤口愈合得很好。看着这几个年轻人围在炉火边说笑，让我想起了大灾变前的家。有他们在，这里就是家。' },
+    { author: '雷诺', avatar: '🏹', text: '今天在铅门外巡查，风里沙尘淡了一些。黑子趴在我脚边警惕地竖起耳朵。队长是个好首领，第101号避难所会成为荒原上的传奇。' },
+    { author: '黑子', avatar: '🐕', text: '汪！今天早晨队长揉了我的肚皮，吃了香喷喷的厚肉排。我和小朵在走廊追皮球，这个地洞很暖和，我要一辈子保护大家！' }
+  ];
+  if(Math.random() < 0.6){
+    var e = entries[Math.floor(Math.random()*entries.length)];
+    G.diaries.unshift({ day: G.day, author: e.author, avatar: e.avatar, text: e.text });
+    if(G.diaries.length > 20) G.diaries.pop();
+  }
+}
+
+function checkSurviveState(){
+  // 断粮危机
+  if(G.food < 0){
+    G.food = 0;
+    for(var i=0; i<G.survivors.length; i++){
+      G.survivors[i].health = cl(G.survivors[i].health - 18);
+      G.survivors[i].mood = cl(G.survivors[i].mood - 20);
+    }
+    addLog('⚠️【严重饥荒】避难所断粮！同伴们饥肠辘辘，健康与心境受损！', 'log-rose');
+  }
+  // 断水危机
+  if(G.water < 0){
+    G.water = 0;
+    for(var j=0; j<G.survivors.length; j++) G.survivors[j].health = cl(G.survivors[j].health - 22);
+    addLog('⚠️【重度脱水】纯净水告罄！喉咙干裂，健康急剧受损！', 'log-rose');
+  }
+  // 断电危机
+  if(G.power <= 0){
+    G.power = 0;
+    G.radiation = cl(G.radiation + 16);
+    addLog('⚠️【全所断电】发电机燃料耗尽停机！地下温室与空气循环瘫痪，辐射涌入！', 'log-rose');
+  }
+
+  // 剧情阶段事件检查 (Act 1, 2, 3)
+  checkStoryEvents();
+
+  // 终局判定
+  if(G.day >= 60 || (G.facilities.greenhouse >= 2 && G.flags.satelliteDecoded && G.cozyScore >= 50)){
+    triggerVictoryCheck();
+  }
+}
+
+function checkStoryEvents(){
+  // 第8日：小朵生病发热事件
+  if(G.day === 8 && !G.flags.duoFeverDone){
+    G.flags.duoFeverDone = true;
+    var html = '<div class="story-box">'+
+      '<b>【突发剧情 · 寒夜高热的小朵】</b><br><br>'+
+      '清晨，小朵没有像往常一样跑出来喂黑子。你推开房门，发现小女孩蜷缩在被窝里小脸通红，嘴唇干裂：<br>'+
+      '「哥哥……我头好晕……是不是见不到春天的草莓了……」<br>'+
+      '老陈赶来切脉：「是轻度辐射感染伴随风寒高热，必须立刻用发光雪蘑菇原浆与洁净温水熬制退烧清热剂！」'+
+      '</div><div class="story-choices">'+
+      '<button class="choice-btn" onclick="doCureDuo(true)">💊 消耗 3份药品与2升纯净水，老陈精心煎服退烧针剂</button>'+
+      '<button class="choice-btn" onclick="doCureDuo(false)">❄️ 仅用温毛巾冷敷，省下药品应对更严峻的危机</button>'+
+      '</div>';
+    openModal('🚨 紧急剧情：小朵的危情', html);
+    return;
+  }
+
+  // 第18日：铁颅盗贼团的最后通牒
+  if(G.day === 18 && !G.flags.banditRaidDone){
+    G.flags.banditRaidDone = true;
+    var html2 = '<div class="story-box">'+
+      '<b>【突发主线 · 铁颅盗贼团的最后通牒】</b><br><br>'+
+      '外层防爆视窗外，传来了野蛮的改装越野车引擎轰鸣声。<br>'+
+      '自称“铁颅帮”的三名武装匪徒用大喇叭狂叫：<br>'+
+      '「地下的缩头乌龟听着！交出20份口粮和10桶柴油当保护费，否则半夜我们就用定向爆破炸塌你们的主通风井！」'+
+      '</div><div class="story-choices">'+
+      '<button class="choice-btn" onclick="doBanditChoice(\'fight\')">⚔️ 雷诺与黑子设伏，开启哨戒机枪与暗藏电磁地雷，正面硬碰硬击溃他们！</button>'+
+      '<button class="choice-btn" onclick="doBanditChoice(\'trick\')">🧠 安娜释放毒气发生器假警报与伪造高辐射警报，兵不血刃吓退匪徒</button>'+
+      '<button class="choice-btn" onclick="doBanditChoice(\'pay\')">🍞 消耗 15份口粮与5桶柴油破财免灾，息事宁人</button>'+
+      '</div>';
+    openModal('🚨 铁颅盗贼团逼近', html2);
+    return;
+  }
+
+  // 随机废土小事件
+  if(Math.random() < 0.22){
+    triggerNightEvent();
+  }
+}
+
+function doCureDuo(cure){
+  closeModal();
+  var duo = G.survivors.find(function(x){ return x.id==='duo'; });
+  if(cure){
+    G.med = Math.max(0, G.med - 3); G.water = Math.max(0, G.water - 2);
+    if(duo){ duo.health = cl(duo.health + 25); duo.mood = cl(duo.mood + 30); duo.affection = cl(duo.affection + 25); }
+    addLog('💖 老陈连夜熬出雪蘑菇清毒剂喂下。破晓时分，小朵烧退了，握着你的手指甜甜睡去，亲密度达到顶峰！', 'log-green');
+    toast('小朵平安脱险！');
+  } else {
+    if(duo){ duo.health = cl(duo.health - 25); duo.mood = cl(duo.mood - 30); }
+    addLog('❄️ 小朵虽然熬过了高烧，但身形更加瘦弱，眼里少了一丝光彩……', 'log-rose');
+  }
+  render();
+}
+
+function doBanditChoice(type){
+  closeModal();
+  if(type === 'fight'){
+    var victory = (G.shelterHp >= 60 || G.flags.hasGear);
+    if(victory){
+      G.scrap += 30; G.fuel += 10;
+      addLog('⚔️ 伏击大获全胜！雷诺神准射击打爆敌车油箱，匪徒抱头鼠窜，缴获零件+30、柴油+10！', 'log-green');
+      toast('击溃铁颅盗贼团！');
+    } else {
+      G.shelterHp = Math.max(0, G.shelterHp - 25);
+      addLog('⚔️ 惨胜！击退了匪徒，但铅门防爆装甲受损-25%！', 'log-amber');
+      toast('防爆装甲受损');
+    }
+  } else if(type === 'trick'){
+    addLog('🧠 安娜启动了通风管放射性黄烟模拟器，警报声震天响！匪徒以为避难所堆满了核废料，吓得踩死油门狂逃！', 'log-green');
+    toast('智斗智退强敌！');
+  } else {
+    G.food = Math.max(0, G.food - 15); G.fuel = Math.max(0, G.fuel - 5);
+    addLog('🍞 交出了部分口粮与柴油，匪徒狂笑着扬长而去。避难所暂时换来了安宁。', 'log-rose');
+  }
+  render();
+}
+
+function triggerNightEvent(){
+  var events = [
+    function(){
+      triggerNightBattleModal('变异荒原狼群冲击', '变异双头巨狼被避难所排风口的番茄香气引来，尖锐的利爪疯狂抓挠外层防爆钢板！', 16);
+    },
+    function(){
+      triggerNightBattleModal('废土游荡掠夺者偷袭', '三名手持自制雷管与撬棍的流窜废土盗贼正试图破坏外围副通风管道与配电箱！', 18);
+    },
+    function(){
+      var foundScrap = ri(16, 28);
+      G.scrap += foundScrap;
+      addLog('🎁【黑夜惊喜】大黑夜巡时从通风管下叼回一个战前军用零件箱（零件+'+foundScrap+'）！', 'log-green');
+    }
+  ];
+  events[Math.floor(Math.random()*events.length)]();
+}
+
+function triggerVictoryCheck(){
+  if(G.flags.hasEnded) return;
+  G.flags.hasEnded = true;
+  var html = '<div class="story-box">'+
+    '<b>🌟【希望之光 · 避难所跨入新纪元】</b><br><br>'+
+    '在你的英明率领与全员同心协力下，第101号避难所已挺过废土最严酷的浩劫！<br>'+
+    '水培温室郁郁葱葱，防爆大门坚不可摧，同伴们围坐在温暖的炉火边，微笑着望向你：<br><br>'+
+    '<b>请选择带领大家迈向的宏伟未来：</b>'+
+    '</div><div class="story-choices">'+
+    '<button class="choice-btn" onclick="unlockEnding(1)">🌱【大地回春 · 绿色新伊甸】：利用改良净土种子向地表播撒绿意，重塑文明森林</button>'+
+    '<button class="choice-btn" onclick="unlockEnding(2)">🏰【废土灯塔 · 辐射万人城】：扩建避难所为地下钢铁城邦，成为千百幸存者的庇护圣所</button>'+
+    '<button class="choice-btn" onclick="unlockEnding(3)">🚀【星海重燃 · 飞向深空】：破译卫星发射井蓝图，建造逃逸飞船飞向宜居新家园</button>'+
+    '<button class="choice-btn" onclick="unlockEnding(4)">☕【炉边微光 · 岁月静好】：与心爱的同伴与忠犬在地下深处平静安享一生温存</button>'+
+    '</div>';
+  openModal('🏆 终局荣耀抉择', html);
+}
+
+function unlockEnding(type){
+  closeModal();
+  var endings = {
+    1: { title:'【大地回春 · 绿色新伊甸】', desc:'你带领安娜、小朵推开铅门，第一株在阳光下无惧辐射的嫩绿树苗在焦黑废土上破土成荫。若干年后，这里成为了全大陆最美丽的森林乐园。' },
+    2: { title:'【废土灯塔 · 辐射万人城】', desc:'第101号避难所打通了周边二十座矿井与地铁，庇护了上万流浪同胞。你的名字被铭刻在钢铁纪念碑上，世代传颂。' },
+    3: { title:'【星海重燃 · 飞向深空】', desc:'巨大的反重力火箭划破铅灰色的天幕，冲向静谧浩瀚的群星。人类的文明火种与记忆，在另一个星球重绽光华。' },
+    4: { title:'【炉边微光 · 岁月静好】', desc:'外界风霜雨雪再也无法侵扰。听着黑子的呼噜、安娜的歌声与小朵清脆的笑声，你微笑着合上日记：这就是最平凡又最伟大的幸福。' }
+  };
+  var e = endings[type] || endings[1];
+  if(G.endingsUnlocked.indexOf(e.title) === -1) G.endingsUnlocked.push(e.title);
+  addLog('🏆 达成终局结局：'+e.title, 'log-amber');
+
+  openModal('🎉 终局圆满 · '+e.title,
+    '<div class="story-box" style="font-size:13px;line-height:1.8;">'+e.desc+'</div>'+
+    '<button class="choice-btn" style="text-align:center;background:#b91c1c;color:#fff;" onclick="closeModal()">载入史册 · 开启新周目</button>');
+}
+
+function openEndingsModal(){
+  var all = [
+    '【大地回春 · 绿色新伊甸】',
+    '【废土灯塔 · 辐射万人城】',
+    '【星海重燃 · 飞向深空】',
+    '【炉边微光 · 岁月静好】'
+  ];
+  var html = '<div class="story-box">避难所传奇终局达成记录（共4部史诗）：</div>';
+  for(var i=0; i<all.length; i++){
+    var done = G.endingsUnlocked.indexOf(all[i]) !== -1;
+    html += '<div style="padding:6px 0;border-bottom:1px solid #333;display:flex;justify-content:space-between;">'+
+      '<span>'+all[i]+'</span>'+
+      '<span style="color:'+(done?'var(--accent-emerald)':'var(--text-dim)')+';font-weight:bold;">'+(done?'✨ 已达成':'🔒 未解锁')+'</span>'+
+      '</div>';
+  }
+  html += '<button class="choice-btn" style="margin-top:10px;text-align:center;" onclick="closeModal()">返回避难所</button>';
+  openModal('🏆 终局图鉴', html);
+}
+
+function openDiaryModal(){
+  var html = '<div class="story-box" style="margin-bottom:8px;"><b>【幸存者私人日记手札】</b>记录伙伴们在地底避难所的温情瞬间：</div>';
+  for(var i=0; i<G.diaries.length; i++){
+    var d = G.diaries[i];
+    html += '<div class="diary-card">'+
+      '<div class="diary-author"><span>'+d.avatar+' '+d.author+'</span><span style="color:var(--text-dim);font-size:11px;">第'+d.day+'日</span></div>'+
+      '<div class="diary-content">'+d.text+'</div>'+
+      '</div>';
+  }
+  html += '<button class="choice-btn" style="text-align:center;margin-top:6px;" onclick="closeModal()">收起手札</button>';
+  openModal('📝 避难所日记手札', html);
+}
+
+function openChronicleModal(){
+  var html = '<div class="story-box" style="line-height:1.7;">'+
+    '<b>【第101号避难所 · 宏伟编年史】</b><br><br>'+
+    '🌟 <b>建所纪元</b>：第1年第'+G.day+'日<br>'+
+    '🏠 <b>避难所评级</b>：'+document.getElementById('shelterGrade').textContent+'<br>'+
+    '🛋️ <b>温馨度指数</b>：'+G.cozyScore+'/100分<br>'+
+    '🐶 <b>忠犬大黑</b>：Lv.'+G.dog.level+' ('+G.dog.skillTitle+')<br>'+
+    '🌱 <b>温室产能</b>：水培床'+G.crops.length+'个，设施等级 Lv.'+G.facilities.greenhouse+'<br>'+
+    '⚙️ <b>工业实力</b>：工坊等级 Lv.'+G.facilities.workshop+'，发电机组 Lv.'+G.facilities.generator+'<br>'+
+    '🛰️ <b>深空破译</b>：'+(G.flags.satelliteDecoded?'✅ 已完成轨道握手':'❌ 尚未破译卫星')+'<br>'+
+    '</div><button class="choice-btn" style="text-align:center;" onclick="closeModal()">返回</button>';
+  openModal('📖 避难所编年史', html);
+}
+
+function openStoryMilestoneModal(){
+  var html = '<div class="story-box" style="line-height:1.8;">'+
+    '<b>【主线三大纪元目标】</b><br><br>'+
+    '1. <b>【第一幕 · 寒夜微光】(第1-15日)</b><br>'+
+    '• 目标：加固铅门至80%以上，建立持续产出的水培温室，确保粮食与水储备不归零。<br><br>'+
+    '2. <b>【第二幕 · 荒原回响】(第16-35日)</b><br>'+
+    '• 目标：迎击或化解铁颅盗贼团威胁，救助风雪中被困的农学遗孤，打通地下地热温泉管道，温馨度突破50分！<br><br>'+
+    '3. <b>【第三幕 · 黎明抉择】(第36-60日)</b><br>'+
+    '• 目标：破译深空同步轨道卫星，带领全避难所同胞做出终局抉择，迎来大地回春或群星征途！'+
+    '</div><button class="choice-btn" style="text-align:center;" onclick="closeModal()">知晓目标，全力以赴！</button>';
+  openModal('🎯 避难所纪元发展大纲', html);
+}
+
+function showHelpModal(){
+  var html = '<div class="story-box" style="line-height:1.7;">'+
+    '<b>【避难所生存与经营法则】</b><br><br>'+
+    '1. <b>核心循环</b>：每日拥有 6 点行动力，可安排种植、烹饪、检修、居室装潢、搜荒与伙伴温存。<br>'+
+    '2. <b>生存底线</b>：每日结束时全员自动消耗口粮与纯净水，断粮断水将导致同伴生命受损！<br>'+
+    '3. <b>工坊与温室</b>：记得常去温室采摘与浇水；定期更换空气滤芯与检修发电机防断电。<br>'+
+    '4. <b>温馨居室</b>：在居室打造沙发、彩灯与留声机，可大幅提升避难所温馨度，夜间享受额外精力恢复！<br>'+
+    '5. <b>数据安全</b>：支持一键本地存档与导出，永久离线双击即玩。'+
+    '</div><button class="choice-btn" style="text-align:center;" onclick="closeModal()">明白，守护家园！</button>';
+  openModal('❓ 避难所生存指南', html);
+}
+
+/* ================= 9. 存读档与初始化 ================= */
+function openSaveModal(){
+  var html = '<div class="story-box">避难所数据保存在本地浏览器中，亦可复制导出存档码永久备份：</div>'+
+    '<div class="story-choices">'+
+    '<button class="choice-btn" onclick="doSaveLocal()">💾 保存当前避难所进度</button>'+
+    '<button class="choice-btn" onclick="doLoadLocal()">📂 读取上次保存的进度</button>'+
+    '<button class="choice-btn" onclick="doExportJson()">📋 复制 JSON 备份码</button>'+
+    '<button class="choice-btn" onclick="closeModal()">返回</button>'+
+    '</div>';
+  openModal('💾 避难所数据管理', html);
+}
+
+function doSaveLocal(){
+  try {
+    localStorage.setItem('SHELTER_SAVE_V1', JSON.stringify(G));
+    toast('避难所进度已保存！');
+    closeModal();
+  } catch(e){ toast('保存失败'); }
+}
+
+function doLoadLocal(){
+  try {
+    var raw = localStorage.getItem('SHELTER_SAVE_V1');
+    if(!raw){ toast('暂无保存的存档记录'); return; }
+    G = JSON.parse(raw);
+    toast('存档已成功载入！');
+    closeModal(); render();
+  } catch(e){ toast('载入失败'); }
+}
+
+function doExportJson(){
+  var str = JSON.stringify(G);
+  navigator.clipboard.writeText(str).then(function(){
+    toast('已复制完整存档数据至剪贴板！');
+  }).catch(function(){ toast('复制失败，请手动备份'); });
+}
+
+function doRestart(){
+  if(confirm('确定要重启新的避难所纪元吗？当前未保存的物资将重置。')){
+    location.reload();
+  }
+}
+
+// 废土微光尘埃浮动画布动画
+function initDustCanvas(){
+  var cvs = document.getElementById('dustCanvas');
+  var ctx = cvs.getContext('2d');
+  var w = cvs.width = window.innerWidth;
+  var h = cvs.height = window.innerHeight;
+  var particles = [];
+  for(var i=0; i<35; i++){
+    particles.push({
+      x: Math.random()*w, y: Math.random()*h,
+      r: Math.random()*1.8 + 0.5,
+      vx: (Math.random()-0.5)*0.3, vy: -Math.random()*0.4 - 0.1,
+      alpha: Math.random()*0.5 + 0.2
+    });
+  }
+  function loop(){
+    ctx.clearRect(0,0,w,h);
+    ctx.fillStyle = '#d29922';
+    for(var j=0; j<particles.length; j++){
+      var p = particles[j];
+      ctx.globalAlpha = p.alpha;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fill();
+      p.x += p.vx; p.y += p.vy;
+      if(p.y < 0) { p.y = h; p.x = Math.random()*w; }
+      if(p.x < 0) p.x = w;
+      if(p.x > w) p.x = 0;
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+window.onload = function(){
+  initDustCanvas();
+  addLog('🛡️ 第101号避难所主电源接通，生命维持系统平稳运转。在严酷废土中守卫人类最后的希望！', 'log-amber');
+  addLog('💡 规则：每日安排温室水培、厨房熬汤、工坊检修与废墟搜荒；抚摸黑子与布置居室可让地宫充满温情。', '');
+  render();
+};
+
+/* ================= 10. 深度伙伴羁绊夜话手卷 (文学级长篇纪事) ================= */
+var SURVIVOR_MEMOIRS = {
+  duo: {
+    name: '小朵 (Duo)', title: '幸存遗孤小妹妹 · 晨曦微光', avatar: '👧',
+    intro: '在暴风雪呼啸的废弃防空洞塌方水泥板下被你抱出的小女孩。她紧紧攥着一盒受潮的彩色蜡笔，那是大灾变前妈妈留给她的最后一件礼物。在避难所的地宫深处，只要听见她的笑声，严冬就退去了一半。',
+    chapters: [
+      {
+        title: '卷一 · 坍塌废墟里的小红鞋',
+        desc: '「那天底下好黑好冷，外面全是呜呜的风声和大铁块倒塌的声音。妈妈把我塞进铁柜子里，把蜡笔塞在我兜兜里，对我说：“小朵乖乖数到一百，就会有一个穿铠甲的大英雄来开门……”我数到九百九十九，手电筒的光就照进来了。哥哥/姐姐，你就是我的大英雄。」'
+      },
+      {
+        title: '卷二 · 白纸上的大烟囱与蓝天',
+        desc: '小朵趴在温暖的红砖炉台前，用红蜡笔在雪浪纸上画了一个带大烟囱的小房子，旁边画着一株结满大草莓的树和一只耳朵尖尖的大黑狗。小女孩抬起明亮纯洁的眼眸：「哥哥，天上的太阳真的会把雪融化成小溪吗？等天晴了，我们一起去看真真正正的蓝天好不好？」'
+      },
+      {
+        title: '卷三 · 藏在温室草莓盆里的小乳牙',
+        desc: '小朵的第一颗门牙在吃烤土豆时松脱了。她没有哭，而是神神秘秘地拉着你的衣角来到温室，小心翼翼地把小乳牙埋进了高糖红心草莓的黑土里。小女孩双手合十小声许愿：「听说把牙齿种在地里，明年春天就会长出一颗甜甜的星星，保佑避难所里所有人都不生病。」'
+      },
+      {
+        title: '卷四 · 亲手缝制的防化兔兔布偶',
+        desc: '小朵找老陈要了一截洗干净的医用棉花，又求安娜剪了一块防化服软内衬，用笨拙的针脚缝了一只歪着长耳朵的棉布小兔子。她红着小脸把小兔子塞进你探险的战术背包外兜：「哥哥每次出门搜荒都带上兔兔，兔兔耳朵灵，会提前听见坏人的声音，保佑哥哥平平安安回来吃热汤。」'
+      },
+      {
+        title: '卷五 · 永不熄灭的晨曦之誓',
+        desc: '深夜外界辐射尘暴嘶吼，大地隐隐震颤。小朵抱着小枕头光着脚丫跑进你的房间，钻进被窝紧紧抓住你的手指。小女孩的额头抵着你的手臂，温热的呼吸渐渐平稳：「哥哥，只要握着你的手，小朵就一点儿都不怕黑了。我们会永远在一起，对不对？」'
+      }
+    ]
+  },
+  anna: {
+    name: '安娜 (Anna)', title: '机械工程师 · 赤诚热忱', avatar: '🔧',
+    intro: '扎着利落高马尾的年轻机械天才。她的鼻尖和工装裤上总带着淡淡的机油味，眼神如砂轮上的火花般倔强明亮。那把磨损掉漆的红棉电吉他，是她牺牲的工程师哥哥留给她的遗物。',
+    chapters: [
+      {
+        title: '卷一 · 焊枪、机油与未尽的图纸',
+        desc: '「在核冬天的避难所里，螺栓和气阀就是人类的心脏。我哥常说，只要机械还在运转，文明的脉搏就还没停跳。他在第七地下城排险时吸入了过量放射性蒸汽……临走前他把这套扳手放在我手心里。我答应过他，要亲手让一千座避难所重新亮起灯火。」'
+      },
+      {
+        title: '卷二 · 第一盏钨丝灯亮起的破晓',
+        desc: '那天夜里，主发电机的活塞终于被我和你修好了。合上重型电闸的一瞬间，昏黄温暖的白炽灯光刺破了长达数月的冰冷幽暗。看着小朵欢呼雀跃的身影，我悄悄转过身，用沾满机油的手背抹掉眼泪。队长，那一刻我知道，第101号避难所就是我此生的归宿。'
+      },
+      {
+        title: '卷三 · 老红棉吉他背面的刻痕',
+        desc: '安娜坐在柴油发电机组的油桶上，低头轻轻擦拭着吉他的音孔。在琴头背面，有一道深深的刻痕：“致永不言弃的鸟儿”。她拨动吉他弦，音色温润而悠扬：「这是我哥教我的第一支和弦，他说无论黑夜多漫长，只要歌声还能在炉边响起来，我们就没有输给废土。」'
+      },
+      {
+        title: '卷四 · 通风换气塔顶的星空漫步',
+        desc: '我们戴着双联防化面具，顺着检修铁梯爬到了地表换气塔顶。狂风掀动着铅灰色的毒云，在极速流动的云隙深处，突然露出一角静谧幽蓝的夜空和一颗闪耀的天狼星。安娜指着那颗星星，护目镜下眼神亮若繁星：「你看，星星一直在那里等着我们，队长。」'
+      },
+      {
+        title: '卷五 · 齿轮与后背的绝对誓约',
+        desc: '安娜将一把她亲手精细车削、铭刻着你名字首字母的钛合金扳手递到你手中：「在废土上，能把后背托付给对方的人，千金不换。队长，无论未来你要向地表进军、还是飞向深空，我都会用这双手为你铸造最坚固的铠甲。」'
+      }
+    ]
+  },
+  chen: {
+    name: '老陈 (Dr. Chen)', title: '战地老军医 · 医者仁心', avatar: '🩺',
+    intro: '大灾变前省中心医院急诊外科主任，如今两鬓斑白的老人。他随身携带着磨光边角的银怀表，里面夹着他唯一的女儿在和平时代的泛黄照片。在残酷冷血的废土上，他用中草药与仁心捍卫着最后的尊严。',
+    chapters: [
+      {
+        title: '卷一 · 泛黄怀表里的一寸照',
+        desc: '夜深人静时，老陈总会掏出那块上世纪的老式机械怀表。表盖内侧嵌着一张梳着马尾辫、笑靥如花的年轻女孩照片。「大灾变爆发时，她在南方城市的大学读书……警报响得太快，所有民用通信瞬间瘫痪。老头子我活到现在，只想亲眼看到地表绿意重归那天，能再去南方的废墟里找找她的足迹。」'
+      },
+      {
+        title: '卷二 · 地底岩缝里的雪蘑菇与岐黄术',
+        desc: '老陈在煤油灯下一味一味研磨着岩缝里采下的发光雪蘑菇、干燥蒲公英根与野生马齿苋。「西药针剂用一支少一支，但大自然从不吝啬它的生机。万物相生相克，强辐射的土地边，必有抗毒的灵草。我把这些药理都记在本子里，以后孩子们就能靠大地继续治病救人了。」'
+      },
+      {
+        title: '卷三 · 木板上的十九路残局',
+        desc: '老陈在一块废平整的杉木板上用碳条画出围棋棋盘，用白石子和黑螺母与你手谈。「下棋如治所，不可急功冒进，亦不可坐以待毙。你治避难所，既有霹雳手段，又有菩萨心肠，把口粮多分给小朵和老人。队长，这是王道，有王道在，人聚而不散。」'
+      },
+      {
+        title: '卷四 · 寒冬深夜的雪中守夜',
+        desc: '那次小朵发高烧，老陈守在床前煎药，整整三天两夜没合眼。老人用颤抖却极稳的手施针退热，破晓时分擦了擦额头的冷汗微笑：「小丫头命硬，老天爷不敢从我陈某人手里抢人。队长，看见小朵活蹦乱跳，我便觉得这一辈子行医积德，都值了。」'
+      },
+      {
+        title: '卷五 · 《废土本草》薪火相传',
+        desc: '老陈将一本厚厚的手抄本郑重交到你的手中，上面密密麻麻记录着数百种变异草药的性味、图鉴、萃取流程与急救止血方剂。「老头子年纪大了，眼睛渐渐花了。但医者的薪火不能断。把这些传下去，只要人间还有悬壶济世的心，文明就绝不会湮灭。」'
+      }
+    ]
+  },
+  ray: {
+    name: '雷诺 (Ray)', title: '废土老练猎人 · 荒原之狼', avatar: '🏹',
+    intro: '脸上带着一道从额角划到耳根的狰狞爪痕。他曾是荒原上独来独往的独狼斥候，见过人性的至恶与变异兽的凶残。平日言语极少，但当危险来临时，他的箭矢永远比风暴更快出膛。',
+    chapters: [
+      {
+        title: '卷一 · 荒原独狼的七条生存法则',
+        desc: '雷诺用磨刀石细细打磨着多功能猎刀：「第一，永远顺风潜伏，异兽的鼻子比雷达还灵；第二，听见乌鸦哑叫立刻找岩洞藏身；第三，不要相信废土上任何主动哭嚎的陌生人……至于第七条，以前我不信，现在我信了——一个人可以走得很快，但一群同伴才能走得远。」'
+      },
+      {
+        title: '卷二 · 脸颊伤痕背后的血战',
+        desc: '「这道疤是一头两米高的成年变异狂暴山猫留下的。那年在北岭冰原，我和它在暗无天日的冰缝里僵持了三天三夜。最后我用半截工兵铲刺穿了它的咽喉，我也断了三根肋骨。那之后我明白了，野兽凶残，但心怀恶念的匪徒比野兽更可怕百倍。」'
+      },
+      {
+        title: '卷三 · 为什么停下流浪的脚步',
+        desc: '「我在荒原上漫无目的地流浪了整整九年。风吹到哪里，我就睡在哪里，枕着枪，随时准备在睡梦中咽气。直到那天，我闻到你们换气口飘出的番茄炖肉香，看见黑子摇着尾巴向我扑过来，你从铅门后面递给我一碗滚烫的姜汤……那一刻我对自己说，雷诺，你的漂泊该结束了。」'
+      },
+      {
+        title: '卷四 · 篝火旁的战术传授',
+        desc: '雷诺坐在壁炉旁，耐心地帮你调整战术弩的配重与拉力平衡，细细教你如何在昏暗视线下根据足迹深浅判断掠夺者队伍的辎重虚实：「队长，你的心很善，这是好事。但对外面的恶狼，必须有比它们更锋利的獠牙。有我在，绝不让任何匪徒跨过门槛一步。」'
+      },
+      {
+        title: '卷五 · 猎人的守护之盾',
+        desc: '雷诺擦拭着猎弓，目光望向在大厅里围着小彩灯嬉闹的小朵和黑子，嘴角露出一丝罕见的温柔：「我这一生杀戮太多，原本以为死后唯有荒野的黄沙埋骨。但能为你们守住这处小小的炉火，是我这辈子做过最自豪的决定。队长，下一次探险，雷诺依然走在第一个。」'
+      }
+    ]
+  },
+  dog: {
+    name: '黑子 (Blacky)', title: '防暴德牧军犬 · 灵魂伴侣', avatar: '🐕',
+    intro: '战前纯种德牧军犬的后代，毛色黑亮如缎，耳尖立挺，眼神聪慧忠诚。在它眼中，避难所的每一个人都是它必须用生命护卫的家人，而你则是它奉献全部灵魂的唯一归宿。',
+    chapters: [
+      {
+        title: '卷一 · 冰雪深坑里的小黑狗',
+        desc: '黑子把大脑袋轻轻搭在你的膝盖上，发出极轻柔的哼唧声。那天在废墟冰坑里，快要冻僵的小奶狗浑身落满雪花，是你脱下棉大衣把它紧紧裹在胸口，用体温一点点把它捂热。从那一刻起，它的生命就完完全全属于你了。'
+      },
+      {
+        title: '卷二 · 走廊里的扔球大冒险',
+        desc: '大黑嘴里紧紧叼着你给它的弹力皮球，在地下走廊里四爪蹬地欢快狂奔！它跑到你跟前，啪嗒一声把沾满口水的球丢在你鞋面上，摇晃着蓬松的大尾巴，扬起清澈憨厚的眼睛看着你，急切地吐着舌头催促你再扔一次！'
+      },
+      {
+        title: '卷三 · 炉火前的肚皮狂欢',
+        desc: '每当红砖炉灶生起火，黑子就会舒舒服服地四脚朝天仰面躺在羊毛地毯上，露出暖烘烘、毛茸茸的白肚皮。只要你的手指抚上它的软毛，它就舒服得眯起眼睛打起小呼噜，后腿还会随着你的抓挠在半空中一抖一抖。所有的末日疲惫，都在这毛茸茸的触感中烟消云散。'
+      },
+      {
+        title: '卷四 · 寒夜警备与忠诚卫士',
+        desc: '深夜外界有异响时，黑子绝不会乱吠惊醒熟睡的小朵。它会悄无声息地站起身，压低身子走到厚重的铅防爆门前，喉咙里发出低沉有力的警戒呜鸣，立起耳朵捕捉风声。有它在，整个避难所的夜晚比任何装甲堡垒都让人安心。'
+      },
+      {
+        title: '卷五 · 一生一世的无言守护',
+        desc: '黑子用湿漉漉的黑鼻子蹭了蹭你的手心，用温热厚实的身体紧紧依偎在你的小腿边。人类或许会因言语而产生隔阂，但小狗的爱永远纯粹澄澈。在残酷破败的废土上，有它这样一位跨越物种的灵魂伴侣，你便永远不会感到孤独。'
+      }
+    ]
+  }
+};
+
+function openSurvivorMemoirModal(id){
+  var m = SURVIVOR_MEMOIRS[id];
+  if(!m) return;
+  playBeep(660, 'sine', 0.1);
+  var html = '<div class="story-box" style="margin-bottom:12px;background:linear-gradient(135deg,rgba(33,39,47,0.9),rgba(24,29,34,0.95));border-color:var(--border-main);">'+
+    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">'+
+      '<div style="width:42px;height:42px;background:#111;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;">'+m.avatar+'</div>'+
+      '<div>'+
+        '<div style="font-size:14px;font-weight:bold;color:#fff;">'+m.name+'</div>'+
+        '<div style="font-size:11.5px;color:var(--accent-amber);">'+m.title+'</div>'+
+      '</div>'+
+    '</div>'+
+    '<div style="font-size:12px;color:var(--text-sub);line-height:1.6;border-top:1px dashed var(--border-main);padding-top:8px;">'+m.intro+'</div>'+
+    '</div>';
+
+  html += '<div style="font-size:13px;font-weight:bold;color:var(--accent-cyan);margin-bottom:8px;">📜 专属羁绊长卷（共五卷）：</div>';
+  for(var i=0; i<m.chapters.length; i++){
+    var c = m.chapters[i];
+    html += '<div class="diary-card" style="margin-bottom:8px;border-left:3px solid var(--accent-amber);">'+
+      '<div style="font-weight:bold;color:#fff;font-size:12.5px;margin-bottom:4px;">'+c.title+'</div>'+
+      '<div style="font-size:12px;color:var(--text-sub);line-height:1.7;">'+c.desc+'</div>'+
+      '</div>';
+  }
+
+  html += '<button class="choice-btn" style="text-align:center;margin-top:10px;background:var(--bg-sub);" onclick="closeModal()">收起羁绊长卷</button>';
+  openModal('📖 幸存者羁绊夜话 · ' + m.name, html);
+}
+
+
+/* ================= 示波器波形画布动画 ================= */
+var waveCanvasAnim = null;
+function initWaveformCanvas(){
+  var cvs = document.getElementById('radioWaveCanvas');
+  if(!cvs) return;
+  var ctx = cvs.getContext('2d');
+  var w = cvs.width;
+  var h = cvs.height;
+  var step = 0;
+
+  if(waveCanvasAnim) cancelAnimationFrame(waveCanvasAnim);
+
+  function drawWave(){
+    if(!document.getElementById('radioWaveCanvas')) return;
+    ctx.fillStyle = 'rgba(3, 10, 6, 0.3)';
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.strokeStyle = audioOn ? '#39e58c' : '#1e7e4e';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+
+    var mid = h / 2;
+    step += 0.08;
+    for(var x = 0; x < w; x++){
+      var amp = audioOn ? 10 : 3;
+      var y = mid + Math.sin(x * 0.05 + step) * amp * Math.cos(x * 0.02);
+      if(Math.random() < 0.02) y += (Math.random() - 0.5) * 6; // 微噪音
+      if(x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+
+    waveCanvasAnim = requestAnimationFrame(drawWave);
+  }
+  drawWave();
+}
+
+/* ================= 战备装备升级工坊 ================= */
+function openGearUpgradeModal(){
+  var g = G.gear || {};
+  var html = '<div class="story-panel"><div class="story-title">🦾 避难所工业装备台</div>'+
+    '<div class="story-text"><p>打造尖端动力外骨骼与防护战具，外出搜荒收获翻倍，负伤率与辐射吸收骤减！</p></div></div>'+
+    '<div class="story-choices">'+
+    '<button class="choice-btn" onclick="doUpgradeGearSlot(\'exosuit\')">🦾 升级【动力外骨骼机甲】(当前T'+(g.exosuit?g.exosuit.tier:1)+' · 需零件25, 柴油5) - 搜荒物资额外+40%</button>'+
+    '<button class="choice-btn" onclick="doUpgradeGearSlot(\'mask\')">🤿 升级【正压纳米防核生化面罩】(当前T'+(g.mask?g.mask.tier:1)+' · 需零件18) - 外出辐射吸收降低60%</button>'+
+    '<button class="choice-btn" onclick="doUpgradeGearSlot(\'suit\')">🦺 升级【合金复合防弹装甲】(当前T'+(g.suit?g.suit.tier:1)+' · 需零件22) - 探险受伤概率降低70%</button>'+
+    '<button class="choice-btn" onclick="doUpgradeGearSlot(\'dogRig\')">🐕 升级【黑子战术装甲鞍包】(当前T'+(g.dogRig?g.dogRig.tier:1)+' · 需零件15) - 黑子搜救额外爆战前补给</button>'+
+    '<button class="choice-btn" onclick="closeModal()">返回</button></div>';
+  openModal('🦾 战备外骨骼机甲改装', html);
+}
+
+function doUpgradeGearSlot(slot){
+  closeModal();
+  var g = G.gear[slot];
+  if(!g) return;
+  if(slot === 'exosuit'){
+    if(G.scrap < 25 || G.fuel < 5){ toast('材料不足 (零件×25, 柴油×5)'); return; }
+    G.scrap -= 25; G.fuel -= 5;
+    g.tier++;
+    g.name = '极境核能动力外骨骼装甲 (T' + g.tier + ')';
+    g.desc = '大幅提升越野负重，搜荒物资缴获提升40%';
+    addLog('🦾 安娜为你装配完成【'+g.name+'】！伺服电机轰鸣，骨骼装甲护体，搜荒如有神助！', 'gold');
+  } else if(slot === 'mask'){
+    if(G.scrap < 18){ toast('零件不足18件'); return; }
+    G.scrap -= 18;
+    g.tier++;
+    g.name = '正压纳米战术防毒面具 (T' + g.tier + ')';
+    g.desc = '正压空气自循环，完全隔绝辐射烟尘';
+    addLog('🤿 压制合成高阶纳米防毒面罩！外出搜荒受辐射影响大幅减免！', 'log-green');
+  } else if(slot === 'suit'){
+    if(G.scrap < 22){ toast('零件不足22件'); return; }
+    G.scrap -= 22;
+    g.tier++;
+    g.name = '高密碳纤重型复合防弹背心 (T' + g.tier + ')';
+    g.desc = '双层倾斜防弹插板，有效抵御爪咬与流弹';
+    addLog('🦺 为探险小队升级【'+g.name+'】！外出搜荒伤亡概率归零！', 'log-green');
+  } else {
+    if(G.scrap < 15){ toast('零件不足15件'); return; }
+    G.scrap -= 15;
+    g.tier++;
+    g.name = '凯夫拉犬用战术装甲背带 (T' + g.tier + ')';
+    g.desc = '黑子着装威风凛凛，大幅提升物资搜获概率';
+    addLog('🐕 为黑子穿上战术背带，大德牧威风凛凛地直立踏步，亲密度大涨！', 'log-amber');
+  }
+  toast('战备装备升级成功！');
+  render();
+}
+
+/* ================= 同伴温情赠礼与互动 ================= */
+function openCampGiftingModal(){
+  var html = '<div class="story-panel"><div class="story-title">🎁 围炉温情 · 赠送礼物</div>'+
+    '<div class="story-text"><p>挑选一份温情礼物赠给朝夕相伴的同胞，抚平末日创伤，深化灵魂羁绊：</p></div></div>'+
+    '<div class="story-choices">'+
+    '<button class="choice-btn" onclick="doGiftCompanion(\'duo\')">🍓 赠送小朵：一碗鲜甜的红心草莓与水果糖（小朵心境+25，回赠手绘卡片）</button>'+
+    '<button class="choice-btn" onclick="doGiftCompanion(\'anna\')">🔧 赠送安娜：精密航空轴承与老黑胶唱片（安娜心境+20，免费调校发电机）</button>'+
+    '<button class="choice-btn" onclick="doGiftCompanion(\'chen\')">🍄 赠送老陈：发光雪蘑菇与野甘草茶（老陈心境+20，回赠特效解毒原浆）</button>'+
+    '<button class="choice-btn" onclick="doGiftCompanion(\'ray\')">🥩 赠送雷诺：香煎厚切纯肉排（雷诺心境+20，今夜亲自值夜守卫）</button>'+
+    '<button class="choice-btn" onclick="doGiftCompanion(\'dog\')">🍖 赠送大黑：整根带肉大棒骨（饱食+40，翻肚皮疯狂踩奶，精力+1）</button>'+
+    '<button class="choice-btn" onclick="closeModal()">返回</button></div>';
+  openModal('🎁 避难所温情赠礼', html);
+}
+
+function doGiftCompanion(cid){
+  closeModal();
+  if(cid === 'duo'){
+    var duo = G.survivors.find(function(x){ return x.id==='duo'; });
+    if(duo){ duo.mood = 100; duo.affection = cl(duo.affection + 15); }
+    addLog('🍓 小朵咬着甜甜的草莓，大眼睛笑成了弯弯的月牙。小姑娘飞快地用彩色蜡笔画了一张你和她的画送给你：「哥哥最好了！」（小朵心境回满！）', 'log-green');
+    toast('小朵开心地抱住了你');
+  } else if(cid === 'anna'){
+    var anna = G.survivors.find(function(x){ return x.id==='anna'; });
+    if(anna){ anna.mood = cl(anna.mood + 22); anna.affection = cl(anna.affection + 12); }
+    G.power = cl(G.power + 15);
+    addLog('🔧 安娜眼里满是惊喜与光芒，红着脸收下齿轮，当晚便拿起扳手把整个避难所的线路重新梳理了一遍！（安娜心境+22，储备电力+15）', 'log-amber');
+    toast('安娜精心维护了避难所');
+  } else if(cid === 'chen'){
+    var chen = G.survivors.find(function(x){ return x.id==='chen'; });
+    if(chen){ chen.mood = cl(chen.mood + 20); chen.affection = cl(chen.affection + 12); }
+    G.med = cl(G.med + 3);
+    addLog('🍄 老陈欣慰抚须：「这可是难得的纯净药材！」老军医连夜用砂锅为你熬出一小瓶高效防辐射清露（药品+3）。', 'log-green');
+    toast('老陈回赠防辐射药浆');
+  } else if(cid === 'ray'){
+    var ray = G.survivors.find(function(x){ return x.id==='ray'; });
+    if(ray){ ray.mood = cl(ray.mood + 20); ray.affection = cl(ray.affection + 12); }
+    G.flags.nightGuardActive = true;
+    addLog('🥩 雷诺大口嚼着肉排，沉稳地握住战术弓：「队长，今夜由我雷诺全权守夜，保证连只变异蚊子都飞不进避难所。」（今夜必定安全无虞）', 'log-amber');
+    toast('雷诺担任今夜警戒哨兵');
+  } else {
+    G.dog.hunger = 100;
+    G.dog.love = cl(G.dog.love + 20);
+    G.energy = Math.min(G.maxEnergy, G.energy + 1);
+    addLog('🍖 大黑叼着大肉骨头开心地呜呜直叫，吃完跳上沙发把脑袋埋在你怀里蹭来蹭去，呼噜声响彻房间！（精力+1，黑子爱意满格）', 'log-green');
+    toast('黑子开心极了！');
+  }
+  render();
+}
+
+/* ================= 战术夜袭互动防御指挥 ================= */
+function triggerNightBattleModal(eventTitle, eventDesc, dmgPotential){
+  if(G.flags.nightGuardActive){
+    G.flags.nightGuardActive = false;
+    addLog('🏹【哨兵狙杀】深夜外层有变异兽群接近，雷诺在视窗后三箭连珠精准狙杀头领，黑子发出震慑怒吼，敌群惊恐四散，未损分毫！', 'log-green');
+    return;
+  }
+
+  var html = '<div class="story-box">'+
+    '<b>🚨【深夜遭遇警报 · '+eventTitle+'】</b><br><br>'+
+    eventDesc+'<br><br><b>防爆指挥官，请下达紧急防御部署指令：</b>'+
+    '</div><div class="story-choices">'+
+    '<button class="choice-btn" onclick="doNightDefend(\'emp\', '+dmgPotential+')">⚡ 启动外围高压电网与电磁冲击（消耗4度电，零损伤击退）</button>'+
+    '<button class="choice-btn" onclick="doNightDefend(\'snipe\', '+dmgPotential+')">🎯 雷诺与黑子开启哨戒探照灯精准反击（精准击退，概率缴获战利品）</button>'+
+    '<button class="choice-btn" onclick="doNightDefend(\'lock\', '+dmgPotential+')">🛡️ 锁死三道重型铅钢防爆门死守（工事吸收冲击，大门轻微受损）</button>'+
+    '</div>';
+  openModal('🚨 避难所紧急遭遇战', html);
+}
+
+function doNightDefend(type, dmgBase){
+  closeModal();
+  if(type === 'emp'){
+    if(G.power >= 4){
+      G.power -= 4;
+      G.scrap += 15;
+      addLog('⚡ 高压电弧与强电磁脉冲瞬间贯穿外围！夜袭兽群被当场电晕瘫痪，避难所毫发无损，顺手回收废料+15！', 'log-green');
+      toast('电网全歼夜袭');
+    } else {
+      var d = Math.round(dmgBase * 0.5);
+      G.shelterHp = Math.max(0, G.shelterHp - d);
+      addLog('⚡ 储备电量不足，电网未能完全激发，防爆铅门承受了撞击（耐久损耗-'+d+'%）！', 'log-amber');
+    }
+  } else if(type === 'snipe'){
+    var foodGain = ri(8, 14);
+    G.food += foodGain;
+    addLog('🎯 雷诺居高临下箭不虚发，大黑紧随其后猛冲捕猎！全歼夜袭狂兽，缴获高能新鲜口粮+'+foodGain+'份！', 'log-green');
+    toast('战术反击大捷！');
+  } else {
+    var loss = Math.min(10, Math.round(dmgBase * 0.4));
+    G.shelterHp = Math.max(0, G.shelterHp - loss);
+    addLog('🛡️ 沉重防爆铅门牢牢挡住了外部疯狂撞击。除了外层装甲轻微凹陷（-'+loss+'%），全避难所安然度过危机。', 'log-cyan');
+    toast('防爆闸门屹立不倒');
+  }
+  render();
+}
+
+</script>
+</body>
+</html>
